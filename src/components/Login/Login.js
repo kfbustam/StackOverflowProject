@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container'
 import Image from 'react-bootstrap/Image'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import { Link } from 'react-router-dom'
 
 function Login() {
     return (
@@ -23,7 +24,7 @@ function Login() {
                     <Button className='login-button'>Log in</Button>
                 </Form>
             </Container>
-            <p className='mt-4 register-text'>Don't have an account? <a href="/">Sign up</a></p>
+            <p className='mt-4 register-text'>Don't have an account? <Link to="/signup">Sign up</Link></p>
         </div>
     )
 }

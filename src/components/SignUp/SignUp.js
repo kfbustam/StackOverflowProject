@@ -18,10 +18,10 @@ function SignUp() {
                     <Container className='info-container'>
                         <h3>Join the Stack Overflow community</h3>
                         <ul>
-                            <li><RiQuestionAnswerFill className='icon'/>Get unstuck - ask a question</li>
+                            <li><RiQuestionAnswerFill className='icon' />Get unstuck - ask a question</li>
                             <li><TiArrowUnsorted className='icon' />Unlock new privileges like voting and commenting</li>
-                            <li><AiFillTags className='icon'/>Save your favorite tags, filters, and jobs</li>
-                            <li><RiTrophyFill className='icon'/>Earn reputation and badges</li>
+                            <li><AiFillTags className='icon' />Save your favorite tags, filters, and jobs</li>
+                            <li><RiTrophyFill className='icon' />Earn reputation and badges</li>
                         </ul>
                     </Container>
                 </Col>
@@ -39,10 +39,12 @@ function SignUp() {
                             <Form.Group className='mb-3'>
                                 <Form.Label className='signup-text'>Password</Form.Label>
                                 <Form.Control type="password" />
-                                <Form.Text className="text-muted password-info">
-                                    Passwords must contain at least eight characters,
-                                    including at least 1 letter and 1 number.
-                                </Form.Text>
+                                <div className='password-info-container'>
+                                    <Form.Text className="text-muted password-info">
+                                        Passwords must contain at least eight characters,
+                                        including at least 1 letter and 1 number.
+                                    </Form.Text>
+                                </div>
                             </Form.Group>
                             <Button className='login-button'>Sign up</Button>
                         </Form>

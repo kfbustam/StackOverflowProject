@@ -29,6 +29,10 @@
     font-size: 12px;
 }
 
+.password-info-container {
+    line-height: 1rem;
+}
+
 ul {
     list-style: none;
     padding: 0;

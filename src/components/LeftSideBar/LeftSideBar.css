@@ -79,3 +79,11 @@ p{
     margin: 6px 0px;
 }
 
+.link-text {
+    color:rgba(0, 0, 0, 0.64);
+}
+
+.link-text:hover {
+    color: black;
+}
+

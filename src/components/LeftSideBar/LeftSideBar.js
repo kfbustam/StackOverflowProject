@@ -1,7 +1,7 @@
 import React from 'react';
 import PublicIcon from '@material-ui/icons/Public';
 import StarsIcon from '@mui/icons-material/Stars';
-import {Link} from  'react-router-dom';
+import { Link } from  'react-router-dom';
 import './LeftSideBar.css';
 
 function LeftSideBar() {
@@ -10,16 +10,16 @@ function LeftSideBar() {
       <div className='left-sidebar-container'>
         <div className='left-sidebar-options'>
           <div className='left-sidebar-option'>
-            <Link>Home</Link>            
+            <p>Home</p>            
             <p>PUBLIC</p>   
              <div className='link'>
               <div className='link-tag'>
                 <PublicIcon/>
-                <Link>Questions</Link>
+                <Link className='link-text' to="/">Questions</Link>
                </div> 
               <div className='tags'>                
-                <Link>Tags</Link> 
-                <Link>Users</Link>
+                <Link className='link-text' to="/">Tags</Link> 
+                <Link className='link-text' to="/">Users</Link>
               </div>                 
             </div>  
           </div>
@@ -28,7 +28,7 @@ function LeftSideBar() {
             <div className='link'>
               <div className='link-tag'>
                 <StarsIcon/>
-                <Link>Explore Collectives</Link>
+                <Link className='link-text' to="/">Explore Collectives</Link>
               </div>                               
             </div>  
           </div>
