@@ -1,0 +1,46 @@
+.signup-container {
+    background-color: #F1F2F3;
+    height: 92vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-container {
+    background-color: white;
+    width: 300px;
+    border-radius: 5px;
+    box-shadow: 0 0 50px 10px #DBDBDC;
+    text-align: left;
+}
+
+.info-container {
+    width: 500px;
+    line-height: 3rem;
+    margin-top: 50px;
+}
+
+.signup-text {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.password-info {
+    font-size: 12px;
+}
+
+.password-info-container {
+    line-height: 1rem;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    color: #0D96FF;
+    margin-right: 7px;
+}
