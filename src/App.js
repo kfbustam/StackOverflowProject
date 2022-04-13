@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
 import { red } from '@mui/material/colors';
+import PostQuestion from './components/PostQuestion/PostQuestion'
 
 const messageCountStyle = {
   color: '#525960',
@@ -129,6 +130,7 @@ function App() {
         <Route path="/" element={<Layout />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
+        <Route exact path="/postquestion" element={<PostQuestion />} />
       </Routes>
     </>
   );
