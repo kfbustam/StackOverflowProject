@@ -10,6 +10,7 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import HelpIcon from '@mui/icons-material/Help';
 import SignUp from './components/SignUp/SignUp';
 import Questions from './components/Questions/Questions';
+import Users from './components/Users/Users';
 import LeftSideBar from './components/LeftSideBar/LeftSideBar';
 import CircleIcon from '@mui/icons-material/Circle';
 import { Routes, Route } from 'react-router-dom';
@@ -75,7 +76,7 @@ const getRightOfTheSearchBarLinkComponents = (navigate) => {
   }
 
   const rightOfTheSearchBarLinkComponents = [
-    <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small">
+    <IconButton key="profileIcon" onClick={() => navigate('/users')} size="small">
       <Avatar src={profileIconSrc}/>
       <span style={messageCountStyle}>{messageCount}</span>
     </IconButton>,
@@ -154,6 +155,7 @@ function App() {
           <div className='stack-layout'>
             <div className='stack-layout-container'>
               <LeftSideBar activeTab='users'/>
+              <Users />
             </div>    
           </div>
         }/>
