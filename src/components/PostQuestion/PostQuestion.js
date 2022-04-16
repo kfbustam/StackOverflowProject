@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import './PostQuestion.css'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -7,8 +7,16 @@ import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
 import Accordion from 'react-bootstrap/Accordion'
 import Button from 'react-bootstrap/Button'
+import { Editor } from '@tinymce/tinymce-react'
 
 function PostQuestion() {
+    const editorRef = useRef(null);
+    const log = () => {
+        if (editorRef.current) {
+            console.log(editorRef.current.getContent());
+        }
+    };
+
     return (
         <div className='post-page-container'>
             <Container >
@@ -25,11 +33,22 @@ function PostQuestion() {
                             <Form.Control size='sm' placeholder='e.g. Is there an R function for finding the index of an element in a vector?' type='text' />
                             <h6 className='mt-3'>Body</h6>
                             <p className='info-text'>Include all the information someone would need to answer your question</p>
-                            <Form.Control as='textarea' rows={7}/>
+                            {/*<Form.Control as='textarea' rows={7}/>*/}
+                            <Editor
+                                onInit={(evt, editor) => editorRef.current = editor}
+                                init={{
+                                    height: 300,
+                                    menubar: false,
+                                    plugins: 'lists link codesample image',
+                                    toolbar: 'bold italic | link codesample image | bullist numlist ',
+                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                                }}
+                            />
                             <h6 className='mt-3'>Tags</h6>
                             <p className='info-text'>Add up to 5 tags to describe what your question is about</p>
                             <Form.Control size='sm' placeholder='e.g. (sql jquery reactjs)' type='text' />
                         </Container>
+                        <Button className='review-question-button mt-3 mb-3'>Review your question</Button>
                     </Col>
                     <Col md={4}>
                         <Card className='mb-3'>
@@ -89,9 +108,9 @@ function PostQuestion() {
                                     <a href='/' className='card-link'>Software engineering</a>
                                     <p className='card-body-text'>For software development methods and process questions</p>
                                     <a href='/' className='card-link'>Hardware recommendations</a>
-                                    <br/>
+                                    <br />
                                     <a href='/' className='card-link'>Software recommendations</a>
-                                    <p className='card-body-text' style={{marginTop: '7px'}}>Ask questions about the site on <a className='card-link' href='/'>meta</a></p>
+                                    <p className='card-body-text' style={{ marginTop: '7px' }}>Ask questions about the site on <a className='card-link' href='/'>meta</a></p>
                                 </Accordion.Body>
                             </Accordion.Item>
                         </Accordion>
@@ -105,11 +124,6 @@ function PostQuestion() {
                             </Accordion.Item>
                         </Accordion>
 
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Button className='review-question-button mt-3 mb-3'>Review your question</Button>
                     </Col>
                 </Row>
             </Container>
