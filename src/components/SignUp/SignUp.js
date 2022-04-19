@@ -17,7 +17,7 @@ function SignUp() {
                 <Col>
                     <Container className='info-container'>
                         <h3>Join the Stack Overflow community</h3>
-                        <ul>
+                        <ul className='signup-list'>
                             <li><RiQuestionAnswerFill className='icon' />Get unstuck - ask a question</li>
                             <li><TiArrowUnsorted className='icon' />Unlock new privileges like voting and commenting</li>
                             <li><AiFillTags className='icon' />Save your favorite tags, filters, and jobs</li>
