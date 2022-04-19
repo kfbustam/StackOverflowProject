@@ -5,11 +5,12 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Navbar from './components/Navbar/Navbar';
 import CommentIcon from '@mui/icons-material/Comment';
-import Layout from './components/Layout/Layout';
 import Login from './components/Login/Login';
 import InboxIcon from '@mui/icons-material/Inbox';
 import HelpIcon from '@mui/icons-material/Help';
 import SignUp from './components/SignUp/SignUp';
+import Questions from './components/Questions/Questions';
+import LeftSideBar from './components/LeftSideBar/LeftSideBar';
 import CircleIcon from '@mui/icons-material/Circle';
 import { Routes, Route } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -127,7 +128,43 @@ function App() {
         rightOfTheSearchBarLinkComponents={rightOfTheSearchBarLinkComponents} 
       />
       <Routes>
-        <Route path="/" element={<Layout />} />
+        <Route path="/" element={   
+          <div className='stack-layout'>
+            <div className='stack-layout-container'>
+              <LeftSideBar activeTab='home'/>
+              <Questions/>
+            </div>    
+          </div>
+        }/>
+        <Route path="/questions" element={   
+          <div className='stack-layout'>
+            <div className='stack-layout-container'>
+              <LeftSideBar activeTab='questions'/>
+              <Questions/>
+            </div>    
+          </div>
+        }/>
+        <Route path="/tags" element={   
+          <div className='stack-layout'>
+            <div className='stack-layout-container'>
+              <LeftSideBar activeTab='tags'/>
+            </div>    
+          </div>
+        }/>
+        <Route path="/users" element={   
+          <div className='stack-layout'>
+            <div className='stack-layout-container'>
+              <LeftSideBar activeTab='users'/>
+            </div>    
+          </div>
+        }/>
+        <Route path="/exploreCollectives" element={   
+          <div className='stack-layout'>
+            <div className='stack-layout-container'>
+              <LeftSideBar activeTab='exploreCollectives'/>
+            </div>    
+          </div>
+        }/>
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/postquestion" element={<PostQuestion />} />
