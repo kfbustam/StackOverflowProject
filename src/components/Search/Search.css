@@ -1,0 +1,27 @@
+.search-container {
+    margin-left: 260px;
+    width: 125%;
+}
+
+.ask-question-button {
+    background-color: #0D96FF;
+    border-color: #0D96FF;
+    margin-left: auto;
+}
+
+.num-results {
+    color: black;
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.filter-button {
+    background-color: white;
+    color: grey;
+    border-color: grey;
+}
+
+.search-hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
