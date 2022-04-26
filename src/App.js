@@ -10,13 +10,16 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import HelpIcon from '@mui/icons-material/Help';
 import SignUp from './components/SignUp/SignUp';
 import Questions from './components/Questions/Questions';
+import Users from './components/Users/Users';
 import LeftSideBar from './components/LeftSideBar/LeftSideBar';
 import CircleIcon from '@mui/icons-material/Circle';
 import { Routes, Route } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
+import PostQuestion from './components/PostQuestion/PostQuestion'
 import './components/Layout/Layout.css';
+import Search from './components/Search/Search'
 
 const messageCountStyle = {
   color: '#525960',
@@ -75,7 +78,7 @@ const getRightOfTheSearchBarLinkComponents = (navigate) => {
   }
 
   const rightOfTheSearchBarLinkComponents = [
-    <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small">
+    <IconButton key="profileIcon" onClick={() => navigate('/users')} size="small">
       <Avatar src={profileIconSrc}/>
       <span style={messageCountStyle}>{messageCount}</span>
     </IconButton>,
@@ -154,6 +157,7 @@ function App() {
           <div className='stack-layout'>
             <div className='stack-layout-container'>
               <LeftSideBar activeTab='users'/>
+              <Users />
             </div>    
           </div>
         }/>
@@ -166,6 +170,15 @@ function App() {
         }/>
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
+        <Route exact path="/postquestion" element={<PostQuestion />} />
+        <Route path="/search" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='questions'/>
+              <Search/>
+            </div>    
+          </div>
+        }/>
       </Routes>
     </>
   );
