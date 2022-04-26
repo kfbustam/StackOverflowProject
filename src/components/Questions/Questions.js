@@ -29,15 +29,14 @@ const filterButtonGroupStyle = {
 
 const questionListItem = {
   display: 'flex',
-  flexDirection: 'row',
-  height: 150
+  flexDirection: 'row'
 }
 
 const questionListItemRightSideStyle = {
   display: 'flex',
   flexDirection: 'column',
-  margin: '0px 0px 0px 10px',
-  height: '100%', width: '100%', 
+  height: '100%',
+  width: '100%', 
 }
 
 const userCardStyle = {
@@ -47,10 +46,22 @@ const userCardStyle = {
   marginRight: 4
 }
 
+const reputationCountStyle = {
+  backgroundColor: '#1976d2',
+  borderRadius: 5,
+  display: 'flex',
+  flexDirection: 'column',
+  height: 40,
+  justifyContent: 'center',
+  textAlign: 'center',
+  width: 50,
+}
+
 function Questions() {
   const navigate = useNavigate()
   const questions = [{
     answerCount: 1,
+    isAnswered: false,
     lastModified: 'modified Apr 7 at 11:14',
     questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
     questionURL: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
@@ -91,6 +102,7 @@ function Questions() {
           questions.map((question) => {
             const {
               answerCount,
+              isAnswered,
               lastModified,
               questionURL,
               questionTitle,
@@ -106,38 +118,55 @@ function Questions() {
               userProfileURL,
               profileIconSrc
             } = user
+
+            const answeredStyle = isAnswered ? {backgroundColor: '#5DBA7C', borderRadius: 5} : {};
+            const answerCountStyle = isAnswered ? {
+              fontWeight: 'bold',
+              color: 'white',
+            } : 
+            {
+              fontWeight: 'bold',
+              color: '#6A747C',
+              fontSize: 17
+            };
+            const answeredTextStyle = isAnswered ? {
+              fontSize: 11,
+              color: 'white',
+              marginBottom: 5
+            } : {
+              fontSize: 11,
+              color: '#6A747C',
+              marginBottom: 5
+            }
             return (
               <>
                 <ListItem style={questionListItem}>
                   <div style={{display: 'flex', flexDirection: 'column'}}>
-                    <div style={{textAlign: 'center'}}>
-                      {voteCount} votes
+                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
+                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{voteCount}</strong>
+                      <span style={{fontSize: 11}}>votes</span>
                     </div>
-                    <div>
-                      <Button variant="outlined" color="success" style={{width: 100}}>
-                        {answerCount} {answerCount === 1 ? 'answer': 'answers'}
-                      </Button>
+                    <div style={ {...answeredStyle, ...{display: 'flex', flexDirection: 'column', textAlign: 'center'}} }>
+                      <strong style={answerCountStyle}>{answerCount}</strong>
+                      <span style={answeredTextStyle}>{answerCount === 1 ? 'answer': 'answers'}</span>
                     </div>
-                    <div style={{textAlign: 'center'}}>
-                      {viewCount} views
+                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
+                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{voteCount}</strong>
+                      <span style={{fontSize: 11}}>votes</span>
                     </div>
-                    <div style={{margin: 'auto'}}>
-                      <Button variant="contained">+{questionReputationCount}</Button>
+                    <div style={reputationCountStyle}>
+                      <span style={{fontSize: 11, color: 'white'}}>+{questionReputationCount}</span>
                     </div>
                   </div>
                   <div style={questionListItemRightSideStyle}>
-                    <div>
-                      <h3>
-                        <a href={questionURL} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a>
-                      </h3>
-                    </div>
+                    <h3>
+                      <a href={questionURL} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a>
+                    </h3>
                     <div>
                     {
-                      tags.map((tag) => {
-                        const {name, url} = tag
-                        return (
-                          <Button size="small" variant="contained" href={url}>{name}</Button>
-                        );
+                      tags.map(tag => {
+                        const {name, url} = tag;
+                        return <a className='search-tag-block me-1' href={url}>{name}</a>;
                       })
                     }
                     </div>
