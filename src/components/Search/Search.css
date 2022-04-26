@@ -27,8 +27,9 @@
 }
 
 .vote-number {
-    font-weight: normal;
+    font-weight: bold;
     color: #6A747C;
+    font-size: 17px;
 }
 
 .answer-number {
@@ -37,8 +38,9 @@
 }
 
 .unanswered-number {
-    font-weight: normal;
+    font-weight: bold;
     color: #6A747C;
+    font-size: 17px;
 }
 
 .vote-text {
@@ -93,4 +95,8 @@
 
 .search-name-link {
     color: #0763C0;
+}
+
+.search-name-link:hover {
+    color:#0D96FF;
 }
