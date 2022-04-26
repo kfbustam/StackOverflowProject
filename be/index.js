@@ -17,6 +17,8 @@ app.use(express.json());
 
 const authenticatectrl = require('./controllers/authctrl.js')
 app.post("/register", authenticatectrl.registeruser)
+app.post("/login", authenticatectrl.loginuser)
+app.get("/secret", passport.authenticate('jwt',{session: false}), authenticatectrl.secretuser)
 
 // server listening 
 app.listen(process.env.PORT || 3000, function(){
