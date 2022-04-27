@@ -150,11 +150,9 @@ function Answers() {
                   <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
                     <>
                       {
-                        tags.map((tag) => {
-                          const {name, url} = tag
-                          return (
-                            <Button size="small" variant="contained" href={url}>{name}</Button>
-                          );
+                        tags.map(tag => {
+                          const {name, url} = tag;
+                          return <a className='search-tag-block me-1' href={url}>{name}</a>;
                         })
                       }
                     </>
