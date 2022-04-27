@@ -19,7 +19,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
 import PostQuestion from './components/PostQuestion/PostQuestion'
 import './components/Layout/Layout.css';
-
+import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
 const messageCountStyle = {
   color: '#525960',
   fontSize: 14,
@@ -167,6 +167,7 @@ function App() {
             </div>    
           </div>
         }/>
+        <Route exact path="/questions/overview" element={<QuestionOverview />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/postquestion" element={<PostQuestion />} />
