@@ -2,7 +2,6 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import { useNavigate } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -29,13 +28,14 @@ const filterButtonGroupStyle = {
 
 const questionListItem = {
   display: 'flex',
-  flexDirection: 'row'
+  flexDirection: 'row',
+  margin: '5px 0px 10px 20px'
 }
 
 const questionListItemRightSideStyle = {
   display: 'flex',
   flexDirection: 'column',
-  height: '100%',
+  justifyContent: 'space-between',
   width: '100%', 
 }
 
@@ -140,7 +140,7 @@ function Questions() {
             }
             return (
               <>
-                <ListItem style={questionListItem}>
+                <div style={questionListItem}>
                   <div style={{display: 'flex', flexDirection: 'column'}}>
                     <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
                       <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{voteCount}</strong>
@@ -159,16 +159,18 @@ function Questions() {
                     </div>
                   </div>
                   <div style={questionListItemRightSideStyle}>
-                    <h3>
-                      <a href={questionURL} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a>
-                    </h3>
                     <div>
-                    {
-                      tags.map(tag => {
-                        const {name, url} = tag;
-                        return <a className='search-tag-block me-1' href={url}>{name}</a>;
-                      })
-                    }
+                      <h3>
+                        <a href={questionURL} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a>
+                      </h3>
+                      <div>
+                        {
+                          tags.map(tag => {
+                            const {name, url} = tag;
+                            return <a className='search-tag-block me-1' href={url}>{name}</a>;
+                          })
+                        }
+                      </div>
                     </div>
                     <div style={userCardStyle}>
                       <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small" />
@@ -178,7 +180,7 @@ function Questions() {
                       <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a>
                     </div>
                   </div>
-                </ListItem>
+                </div>
                 <Divider />
               </>
             );
