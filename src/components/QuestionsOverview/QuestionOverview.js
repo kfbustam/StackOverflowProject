@@ -33,7 +33,7 @@ const QuestionOverview = () => {
                             <img src="https://i.stack.imgur.com/MfWBo.png" alt="cat" />
                         </div>
                         <div className="mt-3">
-                        I am pretty new to Flutter so would really like it if someone could please tell me how something like this card layout can be done. Thanks
+                            I am pretty new to Flutter so would really like it if someone could please tell me how something like this card layout can be done. Thanks
                         </div>
                         <div className="flex mt-5 flex-wrap gap-2 overflow-auto">
                             <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded">
@@ -46,7 +46,11 @@ const QuestionOverview = () => {
                                 flutter-layout
                             </button>
                         </div>
-                        
+                        <div className="grid mt-3 grid-cols-3 mr-[85%]">
+                            <div className="font-light text-sm text-[#3B4045]">Shared</div>
+                            <div className="font-light text-sm ml-2 text-[#3B4045]">Edit</div>
+                            <div className="font-light text-sm text-[#3B4045]">Follow</div>
+                        </div>
                     </div>
                     <ul className="bg-[#FBF3D5] d-block p0 m0">
                         <div className="s-sidebarwidget--header s-sidebarwidget__small-bold-text fc-light d:fc-black-900 bb bbw1">
