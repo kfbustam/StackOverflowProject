@@ -19,6 +19,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
 
+const multer = require("multer");
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads')
+  },
+  filename: function (req, file, cb) {
+    //console.log(file)
+    cb(null, Date.now()+'-'+file.originalname)
+  }
+})
+
+var upload = multer({ storage: storage })
+app.use(express.static(__dirname + '/public'));
+app.use('/uploads', express.static('uploads'));
+
+
 const authenticatectrl = require('./controllers/authctrl.js')
 app.post("/register", authenticatectrl.registeruser)
 app.post("/login", authenticatectrl.loginuser)

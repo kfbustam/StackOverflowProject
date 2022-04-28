@@ -16,7 +16,26 @@ const UserSchema = new mongoose.Schema({
   },
   reputation:{
     type:Number
-  }  
+  },
+  profileURL:{
+    type:String
+  },
+  memberFrom:{
+    type:Date,
+    default:Date.now,
+  },
+  lastSeen:{
+    type:Date
+  },
+  location:{  
+    type:String
+  },
+  questionIds:{
+    type:[String]
+  },
+  answerIds:{
+    type:[String]
+  }
 })
 
 UserSchema.pre('save', async function(){
