@@ -9,26 +9,66 @@ const questionsSchema = new mongoose.Schema({
     body_image: {
         type:String,
         default:null
-    },     
-    tags: [{ type: String, required: true }],    
+    },
+    isApproved:{
+        type:Boolean,
+        default:true
+    },
+    viewdate:{
+        type:String,
+    },
+    todayview:{
+        type:Number,
+        default:0,
+    },
+    totalviews:{
+        type:Number,
+        default:0
+    },
+    tags: [{ type:mongoose.Schema.Types.ObjectId, ref:"tag" , required: true }],    
     
-    answer_id:{
+    answer_id:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Answers"
-    },
+    }],
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
       },
-    comment_id:{
+    comment_id:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Comments",
-    },
+    }],
     vote_id: [{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Votes"
     }],
-    
+    upvote:
+    {
+        type:Number,
+        default:0
+    },
+    downvote:
+    {
+        type:Number,
+        default:0
+    },
+    score:{
+        type:Number,
+        default:0   
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now,
+    },
+    modifiedAt:{
+        type:Date,
+        default:Date.now,
+    },
+    history:{
+        // If needed, create a history model
+        type: String
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Questions',questionsSchema)

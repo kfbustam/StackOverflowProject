@@ -11,10 +11,22 @@ const answersSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
     },
-    comment_id:{
+    comment_id:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Comments",
+    }],
+    isBest:{
+        type:Boolean,
+        default:false
     },
+    createAt:{
+        type:Date,
+        default:Date.now,
+    },
+    isAdmin:{
+        type:Boolean,
+        default:false
+    }
 }, { timestamps: true });
 
 
