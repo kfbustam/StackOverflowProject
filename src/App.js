@@ -19,6 +19,10 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
 import PostQuestion from './components/PostQuestion/PostQuestion'
 import './components/Layout/Layout.css';
+import Admin from './components/Admin/Admin';
+import AddTag from './components/Admin/AddTag';
+import Question from './components/Admin/Question';
+import UserList from './components/Admin/UserList';
 
 const messageCountStyle = {
   color: '#525960',
@@ -170,6 +174,15 @@ function App() {
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/postquestion" element={<PostQuestion />} />
+        <Route exact path="/admin" element={<Admin />} />
+        <Route exact path="/addtag" element={<AddTag />} />
+        <Route exact path="/question" element={<Question />} />
+        <Route exact path="/userlist" element={<UserList />} />
+
+      
+        
+
+        
       </Routes>
     </>
   );
