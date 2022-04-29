@@ -12,7 +12,7 @@ const QuestionOverview = () => {
   return (
     <>
       <LeftSideBar />
-      <div className="flex flex-wrap ml-72 mr-[2%] overflow-hidden">
+      <div className="flex flex-wrap ml-[20%] mr-[2%] overflow-hidden">
         <div className="grid grid-cols-4 border-b border-gray-300 mt-[3%] gap-4">
           <div className="text-4xl text-[#3B4045] col-span-3 ">
             How can I make a card type layout for a pinterest type masonry
