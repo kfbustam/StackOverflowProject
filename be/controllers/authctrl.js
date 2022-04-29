@@ -59,3 +59,10 @@ module.exports.secretuser = async(req, res) =>{
   res.status(200).json("Authenticated")
 }
 
+module.exports.logoutuser = async(req,res) =>{
+  var authorization = req.headers.authorization.split(' ')[1],
+  decoded;
+  decoded = jwt.verify(authorization, 'TOP_SECRET');
+  var temp = await User.findOneAndUpdate({"_id":decoded.sub}, {"lastSeen":new Date()})
+  res.status(200).json({"message":"User logged out successfully"})
+}

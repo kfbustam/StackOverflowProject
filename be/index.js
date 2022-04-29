@@ -40,6 +40,7 @@ const imgctrl = require("./controllers/image-controller.js")
 
 app.post("/register", authenticatectrl.registeruser)
 app.post("/login", authenticatectrl.loginuser)
+app.post("/logout",passport.authenticate('jwt',{session: false}),authenticatectrl.logoutuser)
 app.get("/secret", passport.authenticate('jwt',{session: false}), authenticatectrl.secretuser)
 app.post("/uploadshopdp",upload.single('profile-file'), imgctrl.uploadpic)
 app.get("/image/:key",imgctrl.retrieveImg)
