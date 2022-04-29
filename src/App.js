@@ -20,6 +20,8 @@ import Badge from '@mui/material/Badge';
 import PostQuestion from './components/PostQuestion/PostQuestion'
 import './components/Layout/Layout.css';
 import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
+import Search from './components/Search/Search'
+
 const messageCountStyle = {
   color: '#525960',
   fontSize: 14,
@@ -171,6 +173,14 @@ function App() {
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/postquestion" element={<PostQuestion />} />
+        <Route path="/search" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='questions'/>
+              <Search/>
+            </div>    
+          </div>
+        }/>
       </Routes>
     </>
   );
