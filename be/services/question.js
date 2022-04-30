@@ -1,9 +1,9 @@
-const { reject } = require("bcrypt/promises");
-const { type } = require("express/lib/response");
-const con = require("../db");
+// const { reject } = require("bcrypt/promises");
+// const { type } = require("express/lib/response");
+// const con = require("../db");
 
 
-const QuestionModel = require("../mongo_models/question.js");
+const Questions = require("../model/questions");
 const answerTableName = "answer";
 
 

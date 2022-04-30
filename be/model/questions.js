@@ -57,14 +57,7 @@ const questionsSchema = new mongoose.Schema({
         type:Number,
         default:0   
     },
-    createdAt:{
-        type:Date,
-        default:Date.now,
-    },
-    modifiedAt:{
-        type:Date,
-        default:Date.now,
-    },
+    
     history:{
         // If needed, create a history model
         type: String
