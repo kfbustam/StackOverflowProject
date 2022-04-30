@@ -42,8 +42,6 @@ class Question {
                         const tag = await TagModel.find(tagQuery)
                         if(tag.length != 0)
                         {
-                                console.log("erri pook")
-
                                 const query = {
                                         "tags": {
                                                 $in:tag[0]._id
