@@ -1,0 +1,44 @@
+.newTag {
+    flex: 4;
+}
+.container{
+    display: flex;
+    margin-top: 10px;
+}
+
+.addTagForm {
+    margin-top: 10px;
+}
+
+.addTagItem {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.addTagItem > label {
+    color: gray;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.addTagItem > input {
+    padding: 10px;
+}
+
+.addTagItem > select {
+    padding: 10px;
+}
+
+.addTagButton {
+    margin-top: 10px;
+    padding: 7px 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: darkblue;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+  
