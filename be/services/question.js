@@ -49,7 +49,6 @@ class Question {
                                 }
                                 else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek ==  DateTime.now().weekNumber)
                                 {
-                                        console.log("erri pook")
                                         console.log(tagData.todaydate)
                                         console.log(new Date().getDate())
 
@@ -74,6 +73,8 @@ class Question {
                                                         count:1
                                                 }
                                         }
+                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
+
                                 }
                         }
 
