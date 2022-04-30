@@ -7,6 +7,7 @@ const User = require("./model/user");
 const Answers = require("./model/answers");
 const question = require("./controllers/question");
 const navbar = require("./controllers/navbar");
+const answer = require("./controllers/answer");
 
 
 var cors = require('cors');
@@ -98,6 +99,7 @@ app.listen(process.env.PORT || 3000, function(){
 
 app.use('/api/question',question);
 app.use('/api/navbar',navbar);
+app.use('/api/answer',answer);
 
 
 module.exports = app

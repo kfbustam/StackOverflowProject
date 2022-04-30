@@ -1,7 +1,7 @@
 const express = require("express");
 const {Question} = require("../services/question");
 const {User} = require("../services/user");
-
+const {Answer} = require("../services/answer")
 const router = express.Router();
 
 
@@ -64,13 +64,14 @@ router.post("/navbarFilter", async (req, res) => {
             else if(data.slice(3).toUpperCase()=="QUESTION")
             {
                 type=data.slice(3)
-                result = await Question.getQuestionByType(type);
+                result = await Question.getAllQuestions();
 
             }
             else if(data.slice(3).toUpperCase()=="ANSWER")
             {
+
                 type=data.slice(3)
-                result = await Question.getQuestionByType(type);
+                result = await Answer.getAllAnswers(type);
 
             }
             else
@@ -118,9 +119,9 @@ router.post("/navbarFilter", async (req, res) => {
         console.log("AUTHOR: "+author)
         console.log("TYPE: "+type) */
 
-        if(result.questions){
+        if(result.data){
             response.success = true;
-            response.questions = result.questions;
+            response.data = result.data;
             response.status = "200";
             response.message = result;
             res.status(200).send(response);

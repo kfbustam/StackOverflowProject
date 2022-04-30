@@ -52,7 +52,7 @@ class Question {
                                 const questions = await QuestionModel.find(query);
                                 if(questions?.length)
                                 {
-                                        result.questions=questions
+                                        result.data=questions
                                         return result;
                                 }
                                 else{
@@ -88,8 +88,6 @@ class Question {
                                 "title": searchRegex
                         }
                         const questions = await QuestionModel.find(query);
-                        console.log(questions)
-
                         if(questions?.length)
                         {
                                 return questions;
@@ -118,7 +116,7 @@ class Question {
                         const questions = await QuestionModel.find(query);
                         if(questions?.length)
                         {
-                                result.questions=questions
+                                result.data=questions
                                 return result;
                         }
                         else{
@@ -136,11 +134,21 @@ class Question {
                 return (x)*/
         }
 
-        static getQuestionByType = async (data) => {
-                let x;
-
-                x = "This api should give all the questions or answers based on the type " + data
-                return (x)
+        static getAllQuestions = async (data) => {
+                try {
+                        let result = {}
+                        const questions = await QuestionModel.find({});
+                        if (questions?.length) {
+                                result.data=questions
+                            return result;
+                        } else {
+                            return [];
+                        }
+            
+                    } catch (err) {
+                        console.log(err);
+                        throw new Error("Some unexpected error occurred while getting the questions");
+                    }
         }
 
         static getQuestionByAcceptance = async (data) => {
