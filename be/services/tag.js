@@ -9,8 +9,7 @@ class Tag {
                 try {
                         const query = {
                                 name : data.name,
-                                description : data.description,
-                                count:data.count,                                
+                                description : data.description                                
                         }
                         const tag = new tagModel(query);
                         const result = tag.save();
