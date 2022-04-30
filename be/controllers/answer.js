@@ -8,7 +8,7 @@ router.post("/addAnswer", async (req, res) => {
     const data = req.body;
     const response={}
     try{
-        const result = await Answer.addAnswer(data);
+        const result = await Answer.addAnswer(data); 
         if(result){
             response.success = true;
             response.user = data.user;
