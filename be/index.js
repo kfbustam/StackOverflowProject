@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const Questions = require("./model/questions");
 const User = require("./model/user");
 const Answers = require("./model/answers");
+const tagModel = require("./model/tag");
 
 var cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -37,6 +38,9 @@ app.use('/uploads', express.static('uploads'));
 
 const authenticatectrl = require('./controllers/authctrl.js')
 const imgctrl = require("./controllers/image-controller.js")
+const tagController = require("./controllers/tag.js")
+const questionController = require("./controllers/question.js")
+
 
 app.post("/register", authenticatectrl.registeruser)
 app.post("/login", authenticatectrl.loginuser)
@@ -44,49 +48,11 @@ app.post("/logout",passport.authenticate('jwt',{session: false}),authenticatectr
 app.get("/secret", passport.authenticate('jwt',{session: false}), authenticatectrl.secretuser)
 app.post("/uploadshopdp",upload.single('profile-file'), imgctrl.uploadpic)
 app.get("/image/:key",imgctrl.retrieveImg)
+app.post("/addTag", tagController.addTag)
+app.get("/getPopularTags",tagController.getPopularTags)
+app.get("/getNewTags",tagController.getNewTags)
+app.get("/getNameTags",tagController.getNameTags)
 
-//get Tags from Sidebar
-app.get("/tags", async (req,res) => {
-  try {
-    const tags = await Questions.aggregate([
-      { $project: { tags: 1 } },
-      { $unwind: '$tags' },
-      { $group: { _id: '$tags', count: { $sum: 1 } } },
-      { $sort: { count: -1 } }      
-    ]);
-    res.stataus(200).json(tags);
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-});
-
-//get recent questions from Sidebar
-app.get("/questions", (req, res) => {
-  Questions.find({})
-           .sort({createdAt: 1}) 
-           .populate("user_id")
-           .exec((err, result) => {
-   if (err) {
-     console.log(err);
-     res.send(err);
-   } else {
-     res.status(200).send(result);
-   }
- });
-});
-
-// Get all users from Sidebar based on reputation
-app.get("/users", async (req, res) => {
-  try {
-    const { sortType = '-reputation' } = req.body;
-    const users = await User.find().sort(sortType);
-    res.status(200).json(users);
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-});
 
 
 // server listening 
