@@ -112,16 +112,13 @@ router.post("/navbarFilter", async (req, res) => {
             exact=data;
             result = await Question.getQuestionByExactmatch(exact);
 
-        }
-        
-
-        console.log("TAG: " + tag)
+        }        
+       /* console.log("TAG: " + tag)
         console.log("EXACT: "+exact)
         console.log("AUTHOR: "+author)
-        console.log("TYPE: "+type)
+        console.log("TYPE: "+type) */
 
-
-        if(result /*&& result.userFound && result.user*/){
+        if(result.questions){
             response.success = true;
             response.questions = result.questions;
             response.status = "200";
@@ -129,7 +126,7 @@ router.post("/navbarFilter", async (req, res) => {
             res.status(200).send(response);
         }else{
             response.success = false;
-            response.error = "User not found";
+            response.error = result.errorMessage;
             response.status = "400";
             res.status(400).send(response);
         }

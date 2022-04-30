@@ -5,6 +5,20 @@ var tagSchema = new Schema({
   name: {type: String, required: true},
   description: {type: String, required: true},
   count: {type: Number,default: 0 ,required: true},
+  todaydate:{
+    type:String,
+  },
+  todaycount:{
+    type:Number,
+    default:0,
+  },
+  weekstartdate:{
+    type:String,
+  },
+  weekcount:{
+    type:Number,
+    default:0,
+  }
   },
 
   {

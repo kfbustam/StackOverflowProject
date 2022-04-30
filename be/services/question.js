@@ -1,20 +1,15 @@
-const { reject } = require("bcrypt/promises");
-const { type } = require("express/lib/response");
-const con = require("../db");
-
-
-const QuestionModel = require("../mongo_models/question.js");
-const answerTableName = "answer";
-
+var mongoose = require('mongoose');
+const QuestionModel = require("../model/questions.js");
+const TagModel = require("../model/tag.js")
 
 class Question {
 
         static addQuestion = async (data) => {
                 try {
                         const query = {
-                                questionTitle : data.questionTitle,
-                                questionTag : data.questionTag,
-                                questionDescription : data.questionDescription,
+                                title : data.title,
+                                tags : data.tags,
+                                body : data.body,
                                 user : data.user
                         }
                         const question = new QuestionModel(query);
@@ -40,18 +35,36 @@ class Question {
         static getQuestionByTag = async (data) => {
 
                 try {
-                        const query = {
-                                "questionTag": data
+                        let result={}
+                        const tagQuery = {
+                                name:data
                         }
-                        const questions = await QuestionModel.find(query);
-                        console.log(questions)
-
-                        if(questions?.length)
+                        const tag = await TagModel.find(tagQuery)
+                        if(tag.length != 0)
                         {
-                                return questions;
+                                console.log("erri pook")
+
+                                const query = {
+                                        "tags": {
+                                                $in:tag[0]._id
+                                        }
+                                }
+                                const questions = await QuestionModel.find(query);
+                                if(questions?.length)
+                                {
+                                        result.questions=questions
+                                        return result;
+                                }
+                                else{
+                                        result.errorMessage="No questions found with this Tag"
+                                        return [];
+                                }
                         }
                         else{
-                                return [];
+                                result.errorMessage="There is no Tag available with the entered text "+data
+                                //throw new Error("Some unexpected error occurred with the Tag")
+
+                                return result;
                         }
 
                 }
@@ -72,7 +85,7 @@ class Question {
                 try {
                         let searchRegex = new RegExp(`${data}`)
                         const query = {
-                                "questionTitle": searchRegex
+                                "title": searchRegex
                         }
                         const questions = await QuestionModel.find(query);
                         console.log(questions)
@@ -97,17 +110,19 @@ class Question {
 
         static getQuestionByAuthor = async (data) => {
                 try {
+                        let result={}
+                        console.log(data)
                         const query = {
                                 "user": data
                         }
                         const questions = await QuestionModel.find(query);
-                        console.log(questions)
-
                         if(questions?.length)
                         {
-                                return questions;
+                                result.questions=questions
+                                return result;
                         }
                         else{
+                                result.errorMessage="No questions found with user id "+data
                                 return [];
                         }
 

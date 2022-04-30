@@ -20,6 +20,9 @@ const UserSchema = new mongoose.Schema({
   profileURL:{
     type:String
   },
+  about:{
+    type:String
+  },
   memberFrom:{
     type:Date,
     default:Date.now,
@@ -35,7 +38,15 @@ const UserSchema = new mongoose.Schema({
   },
   answerIds:{
     type:[String]
-  }
+  },
+  comments:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Comments"
+  }],
+  bookmarks:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Questions"
+  }]
 })
 
 UserSchema.pre('save', async function(){

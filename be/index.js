@@ -5,6 +5,9 @@ const mongoose = require("mongoose");
 const Questions = require("./model/questions");
 const User = require("./model/user");
 const Answers = require("./model/answers");
+const question = require("./controllers/question");
+const navbar = require("./controllers/navbar");
+
 
 var cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -36,9 +39,13 @@ app.use('/uploads', express.static('uploads'));
 
 
 const authenticatectrl = require('./controllers/authctrl.js')
+const imgctrl = require("./controllers/image-controller.js")
 app.post("/register", authenticatectrl.registeruser)
 app.post("/login", authenticatectrl.loginuser)
+app.post("/logout",passport.authenticate('jwt',{session: false}),authenticatectrl.logoutuser)
 app.get("/secret", passport.authenticate('jwt',{session: false}), authenticatectrl.secretuser)
+app.post("/uploadshopdp",upload.single('profile-file'), imgctrl.uploadpic)
+app.get("/image/:key",imgctrl.retrieveImg)
 
 //get Tags from Sidebar
 app.get("/tags", async (req,res) => {
@@ -88,5 +95,9 @@ app.get("/users", async (req, res) => {
 app.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
+
+app.use('/api/question',question);
+app.use('/api/navbar',navbar);
+
 
 module.exports = app

@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const {Question} = require("../services/question.js")
+const bcrypt = require('bcryptjs');
 
 router.post("/addQuestion", async (req, res) => {
     const data = req.body;
@@ -10,12 +11,12 @@ router.post("/addQuestion", async (req, res) => {
         const result = await Question.addQuestion(data);
         if(result){
             response.success = true;
-            response.user = result.user;
+            response.user = data.user;
             response.status = "200";
             res.status(200).send(response);
         }else{
             response.success = false;
-            response.error = "User not found";
+            response.error = "Cannot add the question";
             response.status = "400";
             res.status(400).send(response);
         }

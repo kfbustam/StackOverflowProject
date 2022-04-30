@@ -9,26 +9,69 @@ const questionsSchema = new mongoose.Schema({
     body_image: {
         type:String,
         default:null
-    },     
-    tags: [{ type: String, required: true }],    
-    
-    answer_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Answers"
     },
-    user_id: {
+    isApproved:{
+        type:Boolean,
+        default:true
+    },
+    viewdate:{
+        type:String,
+    },
+    todayview:{
+        type:Number,
+        default:0,
+    },
+    totalviews:{
+        type:Number,
+        default:0
+    },
+    tags: [{ type:mongoose.Schema.Types.ObjectId, ref:"tag" , required: true }],    
+    
+    answer_id:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Answers",
+        default:null
+    }],
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: "users",
+        required:true
       },
-    comment_id:{
+    comment_id:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Comments",
-    },
+    }],
     vote_id: [{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Votes"
+        ref:"Votes",
+        default:null
     }],
-    
+    upvote:
+    {
+        type:Number,
+        default:0
+    },
+    downvote:
+    {
+        type:Number,
+        default:0
+    },
+    score:{
+        type:Number,
+        default:0   
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now,
+    },
+    modifiedAt:{
+        type:Date,
+        default:Date.now,
+    },
+    history:{
+        // If needed, create a history model
+        type: String
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Questions',questionsSchema)

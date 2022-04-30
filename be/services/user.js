@@ -1,5 +1,5 @@
 const { type } = require("express/lib/response");
-const con = require("../db");
+//const con = require("../db");
 
 
 const tableName = "question";
