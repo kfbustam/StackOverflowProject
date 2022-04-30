@@ -78,6 +78,25 @@ class Tag {
                         console.log("Some unexpected error occured while getting tags in alphabetical order")
                 }
         }
+
+        static searchTags = async (data) => {
+                try {    
+                        let searchValue = data.searchValue;  
+                        const regex = new RegExp(searchValue,'i')                  
+                        const result = tagModel.find({name:{$regex: regex}}).limit(5);
+                        if(result)
+                        {
+                                return result;
+                        }
+                        else{
+                                return {};
+                        }
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while searching tags")
+                }
+        }
 }
 
 module.exports.Tag = Tag;
