@@ -8,6 +8,7 @@ const Answers = require("./model/answers");
 const question = require("./controllers/question");
 const navbar = require("./controllers/navbar");
 const answer = require("./controllers/answer");
+const user = require("./controllers/user")
 const tag = require("./controllers/tag.js")
 
 
@@ -67,6 +68,7 @@ app.use('/api/tag',tag)
 app.use('/api/question',question);
 app.use('/api/navbar',navbar);
 app.use('/api/answer',answer);
+app.use('/api/user',user)
 
 
 module.exports = app
