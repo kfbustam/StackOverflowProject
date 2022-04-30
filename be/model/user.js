@@ -2,10 +2,6 @@ const  mongoose = require('mongoose')
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken");
 const UserSchema = new mongoose.Schema({
-  name:{
-    type: String,
-    required: true, 
-  },
   email: {
     type: String,
     required: true,
@@ -13,6 +9,32 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true, 
+  },
+  username:{
+    type: String,
+    default:null,
+  },
+  reputation:{
+    type:Number
+  },
+  profileURL:{
+    type:String
+  },
+  memberFrom:{
+    type:Date,
+    default:Date.now,
+  },
+  lastSeen:{
+    type:Date
+  },
+  location:{  
+    type:String
+  },
+  questionIds:{
+    type:[String]
+  },
+  answerIds:{
+    type:[String]
   }
 })
 
@@ -22,8 +44,6 @@ UserSchema.pre('save', async function(){
 });
 
 UserSchema.methods.matchPassword = async function(enteredPassword){
-    console.log(enteredPassword)
-    console.log(this.password)
     return await bcrypt.compare(enteredPassword, this.password)
 };
 module.exports = mongoose.model('User',UserSchema)
