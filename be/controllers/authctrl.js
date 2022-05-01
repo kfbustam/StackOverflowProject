@@ -26,10 +26,12 @@ module.exports.registeruser = async(req, res) =>{
     }
     const newUser = new User({ email, password,name})
     await newUser.save()
-    res.status(200).json({newUser})
+    let token = genToken(newUser)
+    res.status(200).json({newUser, "token":token})
   }
   catch(err)
   {
+    console.log(err)
     res.status(500).json({"message":err})
   }
 
