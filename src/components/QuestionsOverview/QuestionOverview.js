@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import { Editor } from "@tinymce/tinymce-react";
-
+import "../../dist/output.css"
 const QuestionOverview = () => {
   const editorRef = useRef(null);
   const log = () => {
