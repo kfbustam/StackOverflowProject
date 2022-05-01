@@ -43,8 +43,7 @@ function Login() {
                 password: passwordInput.current.value
             })
             .then(res => {
-                console.log(res.data)
-                localStorage.setItem('jwt', 'bearer ' + res.data.token)
+                localStorage.setItem('jwt', 'bearer ' + res.data.user.token)
     
                 navigate('/')
             })
