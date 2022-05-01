@@ -4,12 +4,12 @@ import AdminSidebar from './Sidebar';
 export default function NewTag() {
   return (
     <>
-    <div className="container">
+    <div className="containers">
        <AdminSidebar />
 
     
    
-    <div className="newTag">
+      <div className="newTag">
       <h1 className="addTagTitle">Add Tag</h1>
       <form className="addTagForm">
        

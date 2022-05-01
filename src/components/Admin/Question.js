@@ -4,7 +4,7 @@ import AdminSidebar from './Sidebar';
 export default function NewTag() {
   return (
     <>
-    <div className="container">
+    <div className="containers">
        <AdminSidebar />
     
    
