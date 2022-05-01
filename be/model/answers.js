@@ -6,15 +6,28 @@ const answersSchema = new mongoose.Schema({
         ref:"Questions"
     },
     answer: String,
-    tags: [{ type: String, required: true }], 
+    /*tags: [{ type: String, required: true }],*/
     user_id:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
+        required:true
     },
-    comment_id:{
+    comment_id:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Comments",
+    }],
+    isBest:{
+        type:Boolean,
+        default:false
     },
+    createAt:{
+        type:Date,
+        default:Date.now,
+    },
+    isAdmin:{
+        type:Boolean,
+        default:false
+    }
 }, { timestamps: true });
 
 
