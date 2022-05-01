@@ -12,8 +12,8 @@ import { Link } from 'react-router-dom'
 function Login() {
     return (
         <div className='login-container text-center'>
-            <Image className='icon mt-4 mb-3' src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png" />
-            <Container className='form-container pb-4 pt-4'>
+            <Image className='login-icon' src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png" />
+            <Container className='form-container pb-4 pt-4 mt-3'>
                 <Form>
                     <Form.Group className='mb-3'>
                         <Form.Label className='login-text'>Email</Form.Label>
@@ -26,7 +26,7 @@ function Login() {
                     <Button className='login-button'>Log in</Button>
                 </Form>
             </Container>
-            <p className='mt-4 register-text'>Don't have an account? <Link to="/signup">Sign up</Link></p>
+            <p className='mt-4 register-text'>Don't have an account? <Link className='login-link' to="/signup">Sign up</Link></p>
         </div>
     )
 }
