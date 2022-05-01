@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import { Editor } from "@tinymce/tinymce-react";
 
-
 const QuestionOverview = () => {
   const editorRef = useRef(null);
   const log = () => {
@@ -33,8 +32,33 @@ const QuestionOverview = () => {
             <div className="font-normal ml-11">5</div>
           </div>
         </div>
-        <div className="grid grid-cols-3 mt-1 mr-[15%]">
-          <div className="font-normal col-span-2 text-lg">
+        <div className="grid grid-cols-12 mt-1 mr-[10%]">
+          <div class="col-span-1">
+            <button>
+              <svg
+                aria-hidden="true"
+                class="svg-icon iconArrowUpLg"
+                width="36"
+                height="36"
+                viewBox="0 0 36 36"
+              >
+                <path d="M2 25h32L18 9 2 25Z"></path>
+              </svg>
+            </button>
+            <div className="ml-[15%] mb-[10%]">0</div>
+            <button>
+              <svg
+                aria-hidden="true"
+                class="svg-icon iconArrowDownLg"
+                width="36"
+                height="36"
+                viewBox="0 0 36 36"
+              >
+                <path d="M2 11h32L18 27 2 11Z"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="text-left font-normal col-span-7 text-lg">
             I am working on a flutter/dart rescue cat adoption app and I have a
             Pintrest style masonry grid layout of the cats available. I have a
             rough draft of a card which shows a photo of the cat and below that
@@ -65,8 +89,15 @@ const QuestionOverview = () => {
                 flutter-layout
               </button>
             </div>
+            <div className="grid mt-3 mr-[75%] grid-cols-3">
+              <div className="font-light text-sm text-[#3B4045]">Shared</div>
+              <div className="font-light text-sm ml-[20%] text-[#3B4045]">
+                Edit
+              </div>
+              <div className="font-light text-sm text-[#3B4045]">Follow</div>
+            </div>
           </div>
-          <div>
+          <div className="col-span-4">
             <ul className="bg-[#FBF3D5] px-2 py-2 ml-2 bg-cover">
               <div className="bg-[#FBF3D5] s-sidebarwidget--header font-bold s-sidebarwidget__small-bold-text fc-light d:fc-black-900 bb bbw1">
                 The Overflow Blog
@@ -200,29 +231,21 @@ const QuestionOverview = () => {
               </li>
             </ul>
           </div>
-          <div className="grid mt-3 grid-cols-3 mr-[50%]">
-            <div className="font-light text-sm text-[#3B4045]">Shared</div>
-            <div className="font-light text-sm ml-[20%] text-[#3B4045]">
-              Edit
-            </div>
-            <div className="font-light text-sm text-[#3B4045]">Follow</div>
-          </div>
         </div>
         <div className="mt-5">
-            <Editor
-              onInit={(evt, editor) => (editorRef.current = editor)}
-              init={{
-                height: 300,
-                width:700,
-                menubar: false,
-                plugins: "lists link codesample image",
-                toolbar:
-                  "bold italic | link codesample image | bullist numlist ",
-                content_style:
-                  "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-              }}
-            />
-          </div>
+          <Editor
+            onInit={(evt, editor) => (editorRef.current = editor)}
+            init={{
+              height: 300,
+              width: 700,
+              menubar: false,
+              plugins: "lists link codesample image",
+              toolbar: "bold italic | link codesample image | bullist numlist ",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+            }}
+          />
+        </div>
       </div>
     </>
   );
