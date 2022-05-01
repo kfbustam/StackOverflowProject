@@ -66,7 +66,7 @@ function PostQuestion() {
                                             <p className='accord-head'><span className='list-number'>1.</span> Summarize the problem</p>
                                         </Accordion.Header>
                                         <Accordion.Body>
-                                            <ul>
+                                            <ul style={{padding: '0'}}>
                                                 <li className='list-text'>Include details about your goals</li>
                                                 <li className='list-text'>Describe expected and actual results</li>
                                                 <li className='list-text'>Include any error messages</li>
