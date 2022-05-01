@@ -20,10 +20,10 @@ function SignUp() {
                     <Container className='info-container'>
                         <h3>Join the Stack Overflow community</h3>
                         <ul className='signup-list'>
-                            <li><RiQuestionAnswerFill className='icon' />Get unstuck - ask a question</li>
-                            <li><TiArrowUnsorted className='icon' />Unlock new privileges like voting and commenting</li>
-                            <li><AiFillTags className='icon' />Save your favorite tags, filters, and jobs</li>
-                            <li><RiTrophyFill className='icon' />Earn reputation and badges</li>
+                            <li ><RiQuestionAnswerFill className='signup-icon' />Get unstuck - ask a question</li>
+                            <li><TiArrowUnsorted className='signup-icon' />Unlock new privileges like voting and commenting</li>
+                            <li><AiFillTags className='signup-icon' />Save your favorite tags, filters, and jobs</li>
+                            <li><RiTrophyFill className='signup-icon' />Earn reputation and badges</li>
                         </ul>
                     </Container>
                 </Col>
