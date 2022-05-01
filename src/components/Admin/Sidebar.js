@@ -32,7 +32,7 @@ export default function Sidebar() {
                 Users Reputation
               </li>
             </Link>
-            <Link to="/products" className="link">
+            <Link to="/quesgraph" className="link">
               <li className="sidebarListItem">
               <Timeline className="sidebarIcon" />
                 Questions/Day

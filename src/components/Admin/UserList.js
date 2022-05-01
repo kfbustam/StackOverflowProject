@@ -45,10 +45,10 @@ function Table({
 
 
   return (
-    <div className="container"><AdminSidebar />
-    <div style={{ width: "100%"}}>
+    <div className="containers"><AdminSidebar />
+    <div className="userList" style={{ width: "90%"}}>
       {list.length > 0 && (
-        <table cellSpacing="0" style={{ width: "50%", height: height, padding: "5px 10px" ,marginleft: "600px" }} >
+        <table cellSpacing="0" style={{ width: "40%", height: height, padding: "5px 10px" ,marginleft: "600px" }} >
           <thead style={{ backgroundColor: "white", color: "black" }}>
             <tr>
               {colNames.map((headerItem, index) => (
@@ -83,9 +83,9 @@ function Table({
       )}
       
     </div>
-    <div style={{ width: "100%"}}>
+    <div className="userList" style={{ width: "100%"}}>
       {list.length > 0 && (
-        <table cellSpacing="0" style={{ width: "50%", height: height, padding: "5px 10px", marginRight: "-200px"}} >
+        <table cellSpacing="0" style={{ width: "0%", height: height, padding: "5px 10px", marginRight: "-200px"}} >
           <thead style={{ backgroundColor: "white", color: "black" }}>
             <tr>
               {colNames.map((headerItem, index) => (

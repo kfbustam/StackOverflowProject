@@ -1,3 +1,7 @@
+.newTag {
+    flex: 4;
+}
+
 .containers{
     display: flex;
     margin-top: 10px;
