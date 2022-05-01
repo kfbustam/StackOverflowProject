@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { DateTime } = require("luxon");
+
 
 var tagSchema = new Schema({
   name: {type: String, required: true},
@@ -11,6 +13,7 @@ var tagSchema = new Schema({
 
   todaydate:{
     type:String,
+    default:new Date().getDate()
   },
 
   todaycount:{
@@ -18,8 +21,9 @@ var tagSchema = new Schema({
     default:0,
   },
 
-  weekstartdate:{
+  currentWeek:{
     type:String,
+    default:DateTime.now().weekNumber
   },
   
   weekcount:{
