@@ -42,6 +42,10 @@ function PostQuestion() {
                 setShowToast(true)
                 setToastText('Please enter a maximum of 5 tags')
             }
+            else if (localStorage.getItem('jwt') === null) {
+                setShowToast(true)
+                setToastText('Please log into an account')
+            }
             else {
                 axios.get(`${API_URL}/api/tag/getPopularTags`)
                     .then(res => {
