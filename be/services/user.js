@@ -69,6 +69,16 @@ class User {
                         console.log("Error occured while getting while updating location of the user")
                 }
         }
+        static getBasicDetails = async (decoded) => {
+                try {    
+                        var temp = await UserModel.findOne({"_id":decoded.sub})
+                        return temp
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while getting the details of the user")
+                }
+        }
 
 }
 
