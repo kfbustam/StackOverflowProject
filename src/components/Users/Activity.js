@@ -3,6 +3,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Answers from './Activity/Answers';
+import Questions from './Activity/Questions';
+import Tags from './Activity/Tags';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -18,6 +20,16 @@ function TabPanel(props) {
       {value === 0 && (
         <Box sx={{ p: 3 }}>
           <Answers />
+        </Box>
+      )}
+      {value === 1 && (
+        <Box sx={{ p: 3 }}>
+          <Questions />
+        </Box>
+      )}
+      {value === 2 && (
+        <Box sx={{ p: 3 }}>
+          <Tags />
         </Box>
       )}
     </div>

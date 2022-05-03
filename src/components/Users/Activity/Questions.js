@@ -24,7 +24,7 @@ const filterButtonGroupStyle = {
   justifyContent: 'end'
 }
 
-function Answers() {
+function Questions() {
   const user = {
     aboutMeText: 'about',
     answersCount: 12,
@@ -81,12 +81,13 @@ function Answers() {
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Answers</h3>
+        <h3>{answersCount} Questions</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>
             <Button>Activity</Button>
             <Button>Newest</Button>
+            <Button>Views</Button>
           </ButtonGroup>
         </div>
       </div>
@@ -95,13 +96,12 @@ function Answers() {
           posts.map((post) => {
             const {
               answeredDate,
-              answerTitle,
               isAccepted,
               numOfVotes,
               url,
               questionTitle,
-              tagLabel,
               tags,
+              viewCount
             } = post
             return (
               <>
@@ -109,6 +109,7 @@ function Answers() {
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%', gap: 5}}>
                     <div style={{display: 'flex', margin: 'auto 0px auto 0px'}}>{numOfVotes} votes</div>
                     <Chip icon={isAccepted ? <Check /> : null} label="Accepted" color="success" />
+                    <div style={{display: 'flex', margin: 'auto 0px auto 0px', color: '#6A747C'}}>{viewCount} views</div>
                   </div>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                     <h3>
@@ -125,7 +126,7 @@ function Answers() {
                       }
                     </div>
                     <div>
-                      answered {answeredDate}
+                      asked {answeredDate}
                     </div>
                   </div>
                 </ListItem>
@@ -139,4 +140,4 @@ function Answers() {
   )
 }
 
-export default Answers
+export default Questions
