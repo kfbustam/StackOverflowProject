@@ -3,6 +3,10 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Answers from './Activity/Answers';
+import Questions from './Activity/Questions';
+import Tags from './Activity/Tags';
+import Badges from './Activity/Badges';
+import Bookmarks from './Activity/Bookmarks';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -13,11 +17,32 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
+      style={{width: '100%'}}
       {...other}
     >
       {value === 0 && (
         <Box sx={{ p: 3 }}>
           <Answers />
+        </Box>
+      )}
+      {value === 1 && (
+        <Box sx={{ p: 3 }}>
+          <Questions />
+        </Box>
+      )}
+      {value === 2 && (
+        <Box sx={{ p: 3 }}>
+          <Tags />
+        </Box>
+      )}
+      {value === 3 && (
+        <Box sx={{ p: 3 }}>
+          <Badges />
+        </Box>
+      )}
+      {value === 4 && (
+        <Box sx={{ p: 3 }}>
+          <Bookmarks />
         </Box>
       )}
     </div>
