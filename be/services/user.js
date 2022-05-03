@@ -55,9 +55,31 @@ class User {
                 }
                 catch(err){
                         console.log(err);
-                        console.log("Error occured while getting while  seraching users")
+                        console.log("Error occured while getting while  searching users")
                 }
         }
+
+        static updateLocation = async (decoded, data) => {
+                try {    
+                        var temp = await UserModel.findOneAndUpdate({"_id":decoded.sub}, {"location":data["location"]})
+                        return await UserModel.findOne({"_id":decoded.sub})
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while updating location of the user")
+                }
+        }
+        static getBasicDetails = async (decoded) => {
+                try {    
+                        var temp = await UserModel.findOne({"_id":decoded.sub})
+                        return temp
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while getting the details of the user")
+                }
+        }
+
 }
 
 module.exports.User = User;

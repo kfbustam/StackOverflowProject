@@ -10,16 +10,18 @@ const navbar = require("./controllers/navbar");
 const answer = require("./controllers/answer");
 const user = require("./controllers/user")
 const tag = require("./controllers/tag.js")
+const authenticatectrl = require('./controllers/authctrl')
+const imgctrl = require("./controllers/image-controller")
+const questionController = require("./controllers/question")
 
 
 const tagModel = require("./model/tag");
 
 var cors = require('cors');
 const jwt = require('jsonwebtoken');
-const passport = require('passport')
+
 const InitiateMongoServer = require("./config/mongo/mongodb")
 InitiateMongoServer()
-require('./config/mongo/passport')
 
 const app = express();
 app.use(cors());
@@ -42,27 +44,10 @@ var upload = multer({ storage: storage })
 app.use(express.static(__dirname + '/public'));
 app.use('/uploads', express.static('uploads'));
 
+app.use("/api/auth", authenticatectrl)
 
-const authenticatectrl = require('./controllers/authctrl.js')
-const imgctrl = require("./controllers/image-controller.js")
-const questionController = require("./controllers/question.js")
-
-
-app.post("/register", authenticatectrl.registeruser)
-app.post("/login", authenticatectrl.loginuser)
-app.post("/logout",passport.authenticate('jwt',{session: false}),authenticatectrl.logoutuser)
-app.get("/secret", passport.authenticate('jwt',{session: false}), authenticatectrl.secretuser)
 app.post("/uploadshopdp",upload.single('profile-file'), imgctrl.uploadpic)
 app.get("/image/:key",imgctrl.retrieveImg)
-
-
-
-// server listening 
-app.listen(process.env.PORT || 3000, function(){
-  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-});
-
-
 
 app.use('/api/tag',tag)
 app.use('/api/question',question);
@@ -70,5 +55,10 @@ app.use('/api/navbar',navbar);
 app.use('/api/answer',answer);
 app.use('/api/user',user)
 
+
+// server listening 
+app.listen(process.env.PORT || 3001, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});
 
 module.exports = app
