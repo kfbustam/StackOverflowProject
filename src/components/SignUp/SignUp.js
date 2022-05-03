@@ -55,13 +55,19 @@ function SignUp() {
         }
         else {
             axios.post(`${API_URL}/api/auth/register`, {
-                name: nameInput.current.value,
+                username: nameInput.current.value,
                 email: emailInput.current.value,
                 password: passwordInput.current.value
             })
             .then(res => {
-                console.log(res.data)
                 localStorage.setItem('jwt', 'bearer ' + res.data.user.token)
+
+                const newUser = res.data.user.newUser
+                localStorage.setItem('user', JSON.stringify({
+                    username: newUser.username,
+                    email: newUser.email,
+                    _id: newUser._id
+                }))
     
                 navigate('/')
             })
