@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from "react";
 //import './App.css';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -14,7 +15,7 @@ import Users from './components/Users/Users';
 import LeftSideBar from './components/LeftSideBar/LeftSideBar';
 import CircleIcon from '@mui/icons-material/Circle';
 import { Routes, Route } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
 import PostQuestion from './components/PostQuestion/PostQuestion'
@@ -27,8 +28,7 @@ import UserList from './components/Admin/UserList';
 import QuestionsGraph from './components/Admin/QuestionsGraph';
 import Quesgraph from './components/Admin/Quesgraph';
 import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
-import Search from './components/Search/Search'
-
+import Search from './components/Search/Search';
 
 const messageCountStyle = {
   color: '#525960',
@@ -70,16 +70,18 @@ const silverCircleIconTextStyle = {
   color: 'silver',
 }
 
-const getRightOfTheSearchBarLinkComponents = (navigate) => {
+const getRightOfTheSearchBarLinkComponents = (navigate, user, logout) => {
+
+
   const profileIconSrc = 'http://placekitten.com/200/300';
   const achievementCount = 42;
   const messageCount = 5;
   const userGoldCount = 2;
   const userSilverCount = 2;
   const userBronzeCount = 2;
-  const isUserLoggedIn = true;
+  // const isUserLoggedIn = true;
 
-  if (!isUserLoggedIn) {
+  if (!user) {
     return [
       <Button key="login" onClick={() => navigate('/login')} variant="outlined">Log in</Button>,
       <Button key="signup" onClick={() => navigate('/signup')} variant="contained">Sign up</Button>
@@ -108,18 +110,30 @@ const getRightOfTheSearchBarLinkComponents = (navigate) => {
     <IconButton key="achievements" onClick={() => navigate('/achievements')} size="small"><Badge badgeContent={achievementCount} color="success"><EmojiEventsIcon color="#525960" /></Badge></IconButton>,
     <IconButton key="help" onClick={() => navigate('/help')} size="small"><HelpIcon color="#525960" /></IconButton>,
     <IconButton key="community" onClick={() => navigate('/community')} size="small"><CommentIcon color="#525960" /></IconButton>,
+    <Button key="logout" onClick={logout} variant="outlined">Logout</Button>
   )
 
   return rightOfTheSearchBarLinkComponents;
 }
 
 function App() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
-  const isUserLoggedIn = true;
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem('user')));
+  }, [location]);
 
+  const logout = () => {
+    navigate('/');
+    localStorage.clear();
+    setUser(null);
+  }
 
-  const leftOfTheSearchBarLinkComponents = isUserLoggedIn ? 
+  // const isUserLoggedIn = true;
+
+  const leftOfTheSearchBarLinkComponents = user ? 
     [
       <Button key="products" variant="text">Products</Button>,
     ] 
@@ -130,7 +144,7 @@ function App() {
     ]
   ;
 
-  const rightOfTheSearchBarLinkComponents = getRightOfTheSearchBarLinkComponents(navigate);
+  const rightOfTheSearchBarLinkComponents = getRightOfTheSearchBarLinkComponents(navigate, user, logout);
 
   return (
     <>
