@@ -1,9 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -11,19 +8,14 @@ import CircleIcon from '@mui/icons-material/Circle';
 const rootStyle = {
   display: 'flex',
   flexDirection: 'column',
+  width: '100%'
 }
 
-const countStyle = {
-  display: 'flex',
-  flexDirection: 'row',
-  gap: 10
-}
-
-const tagListItemStyle = {
-  display: 'flex',
-  flexDirection: 'row',
-  height: 150,
-  justifyContent: 'space-between',
+const badgeGridStyle = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr',
+  columnGap: 10,
+  rowGap: 15,
 }
 
 const filterButtonGroupStyle = {
@@ -53,7 +45,7 @@ const silverCircleIconStyle = {
   width: 12
 }
 
-function Tags() {
+function Badges() {
   const navigate = useNavigate()
   const user = {
     aboutMeText: 'about',
@@ -75,6 +67,7 @@ function Tags() {
 
   const tags = [
     {
+      isBadge: true,
       isBronze: false,
       isSilver: false,
       isGold: true,
@@ -84,6 +77,7 @@ function Tags() {
       url: 'https://stackoverflow.com/questions/tagged/javascript'
     },
     {
+      isBadge: true,
       isBronze: false,
       isSilver: false,
       isGold: true,
@@ -93,6 +87,37 @@ function Tags() {
       url: 'https://stackoverflow.com/questions/tagged/javascript'
     },
     {
+      isBadge: true,
+      isBronze: false,
+      isSilver: false,
+      isGold: true,
+      name: 'pandas',
+      postCount: 1250,
+      scoreCount: 2040,
+      url: 'https://stackoverflow.com/questions/tagged/javascript'
+    },
+    {
+      isBadge: false,
+      isBronze: false,
+      isSilver: false,
+      isGold: true,
+      name: 'pandas',
+      postCount: 1250,
+      scoreCount: 2040,
+      url: 'https://stackoverflow.com/questions/tagged/javascript'
+    },
+    {
+      isBadge: false,
+      isBronze: false,
+      isSilver: false,
+      isGold: true,
+      name: 'pandas',
+      postCount: 1250,
+      scoreCount: 2040,
+      url: 'https://stackoverflow.com/questions/tagged/javascript'
+    },
+    {
+      isBadge: false,
       isBronze: false,
       isSilver: false,
       isGold: true,
@@ -106,15 +131,16 @@ function Tags() {
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Tags</h3>
+        <h3>{answersCount} Badges</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Score</Button>
+            <Button>Recent</Button>
+            <Button>Class</Button>
             <Button>Name</Button>
           </ButtonGroup>
         </div>
       </div>
-      <List>
+      <div style={badgeGridStyle}>
         {
           tags.map((tag) => {
             const {
@@ -127,27 +153,18 @@ function Tags() {
               url
             } = tag
             return (
-              <>
-                <ListItem style={tagListItemStyle}>
-                  <div>
-                    <a className='search-tag-block me-1' href={url}>{name}</a>
-                    {isGold && <IconButton key="gold" onClick={() => navigate('/gold')} size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
-                    {isSilver && <IconButton key="silver" onClick={() => navigate('/silver')} size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
-                    {isBronze && <IconButton key="bronze" onClick={() => navigate('/bronze')} size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}
-                  </div>
-                  <div style={countStyle}>
-                    <div style={{display: 'flex', margin: 'auto 0px auto 0px', gap: 5}}>{scoreCount} <div style={{color: '#6A747C'}}>score</div></div>
-                    <div style={{display: 'flex', margin: 'auto 0px auto 0px', gap: 5}}>{postCount} <div style={{color: '#6A747C'}}>posts</div></div>
-                  </div>
-                </ListItem>
-                <Divider />
-              </>
+              <div>
+                {isGold && <IconButton key="gold" onClick={() => navigate('/gold')} size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
+                {isSilver && <IconButton key="silver" onClick={() => navigate('/silver')} size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
+                {isBronze && <IconButton key="bronze" onClick={() => navigate('/bronze')} size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}
+                <a className='search-tag-block me-1' href={url}>{name}</a>
+              </div>
             );
           })
         }
-      </List>
+      </div>
     </div>
   )
 }
 
-export default Tags
+export default Badges
