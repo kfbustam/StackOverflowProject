@@ -1,11 +1,13 @@
 //const { response } = require("express");
 const express = require("express");
 const router = express.Router();
-const {Question} = require("../services/question.js")
+//const {Question} = require("../services/question.js")
 const bcrypt = require('bcryptjs');
 
 router.post("/addQuestion",  async (req, res) => {
-    
+
+    const msg = {};
+    msg.userId = req.params.userId;
     const data = req.body;
     const response={}
     if(req.file)

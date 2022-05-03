@@ -1,30 +1,11 @@
 const express = require("express");
-const {Question} = require("../services/question");
-const {User} = require("../services/user");
-const {Answer} = require("../services/answer")
+const {Question} = require("../kafka-services/question.js");
+const {Answer} = require("../kafka-services/answer.js")
 const router = express.Router();
-const kafka = require("../kafka/client");
 
 
-router.post("/navbarFilter", async (req, res) => {
-
-    const msg = {};
-    msg.data = req.body.data;
-    msg.path = "navbar_filter";
-    kafka.make_request('navbar',msg, function(err,results){
-        if (err){
-            console.log("kafka error");
-            res.json({
-                status:"error",
-                msg:"System Error, Try Again."
-            })
-        }else{
-            res.status(results.status).send(results);
-        }
-    });
-
-
-    /* const data = req.body.data;
+const navbarFilter = async (msg, callback) => {
+    const data = msg.data;
     const response = {}
     try{
         //const result = await Question.getOtherFilteredResults(data);
@@ -131,28 +112,40 @@ router.post("/navbarFilter", async (req, res) => {
             exact=data;
             result = await Question.getQuestionByExactmatch(exact);
 
-        }       
+        }        
+       /* console.log("TAG: " + tag)
+        console.log("EXACT: "+exact)
+        console.log("AUTHOR: "+author)
+        console.log("TYPE: "+type) */
+
         if(result.data){
             response.success = true;
             response.data = result.data;
             response.status = "200";
             response.message = result;
-            res.status(200).send(response);
+            callback(null,response);
         }else{
             response.success = false;
             response.error = result.errorMessage;
             response.status = "400";
-            res.status(400).send(response);
+            callback(null,response);
         }
     }catch(e){
         console.log(e);
         response.success = false;
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
-        res.status(500).send(response);
-    } */
-});
+        callback(null,response);
+    }
+};
+
+function handle_request(msg, callback) {
+    if (msg.path === "navbar_filter") {
+      navbarFilter(msg, callback);
+    }else if (msg.path === "something") {
+      someThing(msg, callback);
+    }
+  }
 
 
-
-module.exports = router;
+  exports.handle_request = handle_request;
