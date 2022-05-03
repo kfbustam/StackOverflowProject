@@ -1,0 +1,88 @@
+.post-page-container {
+    background-color: #F1F2F3;
+    height: 100%;
+}
+
+.post-question-container {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 50px 10px #DBDBDC;
+}
+
+.info-text {
+    font-size: 12px;
+    color: black;
+    margin-bottom: 4px;
+}
+
+h6 {
+    color: #0B0D0E;
+    margin-bottom: 4px;
+}
+
+.card-body-text {
+    font-size: 13px;
+    color: black;
+    margin-bottom: 7px;
+}
+
+.accord-head {
+    color: black;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.list-number {
+    color: #0D96FF;
+    font-size: 18px;
+}
+
+.list-text {
+    font-size: 13px;
+    color: black;
+    margin-bottom: 7px;
+    list-style: inside;
+}
+
+.accord-head-container > button {
+    padding: 5px 16px;
+}
+
+.review-question-button {
+    background-color: #0D96FF;
+    border-color: #0D96FF;
+}
+
+.accord-head-container > button:not(.collapsed) {
+    background-color: white;
+}
+
+.accord-head-container > button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+}
+
+.support-accord-header > button {
+    background-color: #F7F7F7;
+    color: #212529;
+}
+
+.support-accord-header > button:not(.collapsed) {
+    background-color: #F7F7F7;
+    color: #212529;
+}
+
+.support-accord-header > button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+}
+
+.card-link {
+    color: #0763C0;
+    font-size: 13px;
+}
+
+.card-link:hover {
+    color:#0D96FF;
+    font-size: 13px;
+}

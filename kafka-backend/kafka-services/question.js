@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
-const QuestionModel = require("../model/questions.js");
-const tagModel = require('../model/tag.js');
-const TagModel = require("../model/tag.js")
+const QuestionModel = require("../mongo-models/questions.js");
+const tagModel = require('../mongo-models/tag.js');
+const TagModel = require("../mongo-models/tag.js")
 const { DateTime } = require("luxon");
 
 class Question {
