@@ -41,6 +41,7 @@ h6 {
     font-size: 13px;
     color: black;
     margin-bottom: 7px;
+    list-style: inside;
 }
 
 .accord-head-container > button {
@@ -77,5 +78,11 @@ h6 {
 }
 
 .card-link {
+    color: #0763C0;
+    font-size: 13px;
+}
+
+.card-link:hover {
+    color:#0D96FF;
     font-size: 13px;
 }

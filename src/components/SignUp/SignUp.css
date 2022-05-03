@@ -38,9 +38,10 @@
     padding: 0;
 }
 
-.icon {
+.signup-icon {
     width: 30px;
     height: 30px;
     color: #0D96FF;
     margin-right: 7px;
+    display: inline;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+//import './App.css';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
@@ -24,6 +24,8 @@ import Admin from './components/Admin/Admin';
 import AddTag from './components/Admin/AddTag';
 import Question from './components/Admin/Question';
 import UserList from './components/Admin/UserList';
+import QuestionsGraph from './components/Admin/QuestionsGraph';
+import Quesgraph from './components/Admin/Quesgraph';
 import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
 import Search from './components/Search/Search'
 
@@ -184,6 +186,8 @@ function App() {
         <Route exact path="/addtag" element={<AddTag />} />
         <Route exact path="/question" element={<Question />} />
         <Route exact path="/userlist" element={<UserList />} />
+        <Route exact path="/questionsgraph" element={<QuestionsGraph />} />
+        <Route exact path="/quesgraph" element={<Quesgraph />} />
 
       
         

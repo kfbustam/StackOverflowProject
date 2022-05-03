@@ -8,14 +8,80 @@ import Card from 'react-bootstrap/Card'
 import Accordion from 'react-bootstrap/Accordion'
 import Button from 'react-bootstrap/Button'
 import { Editor } from '@tinymce/tinymce-react'
+import axios from 'axios'
+import API_URL from '../../apiConfig'
+import MyToast from '../MyToast/MyToast'
+import jwt_decode from 'jwt-decode'
+import { useNavigate } from 'react-router-dom';
 
 function PostQuestion() {
     const editorRef = useRef(null);
+    const tagsInput = useRef(null)
+    const titleInput = useRef(null)
+
+    const [showToast, setShowToast] = useState(false)
+    const [toastText, setToastText] = useState('')
+
+    const navigate = useNavigate()
+
     const log = () => {
         if (editorRef.current) {
             console.log(editorRef.current.getContent());
         }
     };
+
+    const handleSubmit = () => {
+        if (missingFields()) {
+            setShowToast(true)
+            setToastText('Please fill in all fields')
+        }
+        else {
+            const tagsArray = getTagsInLowerCase()
+
+            if (tagsArray.length > 5) {
+                setShowToast(true)
+                setToastText('Please enter a maximum of 5 tags')
+            }
+            else if (localStorage.getItem('jwt') === null) {
+                setShowToast(true)
+                setToastText('Please log into an account')
+            }
+            else {
+                axios.get(`${API_URL}/api/tag/getPopularTags`)
+                    .then(res => {
+                        const allTags = res.data.tags
+                        const idArray = allTags.filter(tag => tagsArray.includes(tag.name.toLowerCase())).map(tag => tag._id)
+
+                        const userID = jwt_decode(localStorage.getItem('jwt')).sub
+
+                        axios.post(`${API_URL}/api/question/addQuestion`, {
+                            title: titleInput.current.value,
+                            body: editorRef.current.getContent(),
+                            tags: idArray,
+                            user: userID
+                        })
+                        .then(res => {
+                            navigate('/questions/overview')
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        }
+    }
+
+    const getTagsInLowerCase = () => {
+        const tagsArray = tagsInput.current.value.trim().split(' ')
+        return tagsArray.map(tag => tag.toLowerCase())
+    }
+
+    const missingFields = () => {
+        return !titleInput.current.value || !editorRef.current.getContent() || !tagsInput.current.value
+    }
 
     return (
         <div className='post-page-container'>
@@ -30,7 +96,8 @@ function PostQuestion() {
                         <Container className='post-question-container pt-3 pb-3'>
                             <h6>Title</h6>
                             <p className='info-text'>Be specific and imagine you're asking a question to another person</p>
-                            <Form.Control size='sm' placeholder='e.g. Is there an R function for finding the index of an element in a vector?' type='text' />
+                            <Form.Control size='sm' placeholder='e.g. Is there an R function for finding the index of an element in a vector?'
+                                type='text' ref={titleInput} />
                             <h6 className='mt-3'>Body</h6>
                             <p className='info-text'>Include all the information someone would need to answer your question</p>
                             {/*<Form.Control as='textarea' rows={7}/>*/}
@@ -46,9 +113,9 @@ function PostQuestion() {
                             />
                             <h6 className='mt-3'>Tags</h6>
                             <p className='info-text'>Add up to 5 tags to describe what your question is about</p>
-                            <Form.Control size='sm' placeholder='e.g. (sql jquery reactjs)' type='text' />
+                            <Form.Control size='sm' placeholder='e.g. (sql jquery reactjs)' type='text' ref={tagsInput} />
                         </Container>
-                        <Button className='review-question-button mt-3 mb-3'>Review your question</Button>
+                        <Button className='review-question-button mt-3 mb-3' onClick={handleSubmit}>Review your question</Button>
                     </Col>
                     <Col md={4}>
                         <Card className='mb-3'>
@@ -66,7 +133,7 @@ function PostQuestion() {
                                             <p className='accord-head'><span className='list-number'>1.</span> Summarize the problem</p>
                                         </Accordion.Header>
                                         <Accordion.Body>
-                                            <ul>
+                                            <ul style={{ padding: '0' }}>
                                                 <li className='list-text'>Include details about your goals</li>
                                                 <li className='list-text'>Describe expected and actual results</li>
                                                 <li className='list-text'>Include any error messages</li>
@@ -127,6 +194,7 @@ function PostQuestion() {
                     </Col>
                 </Row>
             </Container>
+            <MyToast show={showToast} handleClose={() => setShowToast(false)} text={toastText} />
         </div>
     )
 }
