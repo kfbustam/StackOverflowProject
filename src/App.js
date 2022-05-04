@@ -29,6 +29,7 @@ import QuestionsGraph from './components/Admin/QuestionsGraph';
 import Quesgraph from './components/Admin/Quesgraph';
 import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
 import Search from './components/Search/Search';
+import AllUsers from './components/AllUsers/AllUsers'
 
 const messageCountStyle = {
   color: '#525960',
@@ -213,6 +214,14 @@ function App() {
             <div >
               <LeftSideBar activeTab='questions'/>
               <Search/>
+            </div>    
+          </div>
+        }/>
+        <Route path="/allUsers" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='users'/>
+              <AllUsers/>
             </div>    
           </div>
         }/>
