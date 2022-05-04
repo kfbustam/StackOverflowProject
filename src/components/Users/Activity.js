@@ -7,6 +7,7 @@ import Questions from './Activity/Questions';
 import Tags from './Activity/Tags';
 import Badges from './Activity/Badges';
 import Bookmarks from './Activity/Bookmarks';
+import Reputation from './Activity/Reputation';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,6 +44,11 @@ function TabPanel(props) {
       {value === 4 && (
         <Box sx={{ p: 3 }}>
           <Bookmarks />
+        </Box>
+      )}
+      {value === 5 && (
+        <Box sx={{ p: 3 }}>
+          <Reputation />
         </Box>
       )}
     </div>
