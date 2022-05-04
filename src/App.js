@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Navbar/Footer';
 import CommentIcon from '@mui/icons-material/Comment';
 import Login from './components/Login/Login';
 import InboxIcon from '@mui/icons-material/Inbox';
@@ -218,6 +219,7 @@ function App() {
         }/>
 
       </Routes>
+      <Footer />
     </>
   );
 }

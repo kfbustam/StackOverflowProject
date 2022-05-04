@@ -1,6 +1,7 @@
 import React from 'react';
 import PublicIcon from '@material-ui/icons/Public';
 import StarsIcon from '@mui/icons-material/Stars';
+import Box from '@mui/material/Box';
 import { Link } from  'react-router-dom';
 import './LeftSideBar.css';
 
@@ -37,6 +38,7 @@ function LeftSideBar({activeTab}) {
             </div>  
           </div>
         </div>
+        <Box sx={{ borderRight: 1 }}></Box>
       </div>
     </div>    
   )}
