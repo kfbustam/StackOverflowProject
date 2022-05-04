@@ -2,28 +2,49 @@ var mongoose = require('mongoose');
 const QuestionModel = require("../model/questions.js");
 const tagModel = require('../model/tag.js');
 const TagModel = require("../model/tag.js")
+const UserModel = require("../model/user.js")
 const { DateTime } = require("luxon");
 
 class Question {
 
         static addQuestion = async (data) => {
                 try {
-                        const addQuery = {
-                                title : data.title,
-                                tags : data.tags,
-                                body : data.body,
-                                user : data.user
-                        }
-                        addQuery.$and = [];
-                        if(data.body_image)
+                       let addQuery;
+                        if(data.body.includes("<img"))
                         {
-                                addQuery.$and.push({"body_image": data.key});
-                                addQuery.$and.push({"isApproved":false})
+                                addQuery= {
+                                        title : data.title,
+                                        tags : data.tags,
+                                        body : data.body,
+                                        user : data.user,
+                                        isApproved : false
+                                }
+                        }
+                        else
+                        {
+                                addQuery= {
+                                        title : data.title,
+                                        tags : data.tags,
+                                        body : data.body,
+                                        user : data.user
+                                }
+
+                        }
+                        const question = new QuestionModel(addQuery);
+                        const result = await question.save();
+                        
+                        const findQuestionCondition = {
+                                "_id":mongoose.Types.ObjectId(data.user)
                         }
 
-                        const question = new QuestionModel(addQuery);
-                        const result = question.save();
+                        const updateQuestionCondition = {
+                                $push: {questionIds: result._id}
+                        }
 
+                        const updateUser = await UserModel.updateOne(findQuestionCondition,updateQuestionCondition)
+                        console.log(updateUser)
+
+                        //While adding the question, checking which tags are present and updating those tags totalCount, todayCount and weekCount
                         for(const tag of data.tags)
                         {
                                 const tagData= await tagModel.findById(tag)

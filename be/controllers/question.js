@@ -8,12 +8,12 @@ router.post("/addQuestion",  async (req, res) => {
     
     const data = req.body;
     const response={}
-    if(req.file)
+   /* if(req.file)
     {
         const file = req.file;
         const result = await uploadFile(file);
         data.key=result;
-    }
+    } */
     try{
         const result = await Question.addQuestion(data);
         if(result){
