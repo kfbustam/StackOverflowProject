@@ -23,7 +23,7 @@ function LeftSideBar({activeTab}) {
                </div> 
               <div className='tags'>                
                 <Link className='link-tag link-text' to="/tags" style={activeTab === 'tags' ? {borderRight: '4px solid #F48024'} : {}}>Tags</Link> 
-                <Link className='link-tag link-text' to="/users" style={activeTab === 'users' ? {borderRight: '4px solid #F48024'} : {}}>Users</Link>
+                <Link className='link-tag link-text' to="/allusers" style={activeTab === 'users' ? {borderRight: '4px solid #F48024'} : {}}>Users</Link>
               </div>
             </div>
           </div>
