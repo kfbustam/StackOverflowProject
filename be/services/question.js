@@ -9,93 +9,86 @@ class Question {
         static addQuestion = async (data) => {
                 try {
                         const addQuery = {
-                                title : data.title,
-                                tags : data.tags,
-                                body : data.body,
-                                user : data.user
+                                title: data.title,
+                                tags: data.tags,
+                                body: data.body,
+                                user: data.user
                         }
                         addQuery.$and = [];
-                        if(data.body_image)
-                        {
-                                addQuery.$and.push({"body_image": data.key});
-                                addQuery.$and.push({"isApproved":false})
+                        if (data.body_image) {
+                                addQuery.$and.push({ "body_image": data.key });
+                                addQuery.$and.push({ "isApproved": false })
                         }
 
                         const question = new QuestionModel(addQuery);
                         const result = question.save();
 
-                        for(const tag of data.tags)
-                        {
-                                const tagData= await tagModel.findById(tag)
+                        for (const tag of data.tags) {
+                                const tagData = await tagModel.findById(tag)
                                 const findCondition = {
-                                        "_id":mongoose.Types.ObjectId(tag)
+                                        "_id": mongoose.Types.ObjectId(tag)
                                 }
-                                if(tagData.todaydate == new Date().getDate() && tagData.currentWeek == DateTime.now().weekNumber)
-                                {
+                                if (tagData.todaydate == new Date().getDate() && tagData.currentWeek == DateTime.now().weekNumber) {
                                         const updateCondition = {
                                                 $inc: {
-                                                        count:1,
-                                                        todaycount:1,
-                                                        weekcount:1
+                                                        count: 1,
+                                                        todaycount: 1,
+                                                        weekcount: 1
                                                 }
                                         }
-                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
+                                        const countResult = await tagModel.updateOne(findCondition, updateCondition);
                                 }
-                                else if(tagData.todaydate == new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
-                                {
+                                else if (tagData.todaydate == new Date().getDate() && tagData.currentWeek != DateTime.now().weekNumber) {
                                         const updateCondition = {
-                                                currentWeek:DateTime.now().weekNumber,
-                                                weekcount:1,
+                                                currentWeek: DateTime.now().weekNumber,
+                                                weekcount: 1,
                                                 $inc: {
-                                                        count:1,
-                                                        todaycount:1,
+                                                        count: 1,
+                                                        todaycount: 1,
                                                 }
                                         }
-                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
+                                        const countResult = await tagModel.updateOne(findCondition, updateCondition);
 
                                 }
-                                else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek ==  DateTime.now().weekNumber)
-                                {
+                                else if (tagData.todaydate != new Date().getDate() && tagData.currentWeek == DateTime.now().weekNumber) {
                                         console.log(tagData.todaydate)
                                         console.log(new Date().getDate())
 
                                         const updateCondition = {
-                                                todaydate:new Date().getDate(),
-                                                todaycount:1,
+                                                todaydate: new Date().getDate(),
+                                                todaycount: 1,
                                                 $inc: {
-                                                        count:1,
-                                                        weekcount:1
+                                                        count: 1,
+                                                        weekcount: 1
                                                 }
                                         }
-                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
+                                        const countResult = await tagModel.updateOne(findCondition, updateCondition);
                                 }
-                                else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
-                                {
+                                else if (tagData.todaydate != new Date().getDate() && tagData.currentWeek != DateTime.now().weekNumber) {
                                         const updateCondition = {
-                                                todaydate:new Date().getDate(),
-                                                currentWeek:DateTime.now().weekNumber,
-                                                todaycount:1,
-                                                weekcount:1,
+                                                todaydate: new Date().getDate(),
+                                                currentWeek: DateTime.now().weekNumber,
+                                                todaycount: 1,
+                                                weekcount: 1,
                                                 $inc: {
-                                                        count:1
+                                                        count: 1
                                                 }
                                         }
-                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
+                                        const countResult = await tagModel.updateOne(findCondition, updateCondition);
 
                                 }
                         }
 
-                        if(result)
-                        {
+                        if (result) {
                                 return result;
                         }
-                        else{
+                        else {
                                 return {};
                         }
 
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error occured while adding question")
                 }
@@ -106,38 +99,36 @@ class Question {
         static getQuestionByTag = async (data) => {
 
                 try {
-                        let result={}
+                        let result = {}
                         const tagQuery = {
-                                name:data
+                                name: data
                         }
                         const tag = await TagModel.find(tagQuery)
-                        if(tag.length != 0)
-                        {
+                        if (tag.length != 0) {
                                 const query = {
                                         "tags": {
-                                                $in:tag[0]._id
+                                                $in: tag[0]._id
                                         }
                                 }
                                 const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
-                                if(questions?.length)
-                                {
-                                        result.data=questions
+                                if (questions?.length) {
+                                        result.data = questions
                                         return result;
                                 }
-                                else{
-                                        result.errorMessage="No questions found with this Tag"
+                                else {
+                                        result.errorMessage = "No questions found with this Tag"
                                         return [];
                                 }
                         }
-                        else{
-                                result.errorMessage="There is no Tag available with the entered text "+data
+                        else {
+                                result.errorMessage = "There is no Tag available with the entered text " + data
                                 //throw new Error("Some unexpected error occurred with the Tag")
 
                                 return result;
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
@@ -157,16 +148,15 @@ class Question {
                                 "title": searchRegex
                         }
                         const questions = await QuestionModel.find(query);
-                        if(questions?.length)
-                        {
+                        if (questions?.length) {
                                 return questions;
                         }
-                        else{
+                        else {
                                 return [];
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by search data")
                 }
@@ -177,24 +167,23 @@ class Question {
 
         static getQuestionByAuthor = async (data) => {
                 try {
-                        let result={}
+                        let result = {}
                         console.log(data)
                         const query = {
                                 "user": data
                         }
                         const questions = await QuestionModel.find(query);
-                        if(questions?.length)
-                        {
-                                result.data=questions
+                        if (questions?.length) {
+                                result.data = questions
                                 return result;
                         }
-                        else{
-                                result.errorMessage="No questions found with user id "+data
+                        else {
+                                result.errorMessage = "No questions found with user id " + data
                                 return [];
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
@@ -208,16 +197,16 @@ class Question {
                         let result = {}
                         const questions = await QuestionModel.find({});
                         if (questions?.length) {
-                                result.data=questions
-                            return result;
+                                result.data = questions
+                                return result;
                         } else {
-                            return [];
+                                return [];
                         }
-            
-                    } catch (err) {
+
+                } catch (err) {
                         console.log(err);
                         throw new Error("Some unexpected error occurred while getting the questions");
-                    }
+                }
         }
 
         static getQuestionByAcceptance = async (data) => {
@@ -225,6 +214,29 @@ class Question {
 
                 x = "This api should give all the questions or answers based on the acceptance type " + data
                 return (x)
+        }
+
+        static getQuestionById = async (data) => {
+                try {
+                        let result = {}
+                        const question = await QuestionModel.findById(data)
+                                                .populate('user', '_id username reputation')
+                                                .populate('tags', '_id name')
+                                                .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } , })
+
+                        if (question) {
+                                result = question
+                                return result
+                        }
+                        else {
+                                result.errorMessage = "No questions found with question id " + data
+                                return {};
+                        }
+
+                } catch (err) {
+                        console.log(err);
+                        throw new Error("Some unexpected error occurred while getting the questions");
+                }
         }
 
 
