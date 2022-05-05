@@ -164,7 +164,7 @@ class Question {
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
@@ -175,38 +175,37 @@ class Question {
         static getQuestionByTag = async (data) => {
 
                 try {
-                        let result={}
+                        let result = {}
                         const tagQuery = {
-                                name:data
+                                name: data
                         }
                         const tag = await tagModel.find(tagQuery)
                         if(tag.length != 0)
                         {
                                 const query = {
                                         "tags": {
-                                                $in:tag[0]._id
+                                                $in: tag[0]._id
                                         }
                                 }
                                 const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
-                                if(questions?.length)
-                                {
-                                        result.data=questions
+                                if (questions?.length) {
+                                        result.data = questions
                                         return result;
                                 }
-                                else{
-                                        result.errorMessage="No questions found with this Tag"
+                                else {
+                                        result.errorMessage = "No questions found with this Tag"
                                         return [];
                                 }
                         }
-                        else{
-                                result.errorMessage="There is no Tag available with the entered text "+data
+                        else {
+                                result.errorMessage = "There is no Tag available with the entered text " + data
                                 //throw new Error("Some unexpected error occurred with the Tag")
 
                                 return result;
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
@@ -226,16 +225,15 @@ class Question {
                                 "title": searchRegex
                         }
                         const questions = await QuestionModel.find(query);
-                        if(questions?.length)
-                        {
+                        if (questions?.length) {
                                 return questions;
                         }
-                        else{
+                        else {
                                 return [];
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by search data")
                 }
@@ -246,24 +244,23 @@ class Question {
 
         static getQuestionByAuthor = async (data) => {
                 try {
-                        let result={}
+                        let result = {}
                         console.log(data)
                         const query = {
                                 "user": data
                         }
                         const questions = await QuestionModel.find(query);
-                        if(questions?.length)
-                        {
-                                result.data=questions
+                        if (questions?.length) {
+                                result.data = questions
                                 return result;
                         }
-                        else{
-                                result.errorMessage="No questions found with user id "+data
+                        else {
+                                result.errorMessage = "No questions found with user id " + data
                                 return [];
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
@@ -277,16 +274,16 @@ class Question {
                         let result = {}
                         const questions = await QuestionModel.find({}).sort({"createAt":1});
                         if (questions?.length) {
-                                result.data=questions
-                            return result;
+                                result.data = questions
+                                return result;
                         } else {
-                            return [];
+                                return [];
                         }
-            
-                    } catch (err) {
+
+                } catch (err) {
                         console.log(err);
                         throw new Error("Some unexpected error occurred while getting the questions");
-                    }
+                }
         }
 
         static getQuestionByAcceptance = async (data) => {
