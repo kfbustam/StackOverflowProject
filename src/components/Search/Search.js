@@ -12,12 +12,18 @@ const Search = () => {
     const [posts, setPosts] = useState([])
 
     useEffect(() => {
-        setPosts([{
+        const data = [{
             type: 'question',
             votes: 5,
             answers: 3,
             title: 'Question title',
-            description: 'Description of the problem',
+            description: `<p><strong>Bold Text</strong></p> 
+            <p><em>Italics Text</em></p> <p><em><strong>Bold and Italics Text</strong></em></p> 
+            <p><a title="Stack overflow link" href="https://stackoverflow.com/">https://stackoverflow.com/</a>
+            </p> <pre class="language-javascript"><code>const text = 'Hello world' console.log(text)
+            </code></pre> <p>
+            <img src="https://media.istockphoto.com/photos/red-apple-with-leaf-isolated-on-white-background-picture-id185262648?b=1&amp;k=20&amp;m=185262648&amp;s=170667a&amp;w=0&amp;h=2ouM2rkF5oBplBmZdqs3hSOdBzA4mcGNCoF2P0KUMTM=" alt="" width="150" height="150">
+            </p> <ul> <li>List 1</li> <li>List 2</li> </ul> <ol> <li>Number list 1</li> <li>Number list 2</li> </ol> <p>&nbsp;</p>`,
             answered: false,
             tags: ['java', 'python', 'javascript', 'react', 'node'],
             user: 'Phillip Nguyen',
@@ -28,7 +34,7 @@ const Search = () => {
             votes: 7,
             answers: 3,
             title: 'Question title',
-            description: 'Here is a piece of C++ code that shows some very peculiar behavior. For some strange reason, sorting the data (before the timed region) miraculously makes the loop almost six times faster. #include <a',
+            description: 'Here is a piece of C++ code that shows some very peculiar behavior. For some strange reason, sorting the data (before the timed region) miraculously makes the loop almost six times faster. #include <a ',
             answered: true,
             tags: ['java', 'python', 'javascript'],
             user: 'Phillip Nguyen',
@@ -40,7 +46,7 @@ const Search = () => {
             title: 'Answer title',
             description: 'Description of answer',
             answered: false,
-            tags: ['jave', 'python', 'javascript'],
+            tags: ['java', 'python', 'javascript'],
             user: 'Phillip Nguyen',
             date: new Date(2022, 3, 27)
         },
@@ -50,11 +56,22 @@ const Search = () => {
             title: 'Answer title',
             description: 'Description of answer',
             answered: true,
-            tags: ['jave', 'python', 'javascript'],
+            tags: ['java', 'python', 'javascript'],
             user: 'Phillip Nguyen',
             date: new Date(2022, 1, 3)
         },
-        ])
+        ]
+
+        for (let i = 0; i < data.length; i++) {
+            const desc = data[i].description
+            let plainDesc = desc.replace(/<[^>]+>/g, '');
+
+            plainDesc = plainDesc.replace('&nbsp;', '')
+
+            data[i].description = plainDesc
+        }
+
+        setPosts(data)
     }, [])
 
     const handleNewest = () => {
