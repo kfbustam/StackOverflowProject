@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
-const QuestionModel = require("../model/questions.js");
-const tagModel = require('../model/tag.js');
-const UserModel = require('../model/user.js')
-//const TagModel = require("../model/tag.js")
+const QuestionModel = require("../mongo-models/questions.js");
+const tagModel = require('../mongo-models/tag.js');
+const TagModel = require("../mongo-models/tag.js")
 const { DateTime } = require("luxon");
+const UserModel = require('../mongo-models/user.js')
 
 class Question {
 
@@ -33,7 +33,7 @@ class Question {
                          const question = new QuestionModel(addQuery);
                          const result = await question.save();
                          
-                         const findQuestionCondition = {
+                         /*const findQuestionCondition = {
                                  "_id":mongoose.Types.ObjectId(data.user)
                          }
  
@@ -112,7 +112,7 @@ class Question {
                          {
                                  result.todayCountUpdated = true
                                  result.weekCountUpdated = true
-                         }
+                         }*/
                          if(result)
                          {
                                  return result;
@@ -127,47 +127,7 @@ class Question {
                  }
  
 
-        }
-
-
-        static getQuestionByTag = async (data) => {
-
-                try {
-                        let result={}
-                        const tagQuery = {
-                                name:data
-                        }
-                        const tag = await tagModel.find(tagQuery)
-                        if(tag.length != 0)
-                        {
-                                const query = {
-                                        "tags": {
-                                                $in:tag[0]._id
-                                        }
-                                }
-                                const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
-                                if(questions?.length)
-                                {
-                                        result.data=questions
-                                        return result;
-                                }
-                                else{
-                                        result.errorMessage="No questions found with this Tag"
-                                        return [];
-                                }
-                        }
-                        else{
-                                result.errorMessage="There is no Tag available with the entered text "+data
-                                //throw new Error("Some unexpected error occurred with the Tag")
-
-                                return result;
-                        }
-
-                }
-                catch(err){
-                        console.log(err);
-                        console.log("Some unexpected error while fethching the questions by tag")
-                }
+ 
 
         }
 
@@ -179,7 +139,7 @@ class Question {
                         const tagQuery = {
                                 name:data
                         }
-                        const tag = await tagModel.find(tagQuery)
+                        const tag = await TagModel.find(tagQuery)
                         if(tag.length != 0)
                         {
                                 const query = {
@@ -275,7 +235,7 @@ class Question {
         static getAllQuestions = async (data) => {
                 try {
                         let result = {}
-                        const questions = await QuestionModel.find({}).sort({"createAt":1});
+                        const questions = await QuestionModel.find({});
                         if (questions?.length) {
                                 result.data=questions
                             return result;
@@ -294,18 +254,6 @@ class Question {
 
                 x = "This api should give all the questions or answers based on the acceptance type " + data
                 return (x)
-        }
-
-        static upvoteQuestion = async(data) =>{
-                let qtemp = await QuestionModel.findOne({"_id":data.questionId})
-                let upvoteval = qtemp["upvote"]+1
-                let scoreval = upvoteval -  qtemp["downvote"]
-                let usertemp = await UserModel.findOne({"questionIds":data.questionId})
-                console.log(upvoteval)
-                console.log(scoreval)
-                console.log(usertemp)
-                //let temp2 = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"upvote":upvoteval, "score":scoreval})
-                return "Done"
         }
 
 

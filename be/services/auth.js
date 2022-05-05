@@ -10,13 +10,13 @@ class UserAuth {
                         const query = {
                                 email : data.email,
                                 password : data.password,
-                                name : data.name                                
+                                username : data.username                                
                         }
                             let foundUser = await User.findOne({"email": query["email"] });
                               if (foundUser) {
                                 return false
                               }
-                              const newUser = new User({ "email":query["email"], "password":query["password"],"name":query["name"]})
+                              const newUser = new User({ "email":query["email"], "password":query["password"],"username":query["username"]})
                               await newUser.save()
                               let token = genToken(newUser)
                               return {newUser, "token":token}    

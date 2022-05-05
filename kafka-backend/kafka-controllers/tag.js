@@ -1,60 +1,23 @@
 const express = require("express");
-const {User} = require("../services/user")
-const jwt = require("jsonwebtoken");
-const passport = require('passport')
+//const {Tag} = require("../services/tag.js")
 const router = express.Router();
-//const redis = require("./rediscxn")
 
 
-// const runApp1 = async () => {
-// console.log(client)
-router.get("/getPopularUsers", async (req, res) => {
+router.post("/addTag", async (req, res) =>
+{
     const data = req.body;
     const response={}
     try{
-
-
-        const result = await User.getPopularUsers(data);          
-        //await client.set('user', JSON.stringify(result))
-        if(result){
-            response.success = true;
-            response.user = result;
-            response.status = "200";
-            res.status(200).send(response);
-
-        }else{
-            response.success = false;
-            response.error = "User not found";
-            response.status = "400";
-            res.status(400).send(response);
-        }
-    }catch(e){
-        console.log(e);
-        response.success = false;
-        response.error = "Some error occurred. Please try again later";
-        response.status = "500";
-        res.status(500).send(response);
-    }
-})
-//}
-//runApp1()
-
-
-router.get("/getNewUsers", async (req, res) => {
-    const data = req.body;
-    const response={}
-    try{
-        const result = await User.getNewUsers(data);          
+        const result = await Tag.addTag(data);          
 
         if(result){
             response.success = true;
-            response.user = result;
+            response.tags = result;
             response.status = "200";
             res.status(200).send(response);
-
         }else{
             response.success = false;
-            response.error = "User not found";
+            response.error = "Tag not found";
             response.status = "400";
             res.status(400).send(response);
         }
@@ -67,18 +30,18 @@ router.get("/getNewUsers", async (req, res) => {
     }
 })
 
-
-router.get("/searchUsers", async (req, res) => {
+router.get("/getPopularTags", async (req, res) => {
     const data = req.body;
     const response={}
     try{
-        const result = await User.searchUsers(data);          
+        const result = await Tag.getPopularTags(data);          
 
         if(result){
             response.success = true;
-            response.user = result;
+            response.tags = result;
             response.status = "200";
             res.status(200).send(response);
+            //console.log(result);
 
         }else{
             response.success = false;
@@ -95,23 +58,22 @@ router.get("/searchUsers", async (req, res) => {
     }
 })
 
-router.post("/updateLocation",passport.authenticate('jwt',{session: false}), async (req, res) => {
+
+router.get("/getNewTags", async (req, res) => {
     const data = req.body;
     const response={}
-    var authorization = req.headers.authorization.split(' ')[1],
-    decoded;
-    decoded = jwt.verify(authorization, 'TOP_SECRET'); 
     try{
-        const result = await User.updateLocation(decoded, data);          
+        const result = await Tag.getNewTags(data);          
+
         if(result){
             response.success = true;
-            response.user = result;
+            response.tags = result;
             response.status = "200";
             res.status(200).send(response);
 
         }else{
             response.success = false;
-            response.error = "Location has not been updated.";
+            response.error = "Tag not found";
             response.status = "400";
             res.status(400).send(response);
         }
@@ -124,23 +86,49 @@ router.post("/updateLocation",passport.authenticate('jwt',{session: false}), asy
     }
 })
 
-router.get("/getBasicDetails",passport.authenticate('jwt',{session: false}), async (req, res) => {
-    //const data = req.body;
+
+router.get("/getNameTags", async (req, res) => {
+    const data = req.body;
     const response={}
-    var authorization = req.headers.authorization.split(' ')[1],
-    decoded;
-    decoded = jwt.verify(authorization, 'TOP_SECRET'); 
     try{
-        const result = await User.getBasicDetails(decoded);          
+        const result = await Tag.getNameTags(data);          
+
         if(result){
             response.success = true;
-            response.user = result;
+            response.tags = result;
             response.status = "200";
             res.status(200).send(response);
 
         }else{
             response.success = false;
-            response.error = "Location has not been updated.";
+            response.error = "Tag not found";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.get("/searchTags", async (req, res) => {
+    const data = req.body;
+    const response={}
+    try{
+        const result = await Tag.searchTags(data);          
+
+        if(result){
+            response.success = true;
+            response.tags = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Tag not found";
             response.status = "400";
             res.status(400).send(response);
         }

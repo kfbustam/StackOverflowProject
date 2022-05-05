@@ -14,14 +14,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default:null,
   },
-  upvotenum:{
-    type:Number,
-    default:0
-  },
-  downvotenum:{
-    type:Number,
-    default:0
-  },
   reputation:{
     type:Number
   },
