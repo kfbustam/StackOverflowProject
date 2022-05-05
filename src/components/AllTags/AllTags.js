@@ -4,6 +4,8 @@ import Container from 'react-bootstrap/Container'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import axios from 'axios'
+import API_URL from '../../apiConfig'
 
 function AllTags() {
   const [tags, setTags] = useState([{}])
@@ -12,29 +14,20 @@ function AllTags() {
   const [searchText, setSearchText] = useState('')
 
   useEffect(() => {
-    const data = []
+    axios.get(`${API_URL}/api/tag/getPopularTags`)
+    .then(res => {
+      const dataTags = res.data.tags
 
-    for (let i = 0; i < 10; i++) {
-        data.push({
-          name: 'java',
-          description: `Java is a high-level object oriented programming language. Use this tag when you're 
-          having problems using or understanding the language itself. This tag is frequently 
-          used alongside other tags for libraries and/or frameworks used by Java developers.`,
-          count: 1842957,
-          todaycount: 387,
-          weekcount: 2253
-          
-      })
-    }
+      setTags(dataTags)
+      setFilteredTags(dataTags)
 
-    data[4].name = 'javascript'
-    data[7].name = 'php'
-
-    const nameData = data.map(tag => tag.name)
-
-    setTags(data)
-    setFilteredTags(data)
-    setTagNames(nameData)
+      const nameData = dataTags.map(tag => tag.name)
+      const distinctNames = [...new Set(nameData)]
+      setTagNames(distinctNames)
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }, [])
 
   const handleSearch = (text) => {
@@ -58,7 +51,7 @@ function AllTags() {
         open={searchText.length >= 3}/>
       <Row className='mt-5'>
         {filteredTags.map(tag => (
-          <Col sm={6} md={4} lg={3} className='mb-3'>
+          <Col sm={6} md={filteredTags.length < 3 ? 6 : 4} lg={filteredTags.length < 3 ? 4 : 3} className='mb-3'>
             <Container className='all-tags-tag-container pt-2'>
               <div className='all-tags-block'>{tag.name}</div>
               <p className='all-tags-description mt-2'>{tag.description}</p>
