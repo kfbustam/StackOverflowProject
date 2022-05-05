@@ -49,7 +49,7 @@ function handleTopicRequest(topic_name,fname){
 //handleTopicRequest("answer",Answer);
 //handleTopicRequest("authctrl",Authctrl);
 handleTopicRequest("navbar",Navbar);
-//handleTopicRequest("question",Question);
+handleTopicRequest("question",Question);
 //handleTopicRequest("tag",Tag);
 //handleTopicRequest("user",User);
 

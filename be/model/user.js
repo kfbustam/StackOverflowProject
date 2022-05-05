@@ -34,9 +34,10 @@ const UserSchema = new mongoose.Schema({
   location:{  
     type:String
   },
-  questionIds:{
-    type:[String]
-  },
+  questionIds:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"questions"
+  }],
   answerIds:{
     type:[String]
   },

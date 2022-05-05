@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const InitiateMongoServer = async () => {
     try {
         await mongoose.connect(conn, {
+            maxPoolSize:100,
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
