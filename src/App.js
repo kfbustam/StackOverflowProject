@@ -31,6 +31,7 @@ import Quesgraph from './components/Admin/Quesgraph';
 import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
 import Search from './components/Search/Search';
 import AllUsers from './components/AllUsers/AllUsers'
+import AllTags from './components/AllTags/AllTags'
 
 const messageCountStyle = {
   color: '#525960',
@@ -173,8 +174,9 @@ function App() {
         }/>
         <Route path="/tags" element={   
           <div className='stack-layout'>
-            <div className='stack-layout-container'>
+            <div >
               <LeftSideBar activeTab='tags'/>
+              <AllTags/>
             </div>    
           </div>
         }/>
