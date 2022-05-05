@@ -12,7 +12,7 @@ function AllUsers() {
   const [users, setUsers] = useState([{}])
   const [filteredUsers, setFilteredUsers] = useState([{}])
   const [usernames, setUsernames] = useState([])
-
+  const [searchText, setSearchText] = useState('')
 
   useEffect(() => {
     const data = []
@@ -37,7 +37,7 @@ function AllUsers() {
   }, [])
 
   const handleSearch = (text) => {
-    console.log(typeof text)
+    setSearchText(text)
     let allUsers = users
 
     allUsers = allUsers.filter(user => user.username.toLowerCase().includes(text.toString().toLowerCase()))
@@ -49,7 +49,8 @@ function AllUsers() {
     <Container className='all-users-container mt-4'>
       <h1 className='all-users-header'>Users</h1>
       <Typeahead id='username-input' options={usernames} placeholder='Filter by user' className='w-25' maxResults={5}
-        onInputChange={(text) => handleSearch(text)} onChange={(text) => handleSearch(text)}/>
+        onInputChange={(text) => handleSearch(text)} onChange={(text) => handleSearch(text)}
+        open={searchText.length >= 3}/>
       <Row className='mt-5'>
         {filteredUsers.map(user => (
           <Col sm={6} md={4} className='mb-3'>

@@ -1,0 +1,54 @@
+.all-tags-container {
+    margin-left: 265px;
+}
+
+.all-tags-header {
+    font-size: 27px;
+    margin-bottom: 24px;
+}
+
+.all-tags-desc {
+    font-size: 15px;
+    color: black;
+}
+
+.all-tags-description {
+    font-size: 13px;
+    color: black;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    max-width: 200px;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.all-tags-block {
+    display: inline;
+    background-color: #E1EDF4;
+    color: #3A749C;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.all-tags-tag-container {
+    border-color: #D7D9DC;
+    border-radius: 2px;
+    border-style: solid;
+    border-width: 0.5px;
+}
+
+.all-tags-block:hover {
+    background-color: #c7ddea;
+}
+
+.all-tags-count {
+    font-size: 12px;
+}
+
+.all-tags-count-container {
+    display: inline-block !important;
+    width: 50%;
+}
