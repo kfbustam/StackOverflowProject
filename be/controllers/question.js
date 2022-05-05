@@ -8,10 +8,7 @@ const { response } = require("../index.js");
 
 
 router.post("/addQuestion",  async (req, res) => {
-
-    console.log(req.body);
-    console.log("asdasdasdasda")
-    const msg = {};
+    /*const msg = {};
     msg.question = req.body;
     msg.path = "add_question";
     kafka.make_request('question',msg, function(err,results){
@@ -24,9 +21,9 @@ router.post("/addQuestion",  async (req, res) => {
         }else{
             res.status(results.status).send(results);
         }
-    });
+    });*/
     
-    /*const data = req.body;
+    const data = req.body;
     const response={}
     try{
         const result = await Question.addQuestion(data);
@@ -52,12 +49,27 @@ router.post("/addQuestion",  async (req, res) => {
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
         res.status(500).send(response);
-    }*/
+    }
 });
 
 
 router.get("/getAllQuestions",  async (req, res) => {
-    let response={}
+
+    const msg = {};
+    msg.path = "get_all_questions";
+    kafka.make_request('question',msg, function(err,results){
+        if (err){
+            console.log("kafka error");
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }else{
+            res.status(results.status).send(results);
+        }
+    });
+
+    /*let response={}
     try{
         result = await Question.getAllQuestions();
         if(result){
@@ -77,7 +89,7 @@ router.get("/getAllQuestions",  async (req, res) => {
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
         res.status(500).send(response);
-    }
+    }*/
 
 })
 
