@@ -13,12 +13,16 @@ const tag = require("./controllers/tag.js")
 const authenticatectrl = require('./controllers/authctrl')
 const imgctrl = require("./controllers/image-controller")
 const questionController = require("./controllers/question")
+//const testredis = require("./controllers/redis")
 
 
 const tagModel = require("./model/tag");
 
 var cors = require('cors');
 const jwt = require('jsonwebtoken');
+const responseTime = require('response-time')
+const redis = require('redis')
+const axios = require('axios')
 
 const InitiateMongoServer = require("./config/mongo/mongodb")
 InitiateMongoServer()
@@ -28,6 +32,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
+app.use(responseTime())
 
 const multer = require("multer");
 var storage = multer.diskStorage({
@@ -54,7 +59,6 @@ app.use('/api/question',question);
 app.use('/api/navbar',navbar);
 app.use('/api/answer',answer);
 app.use('/api/user',user)
-
 
 // server listening 
 app.listen(process.env.PORT || 3000, function(){

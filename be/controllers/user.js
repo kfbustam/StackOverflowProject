@@ -3,15 +3,34 @@ const {User} = require("../services/user")
 const jwt = require("jsonwebtoken");
 const passport = require('passport')
 const router = express.Router();
-
-
-
+const redis = require("redis")
+// const redisl = require("./rediscxn")
+// const client = redis.createClient()
+//const redis = require('redis')
+var client;
+const runApp = async () => {  client = redis.createClient()
+    client.on('error', (err) => console.log('Redis Client Error', err));
+    await client.connect();
+    console.log('Redis connected!')}
+runApp()
+const runApp1 = async () => {
+console.log(client)
 router.get("/getPopularUsers", async (req, res) => {
     const data = req.body;
     const response={}
     try{
-        const result = await User.getPopularUsers(data);          
+        const cacheCharacters = await client.get('user')
+        if (cacheCharacters) {
+          {
+            response.success = true;
+            response.user = cacheCharacters;
+            response.status = "200";
+            res.status(200).send(response);
+          }
+        }
 
+        const result = await User.getPopularUsers(data);          
+        await client.set('user', JSON.stringify(result))
         if(result){
             response.success = true;
             response.user = result;
@@ -32,6 +51,8 @@ router.get("/getPopularUsers", async (req, res) => {
         res.status(500).send(response);
     }
 })
+}
+runApp1()
 
 
 router.get("/getNewUsers", async (req, res) => {
