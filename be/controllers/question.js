@@ -6,13 +6,13 @@ const bcrypt = require('bcryptjs');
 const kafka = require("../kafka/client");
 const { response } = require("../index.js");
 
-const redis = require('redis')
-var client;
-const runApp = async () => {  client = redis.createClient()
-    client.on('error', (err) => console.log('Redis Client Error', err));
-    await client.connect();
-    console.log('Redis connected!')}
-runApp()
+// const redis = require('redis')
+// var client;
+// const runApp = async () => {  client = redis.createClient()
+//     client.on('error', (err) => console.log('Redis Client Error', err));
+//     await client.connect();
+//     console.log('Redis connected!')}
+// runApp()
 
 
 
