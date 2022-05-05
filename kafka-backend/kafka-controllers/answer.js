@@ -1,21 +1,14 @@
 //const { response } = require("express");
 const express = require("express");
 const router = express.Router();
-const {Question} = require("../services/question.js")
+//const {Answer} = require("../services/answer")
 const bcrypt = require('bcryptjs');
 
-router.post("/addQuestion",  async (req, res) => {
-    
+router.post("/addAnswer", async (req, res) => {
     const data = req.body;
     const response={}
-    if(req.file)
-    {
-        const file = req.file;
-        const result = await uploadFile(file);
-        data.key=result;
-    }
     try{
-        const result = await Question.addQuestion(data);
+        const result = await Answer.addAnswer(data); 
         if(result){
             response.success = true;
             response.user = data.user;
@@ -23,7 +16,7 @@ router.post("/addQuestion",  async (req, res) => {
             res.status(200).send(response);
         }else{
             response.success = false;
-            response.error = "Cannot add the question";
+            response.error = "Cannot add the answer";
             response.status = "400";
             res.status(400).send(response);
         }
@@ -36,11 +29,11 @@ router.post("/addQuestion",  async (req, res) => {
     }
 });
 
-router.post("/upvoteQuestion", async (req, res) => {
+router.post("/getAllAnswers", async (req, res) => {
     const data = req.body;
     const response={}
     try{
-        const result = await Question.upvoteQuestion(data);
+        const result = await Answer.getAllAnswers(data);
         if(result){
             response.success = true;
             response.user = data.user;
@@ -48,7 +41,7 @@ router.post("/upvoteQuestion", async (req, res) => {
             res.status(200).send(response);
         }else{
             response.success = false;
-            response.error = "Cannot upvote the question";
+            response.error = "Cannot find the answers";
             response.status = "400";
             res.status(400).send(response);
         }

@@ -44,6 +44,13 @@ function Login() {
             })
             .then(res => {
                 localStorage.setItem('jwt', 'bearer ' + res.data.user.token)
+
+                const foundUser = res.data.user.foundUser
+                localStorage.setItem('user', JSON.stringify({
+                    username: foundUser.username,
+                    email: foundUser.email,
+                    _id: foundUser._id
+                }))
     
                 navigate('/')
             })

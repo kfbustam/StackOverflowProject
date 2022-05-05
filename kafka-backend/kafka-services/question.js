@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
-const QuestionModel = require("../model/questions.js");
-const tagModel = require('../model/tag.js');
-const UserModel = require('../model/user.js')
-//const TagModel = require("../model/tag.js")
+const QuestionModel = require("../mongo-models/questions.js");
+const tagModel = require('../mongo-models/tag.js');
+const TagModel = require("../mongo-models/tag.js")
 const { DateTime } = require("luxon");
 
 class Question {
@@ -111,7 +110,7 @@ class Question {
                         const tagQuery = {
                                 name:data
                         }
-                        const tag = await tagModel.find(tagQuery)
+                        const tag = await TagModel.find(tagQuery)
                         if(tag.length != 0)
                         {
                                 const query = {
@@ -226,18 +225,6 @@ class Question {
 
                 x = "This api should give all the questions or answers based on the acceptance type " + data
                 return (x)
-        }
-
-        static upvoteQuestion = async(data) =>{
-                let qtemp = await QuestionModel.findOne({"_id":data.questionId})
-                let upvoteval = qtemp["upvote"]+1
-                let scoreval = upvoteval -  qtemp["downvote"]
-                let usertemp = await UserModel.findOne({"questionIds":data.questionId})
-                console.log(upvoteval)
-                console.log(scoreval)
-                console.log(usertemp)
-                //let temp2 = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"upvote":upvoteval, "score":scoreval})
-                return "Done"
         }
 
 
