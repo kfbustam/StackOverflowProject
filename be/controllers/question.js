@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const {Question} = require("../services/question.js")
 const bcrypt = require('bcryptjs');
-//const kafka = require("../kafka/client");
+const kafka = require("../kafka/client");
 const { response } = require("../index.js");
 
 const redis = require('redis')
@@ -17,10 +17,7 @@ runApp()
 
 
 router.post("/addQuestion",  async (req, res) => {
-
-    console.log(req.body);
-    console.log("asdasdasdasda")
-    const msg = {};
+    /*const msg = {};
     msg.question = req.body;
     msg.path = "add_question";
     kafka.make_request('question',msg, function(err,results){
@@ -33,9 +30,9 @@ router.post("/addQuestion",  async (req, res) => {
         }else{
             res.status(results.status).send(results);
         }
-    });
+    });*/
     
-    /*const data = req.body;
+    const data = req.body;
     const response={}
     try{
         const result = await Question.addQuestion(data);
@@ -61,12 +58,27 @@ router.post("/addQuestion",  async (req, res) => {
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
         res.status(500).send(response);
-    }*/
+    }
 });
 
-router.post("/upvoteQuestion", async (req, res) => {
-    const data = req.body;
-    const response={}
+
+// router.get("/getAllQuestions",  async (req, res) => {
+
+//     const msg = {};
+//     msg.path = "get_all_questions";
+//     kafka.make_request('question',msg, function(err,results){
+//         if (err){
+//             console.log("kafka error");
+//             res.json({
+//                 status:"error",
+//                 msg:"System Error, Try Again."
+//             })
+//         }else{
+//             res.status(results.status).send(results);
+//         }
+//     });
+// });
+    /*let response={}
     try{
         const result = await Question.upvoteQuestion(data);
         if(result){
@@ -86,29 +98,27 @@ router.post("/upvoteQuestion", async (req, res) => {
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
         res.status(500).send(response);
-    }
-});
+    }*/
 
-
-const runRedis = async() =>{
+// const runRedis = async() =>{
     router.get("/getAllQuestions",  async (req, res) => {
         let response={}
 
         try{
 
-            const cacheQuestions = await client.get('allQuestions')
-            if (cacheQuestions) {
-              {
-                const temp = JSON.parse(cacheQuestions)
-                response.success = true;
-                response.user = temp;
-                response.status = "200";
-                res.status(200).send(response);
-              }
-            }
-            else{
+            // const cacheQuestions = await client.get('allQuestions')
+            // if (cacheQuestions) {
+            //   {
+            //     const temp = JSON.parse(cacheQuestions)
+            //     response.success = true;
+            //     response.user = temp;
+            //     response.status = "200";
+            //     res.status(200).send(response);
+            //   }
+            // }
+            // else{
                 result = await Question.getAllQuestions();
-                await client.set('allQuestions', JSON.stringify(result))
+                //await client.set('allQuestions', JSON.stringify(result))
     
                 if(result){
                     response.success = true;
@@ -121,7 +131,7 @@ const runRedis = async() =>{
                     response.status = "400";
                     res.status(400).send(response);
                 }
-            }
+            //}
            
         }catch(e){
             console.log(e);
@@ -132,8 +142,8 @@ const runRedis = async() =>{
         }
     
     })    
-}
-runRedis()
+// }
+// runRedis()
 
 
 module.exports = router;
