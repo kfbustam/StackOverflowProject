@@ -15,7 +15,8 @@ const UserSchema = new mongoose.Schema({
     default:null,
   },
   reputation:{
-    type:Number
+    type:Number,
+    default: 0
   },
   profileURL:{
     type:String
