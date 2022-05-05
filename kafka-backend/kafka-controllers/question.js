@@ -1,43 +1,45 @@
 //const { response } = require("express");
 const express = require("express");
 const router = express.Router();
-//const {Question} = require("../services/question.js")
+const {Question} = require("../kafka-services/question.js")
 const bcrypt = require('bcryptjs');
 
-router.post("/addQuestion",  async (req, res) => {
+const addQuestion = async (msg, callback) => {
 
-    const msg = {};
-    msg.userId = req.params.userId;
-    const data = req.body;
+    const question = msg.question;
     const response={}
-    if(req.file)
-    {
-        const file = req.file;
-        const result = await uploadFile(file);
-        data.key=result;
-    }
     try{
-        const result = await Question.addQuestion(data);
+        const result = await Question.addQuestion(question);
         if(result){
             response.success = true;
-            response.user = data.user;
+            response.user = question.user;
             response.status = "200";
-            res.status(200).send(response);
+            response.todayCountUpdated = result.todayCountUpdated;
+            response.weekCountUpdated = result.weekCountUpdated;
+            response.userUpdated=result.userUpdated;
+            callback(null,response);
         }else{
             response.success = false;
             response.error = "Cannot add the question";
             response.status = "400";
-            res.status(400).send(response);
+            callback(null,response);
         }
     }catch(e){
         console.log(e);
         response.success = false;
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
-        res.status(500).send(response);
+        callback(null,response);
     }
-});
+    };
 
-
-
-module.exports = router;
+    function handle_request(msg, callback) {
+        if (msg.path === "add_question") {
+            addQuestion(msg, callback);
+        }else if (msg.path === "something") {
+          someThing(msg, callback);
+        }
+      }
+    
+    
+      exports.handle_request = handle_request;

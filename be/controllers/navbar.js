@@ -8,7 +8,7 @@ const kafka = require("../kafka/client");
 
 router.post("/navbarFilter", async (req, res) => {
 
-    const msg = {};
+    /*const msg = {};
     msg.data = req.body.data;
     msg.path = "navbar_filter";
     kafka.make_request('navbar',msg, function(err,results){
@@ -21,10 +21,10 @@ router.post("/navbarFilter", async (req, res) => {
         }else{
             res.status(results.status).send(results);
         }
-    });
+    });*/
 
 
-    /* const data = req.body.data;
+    const data = req.body.data;
     const response = {}
     try{
         //const result = await Question.getOtherFilteredResults(data);
@@ -150,7 +150,7 @@ router.post("/navbarFilter", async (req, res) => {
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
         res.status(500).send(response);
-    } */
+    }
 });
 
 

@@ -3,102 +3,131 @@ const QuestionModel = require("../mongo-models/questions.js");
 const tagModel = require('../mongo-models/tag.js');
 const TagModel = require("../mongo-models/tag.js")
 const { DateTime } = require("luxon");
+const UserModel = require('../mongo-models/user.js')
 
 class Question {
 
         static addQuestion = async (data) => {
                 try {
-                        const addQuery = {
-                                title : data.title,
-                                tags : data.tags,
-                                body : data.body,
-                                user : data.user
-                        }
-                        addQuery.$and = [];
-                        if(data.body_image)
-                        {
-                                addQuery.$and.push({"body_image": data.key});
-                                addQuery.$and.push({"isApproved":false})
-                        }
+                        let addQuery;
+                         if(data.body.includes("<img"))
+                         {
+                                 addQuery= {
+                                         title : data.title,
+                                         tags : data.tags,
+                                         body : data.body,
+                                         user : data.user,
+                                         isApproved : false
+                                 }
+                         }
+                         else
+                         {
+                                 addQuery= {
+                                         title : data.title,
+                                         tags : data.tags,
+                                         body : data.body,
+                                         user : data.user
+                                 }
+ 
+                         }
+                         const question = new QuestionModel(addQuery);
+                         const result = await question.save();
+                         
+                         /*const findQuestionCondition = {
+                                 "_id":mongoose.Types.ObjectId(data.user)
+                         }
+ 
+                         const updateQuestionCondition = {
+                                 $push: {questionIds: result._id}
+                         }
+ 
+                         const updateUser = await UserModel.updateOne(findQuestionCondition,updateQuestionCondition)
+                
+                         if(updateUser)
+                         {
+                                 result.userUpdated = true;
+                         }
+                         //While adding the question, checking which tags are present and updating those tags totalCount, todayCount and weekCount
+                         let countResult;
+                         for(const tag of data.tags)
+                         {
+                                 const tagData= await tagModel.findById(tag)
+                                 const findCondition = {
+                                         "_id":mongoose.Types.ObjectId(tag)
+                                 }
+                                 if(tagData.todaydate == new Date().getDate() && tagData.currentWeek == DateTime.now().weekNumber)
+                                 {
+                                         const updateCondition = {
+                                                 $inc: {
+                                                         count:1,
+                                                         todaycount:1,
+                                                         weekcount:1
+                                                 }
+                                         }
+                                        countResult = await tagModel.updateOne(findCondition,updateCondition);
+                                 }
+                                 else if(tagData.todaydate == new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
+                                 {
+                                         const updateCondition = {
+                                                 currentWeek:DateTime.now().weekNumber,
+                                                 weekcount:1,
+                                                 $inc: {
+                                                         count:1,
+                                                         todaycount:1,
+                                                 }
+                                         }
+                                        countResult = await tagModel.updateOne(findCondition,updateCondition);
+                                 }
+                                 else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek ==  DateTime.now().weekNumber)
+                                 {
+                                         console.log(tagData.todaydate)
+                                         console.log(new Date().getDate())
+ 
+                                         const updateCondition = {
+                                                 todaydate:new Date().getDate(),
+                                                 todaycount:1,
+                                                 $inc: {
+                                                         count:1,
+                                                         weekcount:1
+                                                 }
+                                         }
+                                        countResult = await tagModel.updateOne(findCondition,updateCondition);
+                                 }
+                                 else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
+                                 {
+                                         const updateCondition = {
+                                                 todaydate:new Date().getDate(),
+                                                 currentWeek:DateTime.now().weekNumber,
+                                                 todaycount:1,
+                                                 weekcount:1,
+                                                 $inc: {
+                                                         count:1
+                                                 }
+                                         }
+                                        countResult = await tagModel.updateOne(findCondition,updateCondition);
+                                 }
+                         }
 
-                        const question = new QuestionModel(addQuery);
-                        const result = question.save();
+                         if(countResult)
+                         {
+                                 result.todayCountUpdated = true
+                                 result.weekCountUpdated = true
+                         }*/
+                         if(result)
+                         {
+                                 return result;
+                         }
+                         else{
+                                 return {};
+                         }
+                 }
+                 catch(err){
+                         console.log(err);
+                         console.log("Some unexpected error occured while adding question")
+                 }
+ 
 
-                        for(const tag of data.tags)
-                        {
-                                const tagData= await tagModel.findById(tag)
-                                const findCondition = {
-                                        "_id":mongoose.Types.ObjectId(tag)
-                                }
-                                if(tagData.todaydate == new Date().getDate() && tagData.currentWeek == DateTime.now().weekNumber)
-                                {
-                                        const updateCondition = {
-                                                $inc: {
-                                                        count:1,
-                                                        todaycount:1,
-                                                        weekcount:1
-                                                }
-                                        }
-                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
-                                }
-                                else if(tagData.todaydate == new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
-                                {
-                                        const updateCondition = {
-                                                currentWeek:DateTime.now().weekNumber,
-                                                weekcount:1,
-                                                $inc: {
-                                                        count:1,
-                                                        todaycount:1,
-                                                }
-                                        }
-                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
-
-                                }
-                                else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek ==  DateTime.now().weekNumber)
-                                {
-                                        console.log(tagData.todaydate)
-                                        console.log(new Date().getDate())
-
-                                        const updateCondition = {
-                                                todaydate:new Date().getDate(),
-                                                todaycount:1,
-                                                $inc: {
-                                                        count:1,
-                                                        weekcount:1
-                                                }
-                                        }
-                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
-                                }
-                                else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
-                                {
-                                        const updateCondition = {
-                                                todaydate:new Date().getDate(),
-                                                currentWeek:DateTime.now().weekNumber,
-                                                todaycount:1,
-                                                weekcount:1,
-                                                $inc: {
-                                                        count:1
-                                                }
-                                        }
-                                        const countResult = await tagModel.updateOne(findCondition,updateCondition);
-
-                                }
-                        }
-
-                        if(result)
-                        {
-                                return result;
-                        }
-                        else{
-                                return {};
-                        }
-
-
-                }
-                catch(err){
-                        console.log(err);
-                        console.log("Some unexpected error occured while adding question")
-                }
+ 
 
         }
 
