@@ -305,6 +305,28 @@ class Question {
                 return "Done"
         }
 
+        static getQuestionById = async (data) => {
+                try {
+                        let result = {}
+                        const question = await QuestionModel.findById(data)
+                                                .populate('user', '_id username reputation')
+                                                .populate('tags', '_id name')
+                                                .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } , })
+
+                        if (question) {
+                                result = question
+                                return result
+                        }
+                        else {
+                                result.errorMessage = "No questions found with question id " + data
+                                return {};
+                        }
+
+                } catch (err) {
+                        console.log(err);
+                        throw new Error("Some unexpected error occurred while getting the questions");
+                }
+        }
 
 }
 

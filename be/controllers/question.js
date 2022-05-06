@@ -81,7 +81,7 @@ router.get('/getById/:id', async (req, res) => {
             res.status(400).send(response);
         }
     } catch (err) {
-        console.log(e);
+        console.log(err);
         response.success = false;
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
