@@ -212,7 +212,7 @@ function App() {
 
         
 
-        <Route path="/search" element={   
+        <Route path="/search/:search_query" element={   
           <div className='stack-layout'>
             <div >
               <LeftSideBar activeTab='questions'/>

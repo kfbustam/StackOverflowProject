@@ -89,6 +89,35 @@ router.get('/getById/:id', async (req, res) => {
     }
 })
 
+router.get('/search/:query', async (req, res) => {
+    const query = req.params.query
+
+    const response = {}
+
+    try {
+        const result = await Question.search(query)
+
+        if(result){
+            response.success = true;
+            response.posts = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Failed to find posts from search query.";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    } catch(err) {
+        console.log(err);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
 // router.get("/getAllQuestions",  async (req, res) => {
 
 //     const msg = {};
