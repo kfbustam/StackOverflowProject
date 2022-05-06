@@ -3,7 +3,7 @@ Spring 2022 CMPE273: StackOverflowProject
 
 
 ## Architecture Diagram
-<img src = "https://user-images.githubusercontent.com/87613567/167223483-0c3465c5-2262-49d0-a377-6803828bb579.png" width = 760 height = 410 />
+<img src = "https://user-images.githubusercontent.com/87613567/167227190-bba6a9e8-e80f-421a-8de1-1c8776de99fe.png" width = 710 height = 410 />
 
 
 
