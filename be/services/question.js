@@ -4,6 +4,7 @@ const tagModel = require('../model/tag.js');
 const UserModel = require('../model/user.js')
 //const TagModel = require("../model/tag.js")
 const { DateTime } = require("luxon");
+const AnswerModel = require('../model/answers')
 
 class Question {
 
@@ -325,6 +326,96 @@ class Question {
                 } catch (err) {
                         console.log(err);
                         throw new Error("Some unexpected error occurred while getting the questions");
+                }
+        }
+
+        static search = async(data) => {
+                const searchCriteria = data.match(/"[^"]*"|[^\s"]+/g)
+
+                try {
+                        let result = []
+
+                        let questions = await QuestionModel.find({}).select('title body tags user score createdAt updatedAt answer_id').lean()
+                                .populate('tags', '_id name')
+                                .populate('answer_id', '_id isBest')
+                                .populate('user', '_id username').limit(10)
+                        let answers = await AnswerModel.find({}).select('answer question_id isBest score createdAt updatedAt').lean()
+                                .populate({ path: 'question_id', populate: { path: 'tags', select: 'name' }, select: 'tags title'})
+                                .populate('user_id', '_id username')
+
+                        searchCriteria.forEach(criteria => {
+                                if (criteria.substring(0, 3) === 'is:') {
+                                        const type = criteria.substring(3, criteria.length)
+
+                                        if (type === 'question') answers = []
+                                        else if (type === 'answer') questions = []
+                                }
+                                else if (criteria.substring(0, 11) === 'isaccepted:') {
+                                        const res = criteria.substring(11, criteria.length)
+
+                                        questions = []
+
+                                        if (res === 'yes') answers = answers.filter(answer => answer.isBest)
+                                        else if (res === 'no') answers = answers.filter(answer => !answer.isBest)
+                                }
+                                else if (criteria.charAt(0) === '[' && criteria.charAt(criteria.length - 1) === ']') {
+                                        const tag = criteria.substring(1, criteria.length - 1)
+
+                                        questions = questions.filter(question => {
+                                                for (const questionTag of question.tags) {
+                                                        if (questionTag.name.toLowerCase() === tag.toLowerCase()) return true
+                                                }
+
+                                                return false
+                                        })
+
+                                        answers = answers.filter(answer => {
+                                                for (const questionTag of answer.question_id.tags) {
+                                                        if (questionTag.name.toLowerCase() === tag.toLowerCase()) return true
+                                                }
+
+                                                return false
+                                        })
+                                }
+                                else if (criteria.substring(0, 5) === 'user:') {
+                                        const userID = criteria.substring(5, criteria.length)
+
+                                        questions = questions.filter(question => question.user._id.toString() === userID)
+
+                                        answers = answers.filter(answer => answer.user_id._id.toString() === userID)
+                                }
+                                else if (criteria.charAt(0) === '"' && criteria.charAt(criteria.length - 1) === '"') {
+                                        const exact = criteria.substring(1, criteria.length - 1).toLowerCase()
+                                        
+                                        questions = questions.filter(question => {
+                                                return question.title.toLowerCase().includes(exact) || 
+                                                        question.body.toLowerCase().includes(exact)
+                                        })
+
+                                        answers = answers.filter(answer => answer.answer.toLowerCase().includes(exact))
+                                }
+                                else {
+                                        const word = criteria
+
+                                        questions = questions.filter(question => {
+                                                return question.title.toLowerCase().includes(word) || 
+                                                        question.body.toLowerCase().includes(word)
+                                        })
+
+                                        answers = answers.filter(answer => answer.answer.toLowerCase().includes(word))
+                                }
+                        })
+
+                        questions.forEach(question => question.type = 'question')
+                        answers.forEach(answer => answer.type = 'answer')
+
+                        result = [...questions, ...answers]
+
+                        return result
+
+                } catch (err) {
+                        console.log(err);
+                        throw new Error("Some unexpected error occurred while getting the posts");
                 }
         }
 
