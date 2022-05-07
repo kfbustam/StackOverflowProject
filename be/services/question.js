@@ -3,6 +3,7 @@ const QuestionModel = require("../model/questions.js");
 const tagModel = require('../model/tag.js');
 const TagModel = require("../model/tag.js")
 const UserModel = require("../model/user.js")
+const CommentsModel = require("../model/comments.js")
 const { DateTime } = require("luxon");
 
 class Question {
@@ -172,51 +173,51 @@ class Question {
         }
 
 
-        static getQuestionByTag = async (data) => {
+        // static getQuestionByTag = async (data) => {
 
-                try {
-                        let result={}
-                        const tagQuery = {
-                                name:data
-                        }
-                        const tag = await TagModel.find(tagQuery)
-                        if(tag.length != 0)
-                        {
-                                const query = {
-                                        "tags": {
-                                                $in:tag[0]._id
-                                        }
-                                }
-                                const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
-                                if(questions?.length)
-                                {
-                                        result.data=questions
-                                        return result;
-                                }
-                                else{
-                                        result.errorMessage="No questions found with this Tag"
-                                        return [];
-                                }
-                        }
-                        else{
-                                result.errorMessage="There is no Tag available with the entered text "+data
-                                //throw new Error("Some unexpected error occurred with the Tag")
+        //         try {
+        //                 let result={}
+        //                 const tagQuery = {
+        //                         name:data
+        //                 }
+        //                 const tag = await TagModel.find(tagQuery)
+        //                 if(tag.length != 0)
+        //                 {
+        //                         const query = {
+        //                                 "tags": {
+        //                                         $in:tag[0]._id
+        //                                 }
+        //                         }
+        //                         const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
+        //                         if(questions?.length)
+        //                         {
+        //                                 result.data=questions
+        //                                 return result;
+        //                         }
+        //                         else{
+        //                                 result.errorMessage="No questions found with this Tag"
+        //                                 return [];
+        //                         }
+        //                 }
+        //                 else{
+        //                         result.errorMessage="There is no Tag available with the entered text "+data
+        //                         //throw new Error("Some unexpected error occurred with the Tag")
 
-                                return result;
-                        }
+        //                         return result;
+        //                 }
 
-                }
-                catch(err){
-                        console.log(err);
-                        console.log("Some unexpected error while fethching the questions by tag")
-                }
+        //         }
+        //         catch(err){
+        //                 console.log(err);
+        //                 console.log("Some unexpected error while fethching the questions by tag")
+        //         }
 
                 /*let x;
                 x = "This api should give all the questions based on Tag " + data
                 console.log(x)
                 return x;*/
 
-        }
+        //}
 
         static getQuestionByExactmatch = async (data) => {
 
@@ -289,12 +290,54 @@ class Question {
                     }
         }
 
+
         static getQuestionByAcceptance = async (data) => {
                 let x;
 
                 x = "This api should give all the questions or answers based on the acceptance type " + data
                 return (x)
         }
+
+
+
+        static addComment = async (data) => {
+                try {
+                        let addQuery;
+                        
+                                 addQuery= {
+                                         "comment": data.comment,                                       
+                                         "user" : data.user_id,
+                                         "question_id" : data.question_id
+                                 } 
+                         
+                         const comment = new CommentsModel(addQuery);
+                         const newComment = await comment.save();                    
+                         
+                         const findQuestionConditionForComment = {
+                                 "_id":mongoose.Types.ObjectId(data.question_id)
+                                 
+                         }                        
+ 
+                         const updateQuestionConditionForComment = {
+                                 $push: {"comment_id": newComment._id}
+                         }
+                         console.log("PUSHing value",newComment._id);
+ 
+                         const updateQuestionComment = await QuestionModel.updateOne(findQuestionConditionForComment,updateQuestionConditionForComment)
+                
+                         return newComment;
+                 }
+                 catch(err){
+                         console.log(err);
+                         console.log("Some unexpected error occured while adding Comment")
+                 }
+ 
+        }
+
+        
+
+        
+
 
 
 }

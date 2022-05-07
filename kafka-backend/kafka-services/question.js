@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 const QuestionModel = require("../mongo-models/questions.js");
-const tagModel = require('../mongo-models/tag.js');
+//const tagModel = require('../mongo-models/tag.js');
 const TagModel = require("../mongo-models/tag.js")
+const CommentsModel= require("../mongo-models/comments")
 const { DateTime } = require("luxon");
 const UserModel = require('../mongo-models/user.js')
 
@@ -254,6 +255,30 @@ class Question {
 
                 x = "This api should give all the questions or answers based on the acceptance type " + data
                 return (x)
+        }
+
+
+        static addComment = async (data) => {
+                try {
+                        let addQuery;
+                        
+                                 addQuery= {
+                                         comment: data.comment,                                       
+                                         user : data.user,
+                                         question_id : data.question
+                                 } 
+                         
+                         const comment = new CommentsModel(addQuery);
+                         const result = await comment.save();
+                         console.log("Comment result", result);                                            
+                        
+                 }
+                 catch(err){
+                         console.log(err);
+                         console.log("Some unexpected error occured while adding Comment")
+                 }
+ 
+
         }
 
 
