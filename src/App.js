@@ -122,16 +122,18 @@ const getRightOfTheSearchBarLinkComponents = (navigate, user, logout) => {
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  //const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const user = JSON.parse(localStorage.getItem('user'))
 
   useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem('user')));
+    //setUser(JSON.parse(localStorage.getItem('user')));
   }, [location]);
 
   const logout = () => {
     navigate('/');
     localStorage.clear();
-    setUser(null);
+    //setUser(null);
+    user = null
   }
 
   // const isUserLoggedIn = true;
@@ -201,7 +203,7 @@ function App() {
         <Route exact path="/askQuestion" element={<PostQuestion />} />
 
         <Route exact path="/admin" element={(user && user.email === 'admin@gmail.com') ? <Admin /> : <Navigate to='/' />} />
-        <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') === 'admin@gmail.com' ? <AddTag /> : <Navigate to='/' />} />
+        <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') ? <AddTag /> : <Navigate to='/' />} />
         <Route exact path="/question" element={(user && user.email === 'admin@gmail.com') ? <Question /> : <Navigate to='/' />} />
         <Route exact path="/userlist" element={(user && user.email === 'admin@gmail.com') ? <UserList /> : <Navigate to='/' />} />
         <Route exact path="/questionsgraph" element={(user && user.email === 'admin@gmail.com') ? <QuestionsGraph /> : <Navigate to='/' />} />
