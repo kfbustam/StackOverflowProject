@@ -5,12 +5,15 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import './Search.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import axios from 'axios'
+import API_URL from '../../apiConfig'
 
 const Search = () => {
     const navigate = useNavigate()
     const [posts, setPosts] = useState([])
-    const data = [{
+    const { search_query } = useParams()
+    /*const data = [{
         type: 'question',
         score: 5,
         answer_id: [{
@@ -116,30 +119,37 @@ const Search = () => {
         },
         createdAt: new Date(2022, 1, 3)
     },
-    ]
+    ]*/
 
     useEffect(() => {
+        axios.get(`${API_URL}/api/question/search/${search_query}`)
+        .then(res => {
+            const data = res.data.posts
 
-        for (let i = 0; i < data.length; i++) {
-            let desc = '';
-
-            if (data[i].type === 'question') {
-                desc = data[i].body
-                let plainDesc = desc.replace(/<[^>]+>/g, '');
-
-                data[i].body = plainDesc
-
-            } else if (data[i].type === 'answer') {
-                desc = data[i].answer
-                let plainDesc = desc.replace(/<[^>]+>/g, '');
-
-                data[i].answer = plainDesc
-            }           
-        }
-
-
-        setPosts(data)
-    }, [])
+            for (let i = 0; i < data.length; i++) {
+                let desc = '';
+    
+                if (data[i].type === 'question') {
+                    desc = data[i].body
+                    let plainDesc = desc.replace(/<[^>]+>/g, '');
+    
+                    data[i].body = plainDesc
+    
+                } else if (data[i].type === 'answer') {
+                    desc = data[i].answer
+                    let plainDesc = desc.replace(/<[^>]+>/g, '');
+    
+                    data[i].answer = plainDesc
+                }           
+            }
+    
+    
+            setPosts(data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }, [search_query])
 
     const handleNewest = () => {
         setPosts([].concat(posts).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()))
@@ -154,7 +164,7 @@ const Search = () => {
             <Container className='mt-3 search-head-container'>
                 <div>
                     <h3 className='search-results-title'>Search results</h3>
-                    <Button className='ask-question-button' onClick={() => navigate('/postquestion')}>Ask question</Button>
+                    <Button className='ask-question-button' onClick={() => navigate('/askQuestion')}>Ask question</Button>
                 </div>
             </Container>
             <Container className='mt-3'>
@@ -194,7 +204,7 @@ const Search = () => {
                                     <div className='search-tag-block me-1'>{tag.name}</div>
                                 ))}
                                 <p className='search-author'>{post.type === 'question' ? 'Asked' : 'Answered'} 
-                                    {' ' + post.createdAt.toLocaleDateString('en-us', { year: "numeric", day: 'numeric', month: "short" })} by 
+                                    {' ' + new Date(post.createdAt).toLocaleDateString('en-us', { year: "numeric", day: 'numeric', month: "short" })} by 
                                     <Link to='/users' className='search-name-link'> {post.type === 'question' ? post.user.username : post.user_id.username}</Link>
                                 </p>
                             </Col>
