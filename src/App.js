@@ -16,7 +16,7 @@ import Users from './components/Users/Users';
 import LeftSideBar from './components/LeftSideBar/LeftSideBar';
 import CircleIcon from '@mui/icons-material/Circle';
 import { Routes, Route } from 'react-router-dom';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
 import PostQuestion from './components/PostQuestion/PostQuestion'
@@ -198,19 +198,14 @@ function App() {
         <Route exact path="/questions/overview" element={<QuestionOverview />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
-        <Route exact path="/postquestion" element={<PostQuestion />} />
+        <Route exact path="/askQuestion" element={<PostQuestion />} />
 
-        <Route exact path="/admin" element={<Admin />} />
-        <Route exact path="/addtag" element={<AddTag />} />
-        <Route exact path="/question" element={<Question />} />
-        <Route exact path="/userlist" element={<UserList />} />
-        <Route exact path="/questionsgraph" element={<QuestionsGraph />} />
-        <Route exact path="/quesgraph" element={<Quesgraph />} />
-
-      
-        
-
-        
+        <Route exact path="/admin" element={user.email === 'admin@gmail.com' ? <Admin /> : <Navigate to='/' />} />
+        <Route exact path="/addtag" element={user.email === 'admin@gmail.com' ? <AddTag /> : <Navigate to='/' />} />
+        <Route exact path="/question" element={user.email === 'admin@gmail.com' ? <Question /> : <Navigate to='/' />} />
+        <Route exact path="/userlist" element={user.email === 'admin@gmail.com' ? <UserList /> : <Navigate to='/' />} />
+        <Route exact path="/questionsgraph" element={user.email === 'admin@gmail.com' ? <QuestionsGraph /> : <Navigate to='/' />} />
+        <Route exact path="/quesgraph" element={user.email === 'admin@gmail.com' ? <Quesgraph /> : <Navigate to='/' />} />
 
         <Route path="/search/:search_query" element={   
           <div className='stack-layout'>
