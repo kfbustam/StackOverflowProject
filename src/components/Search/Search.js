@@ -46,7 +46,7 @@ const Search = () => {
     }, [search_query])
 
     const handleNewest = () => {
-        setPosts([].concat(posts).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()))
+        setPosts([].concat(posts).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
     }
 
     const handleRelevance = () => {
@@ -54,7 +54,7 @@ const Search = () => {
     }
 
     return (
-        <div className='search-container'>
+        <div className='search-container mb-3'>
             <Container className='mt-3 search-head-container'>
                 <div>
                     <h3 className='search-results-title'>Search results</h3>
