@@ -297,19 +297,58 @@ class Question {
         }
 
         static upvoteQuestion = async(data) =>{
-                let qtemp = await QuestionModel.findOne({"_id":data.questionId})
-                let upvoteval = qtemp["upvote"]+1
-                let scoreval = upvoteval -  qtemp["downvote"]
-                let usertemp = await UserModel.findOne({"questionIds":data.questionId})
-                console.log(upvoteval)
-                console.log(scoreval)
-                console.log(usertemp)
-                //let temp2 = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"upvote":upvoteval, "score":scoreval})
-                return "Done"
+                //Updating Question Params
+                let question_doc = await QuestionModel.findOne({"_id":data.questionId})
+                const upvoteval = question_doc["upvote"]+1
+                const  scoreval = upvoteval -  question_doc["downvote"]
+                
+                // Updating Owner Reputation Params
+                let owner_doc = await UserModel.findOne({"questionIds":data.questionId})
+                //console.log(owner_doc)
+                let ownerid = owner_doc["_id"]
+                let reputationval = owner_doc["reputation"]+10
+
+
+                //Updating User upvote count
+                let user_doc = await UserModel.findOne({"_id":data.userId})
+                let upvotegnval = user_doc["upvote_given"]+1
+
+
+                let score_update = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"upvote":upvoteval, "score":scoreval})
+                let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerid},{"reputation":reputationval})
+                let upvotegn_update = await UserModel.findOneAndUpdate({"_id":data.userId},{"upvote_given":upvotegnval}) 
+
+                return {"score":scoreval}
+        }
+
+        static downvoteQuestion = async(data) =>{
+                //Updating Question Params
+                let question_doc = await QuestionModel.findOne({"_id":data.questionId})
+                const downvoteval = question_doc["downvote"]+1
+                const  scoreval = question_doc["upvote"] - downvoteval  
+                
+                // Updating Owner Reputation Params
+                let owner_doc = await UserModel.findOne({"questionIds":data.questionId})
+                let ownerid = owner_doc["_id"]
+                let reputationval = owner_doc["reputation"]-10
+
+
+                //Updating User upvote count
+                let user_doc = await UserModel.findOne({"_id":data.userId})
+                let downvotegnval = user_doc["downvote_given"]+1
+
+
+                let score_update = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"downvote":downvoteval, "score":scoreval})
+                let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerid},{"reputation":reputationval})
+                let downvotegn_update = await UserModel.findOneAndUpdate({"_id":data.userId},{"downvote_given":downvotegnval}) 
+
+                return {"score":scoreval}
         }
 
 
 }
+
+
 
 
 

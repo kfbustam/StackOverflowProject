@@ -14,16 +14,17 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default:null,
   },
-  upvotenum:{
+  upvote_given:{
     type:Number,
     default:0
   },
-  downvotenum:{
+  downvote_given:{
     type:Number,
     default:0
   },
   reputation:{
-    type:Number
+    type:Number,
+    default:0
   },
   profileURL:{
     type:String
