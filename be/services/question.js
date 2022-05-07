@@ -4,6 +4,8 @@ const tagModel = require('../model/tag.js');
 const TagModel = require("../model/tag.js")
 const UserModel = require("../model/user.js")
 const { DateTime } = require("luxon");
+const CountModel = require("../model/count.js");
+const count = require('../model/count.js');
 
 class Question {
 
@@ -79,10 +81,7 @@ class Question {
                                         countResult = await tagModel.updateOne(findCondition,updateCondition);
                                  }
                                  else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek ==  DateTime.now().weekNumber)
-                                 {
-                                         console.log(tagData.todaydate)
-                                         console.log(new Date().getDate())
- 
+                                 { 
                                          const updateCondition = {
                                                  todaydate:new Date().getDate(),
                                                  todaycount:1,
@@ -113,6 +112,39 @@ class Question {
                                  result.todayCountUpdated = true
                                  result.weekCountUpdated = true
                          }
+                         //measuring count of questions
+                         const countData = await CountModel.find({"date":new Date().toDateString()})
+                        if(countData?.length)
+                        {
+
+                                if(countData[0].date === new Date().toDateString())
+                                {
+                                        const updateCount = await CountModel.updateOne({"_id":countData[0]._id},{$inc:{"count":1}})
+
+                                }
+                                else
+                                {
+                                        const addCountCondition = {
+                                                date: new Date().toDateString(),
+                                                 count:1
+                                                }        
+                                        
+                                        const addCount = new CountModel(addCountCondition)
+                                        const result = await addCount.save()
+                                }
+                                
+                        }
+                        else
+                        {
+                                const addCountQuery = {
+                                        date: new Date().toDateString(),
+                                        count: 1
+                                }
+                                const addCount = new CountModel(addCountQuery);
+                                const result = await addCount.save();
+                        }
+
+                        //sending the add question results
                          if(result)
                          {
                                  return result;

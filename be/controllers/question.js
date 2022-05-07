@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const {Question} = require("../services/question.js")
 const bcrypt = require('bcryptjs');
-const kafka = require("../kafka/client");
+//const kafka = require("../kafka/client");
 const { response } = require("../index.js");
 
 
@@ -27,14 +27,13 @@ router.post("/addQuestion",  async (req, res) => {
     const response={}
     try{
         const result = await Question.addQuestion(data);
-        console.log(result.userUpdated)
         if(result){
             response.success = true;
             response.user = data.user;
             response.status = "200";
-            response.todayCountUpdated = result.todayCountUpdated;
-            response.weekCountUpdated = result.weekCountUpdated;
-            response.userUpdated=result.userUpdated;
+            //response.todayCountUpdated = result.todayCountUpdated;
+           // response.weekCountUpdated = result.weekCountUpdated;
+            //response.userUpdated=result.userUpdated;
 
             res.status(200).send(response);
         }else{
@@ -55,7 +54,7 @@ router.post("/addQuestion",  async (req, res) => {
 
 router.get("/getAllQuestions",  async (req, res) => {
 
-    const msg = {};
+    /*const msg = {};
     msg.path = "get_all_questions";
     kafka.make_request('question',msg, function(err,results){
         if (err){
@@ -67,9 +66,9 @@ router.get("/getAllQuestions",  async (req, res) => {
         }else{
             res.status(results.status).send(results);
         }
-    });
+    });*/
 
-    /*let response={}
+    let response={}
     try{
         result = await Question.getAllQuestions();
         if(result){
@@ -89,7 +88,7 @@ router.get("/getAllQuestions",  async (req, res) => {
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
         res.status(500).send(response);
-    }*/
+    }
 
 })
 
