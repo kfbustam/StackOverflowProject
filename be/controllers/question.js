@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const {Question} = require("../services/question.js")
 const bcrypt = require('bcryptjs');
-const kafka = require("../kafka/client");
+//const kafka = require("../kafka/client");
 const { response } = require("../index.js");
 
 // const redis = require('redis')

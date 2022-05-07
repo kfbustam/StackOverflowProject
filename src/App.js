@@ -200,12 +200,12 @@ function App() {
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/askQuestion" element={<PostQuestion />} />
 
-        <Route exact path="/admin" element={user.email === 'admin@gmail.com' ? <Admin /> : <Navigate to='/' />} />
-        <Route exact path="/addtag" element={user.email === 'admin@gmail.com' ? <AddTag /> : <Navigate to='/' />} />
-        <Route exact path="/question" element={user.email === 'admin@gmail.com' ? <Question /> : <Navigate to='/' />} />
-        <Route exact path="/userlist" element={user.email === 'admin@gmail.com' ? <UserList /> : <Navigate to='/' />} />
-        <Route exact path="/questionsgraph" element={user.email === 'admin@gmail.com' ? <QuestionsGraph /> : <Navigate to='/' />} />
-        <Route exact path="/quesgraph" element={user.email === 'admin@gmail.com' ? <Quesgraph /> : <Navigate to='/' />} />
+        <Route exact path="/admin" element={(user && user.email === 'admin@gmail.com') ? <Admin /> : <Navigate to='/' />} />
+        <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') === 'admin@gmail.com' ? <AddTag /> : <Navigate to='/' />} />
+        <Route exact path="/question" element={(user && user.email === 'admin@gmail.com') ? <Question /> : <Navigate to='/' />} />
+        <Route exact path="/userlist" element={(user && user.email === 'admin@gmail.com') ? <UserList /> : <Navigate to='/' />} />
+        <Route exact path="/questionsgraph" element={(user && user.email === 'admin@gmail.com') ? <QuestionsGraph /> : <Navigate to='/' />} />
+        <Route exact path="/quesgraph" element={(user && user.email === 'admin@gmail.com') ? <Quesgraph /> : <Navigate to='/' />} />
 
         <Route path="/search/:search_query" element={   
           <div className='stack-layout'>
