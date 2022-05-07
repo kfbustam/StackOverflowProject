@@ -146,7 +146,8 @@ class Question {
                                                 $in:tag[0]._id
                                         }
                                 }
-                                const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
+                                const questions = await QuestionModel.find(query).populate('tags', 'name')
+                                        .populate('user', 'username reputation');
                                 if(questions?.length)
                                 {
                                         result.data=questions
@@ -173,7 +174,7 @@ class Question {
         }
 
 
-        static getQuestionByTag = async (data) => {
+        /*static getQuestionByTag = async (data) => {
 
                 try {
                         let result = {}
@@ -211,12 +212,7 @@ class Question {
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
 
-                /*let x;
-                x = "This api should give all the questions based on Tag " + data
-                console.log(x)
-                return x;*/
-
-        }
+        }*/
 
         static getQuestionByExactmatch = async (data) => {
 
