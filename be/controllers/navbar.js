@@ -3,7 +3,7 @@ const {Question} = require("../services/question");
 const {User} = require("../services/user");
 const {Answer} = require("../services/answer")
 const router = express.Router();
-const kafka = require("../kafka/client");
+//const kafka = require("../kafka/client");
 
 
 router.post("/navbarFilter", async (req, res) => {

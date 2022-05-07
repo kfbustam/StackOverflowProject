@@ -3,28 +3,28 @@ const express = require("express");
 const router = express.Router();
 const {Question} = require("../services/question.js")
 const bcrypt = require('bcryptjs');
-const kafka = require("../kafka/client");
+//const kafka = require("../kafka/client");
 const { response } = require("../index.js");
 
 
-router.post("/addQuestion",  async (req, res) => {
+// router.post("/addQuestion",  async (req, res) => {
 
-    console.log(req.body);
-    console.log("asdasdasdasda")
-    const msg = {};
-    msg.question = req.body;
-    msg.path = "add_question";
-    kafka.make_request('question',msg, function(err,results){
-        if (err){
-            console.log("kafka error");
-            res.json({
-                status:"error",
-                msg:"System Error, Try Again."
-            })
-        }else{
-            res.status(results.status).send(results);
-        }
-    });
+//     console.log(req.body);
+//     console.log("asdasdasdasda")
+//     const msg = {};
+//     msg.question = req.body;
+//     msg.path = "add_question";
+//     kafka.make_request('question',msg, function(err,results){
+//         if (err){
+//             console.log("kafka error");
+//             res.json({
+//                 status:"error",
+//                 msg:"System Error, Try Again."
+//             })
+//         }else{
+//             res.status(results.status).send(results);
+//         }
+//     });
     
     /*const data = req.body;
     const response={}
@@ -53,13 +53,13 @@ router.post("/addQuestion",  async (req, res) => {
         response.status = "500";
         res.status(500).send(response);
     }*/
-});
+//});
 
 
 router.get("/getAllQuestions",  async (req, res) => {
     let response={}
     try{
-        result = await Question.getAllQuestions();
+        const result = await Question.getAllQuestions();
         if(result){
             response.success = true;
             response.status = "200";
