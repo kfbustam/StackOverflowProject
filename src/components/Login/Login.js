@@ -52,7 +52,8 @@ function Login() {
                     _id: foundUser._id
                 }))
     
-                navigate('/')
+                if (email === 'admin@gmail.com') navigate('/admin')
+                else navigate('/users')
             })
             .catch(err => {
                 console.log(err)
