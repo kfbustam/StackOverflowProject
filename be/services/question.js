@@ -343,10 +343,13 @@ class Question {
         static getQuestionById = async (data) => {
                 try {
                         let result = {}
+                        console.log("DATA",data)
                         const question = await QuestionModel.findById(data)
                                                 .populate('user', '_id username reputation')
                                                 .populate('tags', '_id name')
-                                                .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } , })
+                                                .populate("comment_id")
+                                                .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } })
+                                                .populate({ path: 'answer_id', populate: { path: 'comment_id', select:'comment'}})
 
                         if (question) {
                                 result = question

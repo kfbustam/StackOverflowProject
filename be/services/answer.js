@@ -1,12 +1,9 @@
 var mongoose = require('mongoose');
 const AnswerModel = require("../model/answers.js");
 const TagModel = require("../model/tag.js")
-<<<<<<< HEAD
 const CommentsModel = require("../model/comments.js")
-=======
 const QuestionModel = require('../model/questions.js')
 const UserModel = require('../model/user')
->>>>>>> 85ca8bc032985a6e2d3b336c27f6730036bfe713
 
 class Answer {
 
