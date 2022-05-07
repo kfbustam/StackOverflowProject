@@ -120,28 +120,6 @@ const QuestionOverview = () => {
               </div>
               <div className="font-light text-sm text-[#3B4045]">Follow</div>
             </div>
-            <div className="font-bold mt-3">
-          Your Answer
-        </div>
-        <div className="mt-3">
-          <Editor
-            onInit={(evt, editor) => (editorRef.current = editor)}
-            init={{
-              height: 300,
-              width: 700,
-              menubar: false,
-              plugins: "lists link codesample image",
-              toolbar: "bold italic | link codesample image | bullist numlist ",
-              content_style:
-                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-            }}
-          />
-        </div>
-        <div className="my-2">
-            <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
-              Post Your Answer
-            </button>
-      </div>
           </div>
           <div className="col-span-4">
             <ul className="bg-[#FBF3D5] px-2 py-2 ml-2 bg-cover">
@@ -278,7 +256,95 @@ const QuestionOverview = () => {
             </ul>
           </div>
         </div>
+        <div className="grid grid-cols-12 mt-5">
+          <div class="col-span-1">
+            <button>
+              <svg
+                aria-hidden="true"
+                class="svg-icon iconArrowUpLg"
+                width="36"
+                height="36"
+                viewBox="0 0 36 36"
+              >
+                <path d="M2 25h32L18 9 2 25Z"></path>
+              </svg>
+            </button>
+            <div className="ml-[15%] mb-[10%]">0</div>
+            <button>
+              <svg
+                aria-hidden="true"
+                class="svg-icon iconArrowDownLg"
+                width="36"
+                height="36"
+                viewBox="0 0 36 36"
+              >
+                <path d="M2 11h32L18 27 2 11Z"></path>
+              </svg>
+            </button>
+            <br />
+            <button className="">
+              <svg
+                aria-hidden="true"
+                className="fill-green-700"
+                width="36"
+                height="36"
+                viewBox="0 0 36 36"
+              >
+                <path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path>
+              </svg>
+            </button>
+            <br />
+            <button className="ml-1.5 mt-1">
+              <svg
+                aria-hidden="true"
+                width="19"
+                height="18"
+                viewBox="0 0 19 18"
+              >
+                <path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9Zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5Z"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="font-bold col-span-11">One Answer
+          <div className="font-normal mt-2 mr-[40%]">
+          For years parents have espoused the health benefits of eating garlic bread with cheese to their
+    children, with the food earning such an iconic status in our culture that kids will often dress
+    up as warm, cheesy loaf for Halloween.
+    <br />
+    <pre>
+            <code class="bg-gray-100">&lt;article class="prose"&gt;
+  &lt;h1&gt;Garlic bread &lt;/h1&gt;
+&lt;/article&gt;</code>
+            </pre>   
+            Sometimes you have headings directly underneath each other. In those cases you often have to undo the top margin on the second heading because it usually looks better for the headings to be closer together than a paragraph followed by a heading should be.
+          </div>
+          </div>
+        </div>
       </div>
+      <div className="ml-[20%] mr-[2%] mt-5 overflow-hidden border-t border-gray-300">
+      <div className="font-bold mt-7">Your Answer</div>
+        <br />
+        <div className="mt-3">
+              <Editor
+                onInit={(evt, editor) => (editorRef.current = editor)}
+                init={{
+                  height: 300,
+                  width: 700,
+                  menubar: false,
+                  plugins: "lists link codesample image",
+                  toolbar:
+                    "bold italic | link codesample image | bullist numlist ",
+                  content_style:
+                    "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                }}
+              />
+            </div>
+            <div className="my-2">
+              <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
+                Post Your Answer
+              </button>
+            </div>
+            </div>
     </>
   );
 };
