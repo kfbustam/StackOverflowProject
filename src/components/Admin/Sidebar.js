@@ -38,10 +38,13 @@ export default function Sidebar() {
                 Questions/Day
               </li>
             </Link>
+            <Link to="/toptags" className="link">
             <li className="sidebarListItem">
+            
               <BarChart className="sidebarIcon" />
               Top 10 Tags
             </li>
+            </Link>
             <li className="sidebarListItem">
             <DynamicFeed className="sidebarIcon" />
               Top 10 Questions

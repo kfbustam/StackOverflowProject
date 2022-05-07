@@ -32,6 +32,7 @@ import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
 import Search from './components/Search/Search';
 import AllUsers from './components/AllUsers/AllUsers'
 import AllTags from './components/AllTags/AllTags'
+import Toptags from './components/Admin/Toptags';
 
 const messageCountStyle = {
   color: '#525960',
@@ -206,6 +207,8 @@ function App() {
         <Route exact path="/userlist" element={(user && user.email === 'admin@gmail.com') ? <UserList /> : <Navigate to='/' />} />
         <Route exact path="/questionsgraph" element={(user && user.email === 'admin@gmail.com') ? <QuestionsGraph /> : <Navigate to='/' />} />
         <Route exact path="/quesgraph" element={(user && user.email === 'admin@gmail.com') ? <Quesgraph /> : <Navigate to='/' />} />
+        <Route exact path="/toptags" element={(user && user.email === 'admin@gmail.com') ? <Toptags /> : <Navigate to='/' />} />
+
 
         <Route path="/search/:search_query" element={   
           <div className='stack-layout'>
