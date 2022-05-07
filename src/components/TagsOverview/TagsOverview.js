@@ -14,6 +14,7 @@ const TagsOverview = () => {
     const navigate = useNavigate()
     const [tagDesc, setTagDesc] = useState('')
     const [questions, setQuestions] = useState([{}])
+    const [filteredQuestions, setFilteredQuestions] = useState([{}])
 
     useEffect(() => {
         axios.get(`${API_URL}/api/question/getByTag/${tagName}`)
@@ -32,13 +33,14 @@ const TagsOverview = () => {
                 }
 
                 setQuestions(data)
+                setFilteredQuestions(data)
 
                 setTagDesc(res.data.description)
             })
             .catch(err => {
                 console.log(err)
             })
-    }, [])
+    }, [tagName])
 
     const formatAnswer = (answersArr) => {
         let className = 'mb-0'
@@ -60,6 +62,32 @@ const TagsOverview = () => {
         return className
     }
 
+    const handleInteresting = () => {
+        let temp = questions
+
+        setFilteredQuestions([].concat(temp).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
+    }
+
+    const handleHot = () => {
+        let temp = questions
+
+        setFilteredQuestions([].concat(temp).sort((a, b) => b.todayview - a.todayview))
+    }
+
+    const handleScore = () => {
+        let temp = questions
+
+        setFilteredQuestions([].concat(temp).sort((a, b) => b.score - a.score))
+    }
+
+    const handleUnanswered = () => {
+        let temp = questions
+
+        temp = temp.filter(question => question.answer_id.filter(answer => answer.isBest === true).length === 0)
+
+        setFilteredQuestions(temp)
+    }
+
     return (
         <div className='tags-overview-container'>
             <Container className='mt-3'>
@@ -71,17 +99,17 @@ const TagsOverview = () => {
             </Container>
             <Container className='mt-3'>
                 <div>
-                    <p className='num-results mt-2'>{questions.length} questions</p>
+                    <p className='num-results mt-2'>{filteredQuestions.length} questions</p>
                     <ButtonGroup style={{ marginLeft: '52%' }}>
-                        <Button variant='outline-secondary' >Interesting</Button>
-                        <Button variant='outline-secondary' >Hot</Button>
-                        <Button variant='outline-secondary' >Score</Button>
-                        <Button variant='outline-secondary' >Unanswered</Button>
+                        <Button variant='outline-secondary' onClick={handleInteresting}>Interesting</Button>
+                        <Button variant='outline-secondary' onClick={handleHot}>Hot</Button>
+                        <Button variant='outline-secondary' onClick={handleScore}>Score</Button>
+                        <Button variant='outline-secondary' onClick={handleUnanswered}>Unanswered</Button>
                     </ButtonGroup>
                 </div>
             </Container>
             <hr />
-            {questions.map(question => (
+            {filteredQuestions.map(question => (
                 <div>
                     <Container>
                         <Row>
