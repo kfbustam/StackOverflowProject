@@ -236,7 +236,7 @@ class Question {
         static getAllQuestions = async (data) => {
                 try {
                         let result = {}
-                        const questions = await QuestionModel.find({});
+                        const questions = await QuestionModel.find({}).limit(2700);
                         if (questions?.length) {
                                 result.data=questions
                             return result;

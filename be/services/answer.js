@@ -1,7 +1,12 @@
 var mongoose = require('mongoose');
 const AnswerModel = require("../model/answers.js");
 const TagModel = require("../model/tag.js")
+<<<<<<< HEAD
 const CommentsModel = require("../model/comments.js")
+=======
+const QuestionModel = require('../model/questions.js')
+const UserModel = require('../model/user')
+>>>>>>> 85ca8bc032985a6e2d3b336c27f6730036bfe713
 
 class Answer {
 
@@ -14,9 +19,18 @@ class Answer {
 
             }
             const answer = new AnswerModel(query);
-            const result = answer.save();
+            const result = await answer.save();
+
             if (result) {
-                return result;
+                const question = await QuestionModel.findOneAndUpdate({ _id: query.question_id }, { $push: { answer_id: result._id }})
+
+                if (question) {
+                    const user = await UserModel.findOneAndUpdate({ _id: query.user_id }, { $push: { answerIds: result._id }})
+
+                    if (user) return result
+                    else return {}
+                }
+                else return {}         
             }
             else {
                 return {};

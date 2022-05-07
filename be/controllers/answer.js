@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const {Answer} = require("../services/answer")
 const bcrypt = require('bcryptjs');
+const { Question } = require("../services/question");
 
 router.post("/addAnswer", async (req, res) => {
     const data = req.body;
@@ -28,6 +29,7 @@ router.post("/addAnswer", async (req, res) => {
         res.status(500).send(response);
     }
 });
+
 
 router.post("/getAllAnswers", async (req, res) => {
     const data = req.body;
