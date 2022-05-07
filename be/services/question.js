@@ -273,7 +273,10 @@ class Question {
         static getAllQuestions = async (data) => {
                 try {
                         let result = {}
-                        const questions = await QuestionModel.find({}).sort({"createAt":1});
+                        const questions = await QuestionModel.find({})
+                                .populate('tags', 'name')
+                                .populate('user', 'username reputation')   
+                                .sort({"createdAt":1});
                         if (questions?.length) {
                                 result.data = questions
                                 return result;
