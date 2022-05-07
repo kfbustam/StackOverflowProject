@@ -1,9 +1,11 @@
 import React from 'react';
+import { useState, useEffect } from "react";
 //import './App.css';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Navbar/Footer';
 import CommentIcon from '@mui/icons-material/Comment';
 import Login from './components/Login/Login';
 import InboxIcon from '@mui/icons-material/Inbox';
@@ -14,7 +16,7 @@ import Users from './components/Users/Users';
 import LeftSideBar from './components/LeftSideBar/LeftSideBar';
 import CircleIcon from '@mui/icons-material/Circle';
 import { Routes, Route } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
 import PostQuestion from './components/PostQuestion/PostQuestion'
@@ -27,8 +29,9 @@ import UserList from './components/Admin/UserList';
 import QuestionsGraph from './components/Admin/QuestionsGraph';
 import Quesgraph from './components/Admin/Quesgraph';
 import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
-import Search from './components/Search/Search'
-
+import Search from './components/Search/Search';
+import AllUsers from './components/AllUsers/AllUsers'
+import AllTags from './components/AllTags/AllTags'
 
 const messageCountStyle = {
   color: '#525960',
@@ -70,16 +73,18 @@ const silverCircleIconTextStyle = {
   color: 'silver',
 }
 
-const getRightOfTheSearchBarLinkComponents = (navigate) => {
+const getRightOfTheSearchBarLinkComponents = (navigate, user, logout) => {
+
+
   const profileIconSrc = 'http://placekitten.com/200/300';
   const achievementCount = 42;
   const messageCount = 5;
   const userGoldCount = 2;
   const userSilverCount = 2;
   const userBronzeCount = 2;
-  const isUserLoggedIn = true;
+  // const isUserLoggedIn = true;
 
-  if (!isUserLoggedIn) {
+  if (!user) {
     return [
       <Button key="login" onClick={() => navigate('/login')} variant="outlined">Log in</Button>,
       <Button key="signup" onClick={() => navigate('/signup')} variant="contained">Sign up</Button>
@@ -108,18 +113,32 @@ const getRightOfTheSearchBarLinkComponents = (navigate) => {
     <IconButton key="achievements" onClick={() => navigate('/achievements')} size="small"><Badge badgeContent={achievementCount} color="success"><EmojiEventsIcon color="#525960" /></Badge></IconButton>,
     <IconButton key="help" onClick={() => navigate('/help')} size="small"><HelpIcon color="#525960" /></IconButton>,
     <IconButton key="community" onClick={() => navigate('/community')} size="small"><CommentIcon color="#525960" /></IconButton>,
+    <Button key="logout" onClick={logout} variant="outlined">Logout</Button>
   )
 
   return rightOfTheSearchBarLinkComponents;
 }
 
 function App() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  //const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const user = JSON.parse(localStorage.getItem('user'))
 
-  const isUserLoggedIn = true;
+  useEffect(() => {
+    //setUser(JSON.parse(localStorage.getItem('user')));
+  }, [location]);
 
+  const logout = () => {
+    navigate('/');
+    localStorage.clear();
+    //setUser(null);
+    user = null
+  }
 
-  const leftOfTheSearchBarLinkComponents = isUserLoggedIn ? 
+  // const isUserLoggedIn = true;
+
+  const leftOfTheSearchBarLinkComponents = user ? 
     [
       <Button key="products" variant="text">Products</Button>,
     ] 
@@ -130,7 +149,7 @@ function App() {
     ]
   ;
 
-  const rightOfTheSearchBarLinkComponents = getRightOfTheSearchBarLinkComponents(navigate);
+  const rightOfTheSearchBarLinkComponents = getRightOfTheSearchBarLinkComponents(navigate, user, logout);
 
   return (
     <>
@@ -157,8 +176,9 @@ function App() {
         }/>
         <Route path="/tags" element={   
           <div className='stack-layout'>
-            <div className='stack-layout-container'>
+            <div >
               <LeftSideBar activeTab='tags'/>
+              <AllTags/>
             </div>    
           </div>
         }/>
@@ -180,21 +200,16 @@ function App() {
         <Route exact path="/questions/overview" element={<QuestionOverview />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
-        <Route exact path="/postquestion" element={<PostQuestion />} />
+        <Route exact path="/askQuestion" element={<PostQuestion />} />
 
-        <Route exact path="/admin" element={<Admin />} />
-        <Route exact path="/addtag" element={<AddTag />} />
-        <Route exact path="/question" element={<Question />} />
-        <Route exact path="/userlist" element={<UserList />} />
-        <Route exact path="/questionsgraph" element={<QuestionsGraph />} />
-        <Route exact path="/quesgraph" element={<Quesgraph />} />
+        <Route exact path="/admin" element={(user && user.email === 'admin@gmail.com') ? <Admin /> : <Navigate to='/' />} />
+        <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') ? <AddTag /> : <Navigate to='/' />} />
+        <Route exact path="/question" element={(user && user.email === 'admin@gmail.com') ? <Question /> : <Navigate to='/' />} />
+        <Route exact path="/userlist" element={(user && user.email === 'admin@gmail.com') ? <UserList /> : <Navigate to='/' />} />
+        <Route exact path="/questionsgraph" element={(user && user.email === 'admin@gmail.com') ? <QuestionsGraph /> : <Navigate to='/' />} />
+        <Route exact path="/quesgraph" element={(user && user.email === 'admin@gmail.com') ? <Quesgraph /> : <Navigate to='/' />} />
 
-      
-        
-
-        
-
-        <Route path="/search" element={   
+        <Route path="/search/:search_query" element={   
           <div className='stack-layout'>
             <div >
               <LeftSideBar activeTab='questions'/>
@@ -202,8 +217,17 @@ function App() {
             </div>    
           </div>
         }/>
+        <Route path="/allUsers" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='users'/>
+              <AllUsers/>
+            </div>    
+          </div>
+        }/>
 
       </Routes>
+      <Footer />
     </>
   );
 }
