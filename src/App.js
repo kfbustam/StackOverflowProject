@@ -198,7 +198,7 @@ function App() {
         <Route exact path="/questions/overview" element={<QuestionOverview />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
-        <Route exact path="/postquestion" element={<PostQuestion />} />
+        <Route exact path="/askQuestion" element={<PostQuestion />} />
 
         <Route exact path="/admin" element={user.email === 'admin@gmail.com' ? <Admin /> : <Navigate to='/' />} />
         <Route exact path="/addtag" element={user.email === 'admin@gmail.com' ? <AddTag /> : <Navigate to='/' />} />
