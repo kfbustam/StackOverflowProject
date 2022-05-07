@@ -57,6 +57,30 @@ const QuestionOverview = () => {
                 <path d="M2 11h32L18 27 2 11Z"></path>
               </svg>
             </button>
+            <br />
+            <button className="ml-2">
+              <svg
+                aria-hidden="true"
+                class="svg-icon iconBookmark"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+              >
+                <path d="M6 1a2 2 0 0 0-2 2v14l5-4 5 4V3a2 2 0 0 0-2-2H6Zm3.9 3.83h2.9l-2.35 1.7.9 2.77L9 7.59l-2.35 1.7.9-2.76-2.35-1.7h2.9L9 2.06l.9 2.77Z"></path>
+              </svg>
+            </button>
+            <br />
+            <button className="ml-1.5 mt-1">
+              <svg
+                aria-hidden="true"
+                class="mln2 mr0 svg-icon iconHistory"
+                width="19"
+                height="18"
+                viewBox="0 0 19 18"
+              >
+                <path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9Zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5Z"></path>
+              </svg>
+            </button>
           </div>
           <div className="text-left font-normal col-span-7 text-lg">
             I am working on a flutter/dart rescue cat adoption app and I have a
@@ -90,12 +114,34 @@ const QuestionOverview = () => {
               </button>
             </div>
             <div className="grid mt-3 mr-[75%] grid-cols-3">
-              <div className="font-light text-sm text-[#3B4045]">Shared</div>
+              <div className="font-light text-sm text-[#3B4045]">Share</div>
               <div className="font-light text-sm ml-[20%] text-[#3B4045]">
                 Edit
               </div>
               <div className="font-light text-sm text-[#3B4045]">Follow</div>
             </div>
+            <div className="font-bold mt-3">
+          Your Answer
+        </div>
+        <div className="mt-3">
+          <Editor
+            onInit={(evt, editor) => (editorRef.current = editor)}
+            init={{
+              height: 300,
+              width: 700,
+              menubar: false,
+              plugins: "lists link codesample image",
+              toolbar: "bold italic | link codesample image | bullist numlist ",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+            }}
+          />
+        </div>
+        <div className="my-2">
+            <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
+              Post Your Answer
+            </button>
+      </div>
           </div>
           <div className="col-span-4">
             <ul className="bg-[#FBF3D5] px-2 py-2 ml-2 bg-cover">
@@ -231,20 +277,6 @@ const QuestionOverview = () => {
               </li>
             </ul>
           </div>
-        </div>
-        <div className="mt-5">
-          <Editor
-            onInit={(evt, editor) => (editorRef.current = editor)}
-            init={{
-              height: 300,
-              width: 700,
-              menubar: false,
-              plugins: "lists link codesample image",
-              toolbar: "bold italic | link codesample image | bullist numlist ",
-              content_style:
-                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-            }}
-          />
         </div>
       </div>
     </>
