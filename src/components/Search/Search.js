@@ -13,113 +13,6 @@ const Search = () => {
     const navigate = useNavigate()
     const [posts, setPosts] = useState([])
     const { search_query } = useParams()
-    /*const data = [{
-        type: 'question',
-        score: 5,
-        answer_id: [{
-            _id: '5436',
-            isBest: false
-        },
-        {
-            _id: '23435',
-            isBest: true
-        }],
-        title: 'Question title',
-        body: `<p><strong>Bold Text</strong></p> 
-        <p><em>Italics Text</em></p> <p><em><strong>Bold and Italics Text</strong></em></p> 
-        <p><a title="Stack overflow link" href="https://stackoverflow.com/">https://stackoverflow.com/</a>
-        </p> <pre class="language-javascript"><code>const text = 'Hello world' console.log(text)
-        </code></pre> <p>
-        <img src="https://media.istockphoto.com/photos/red-apple-with-leaf-isolated-on-white-background-picture-id185262648?b=1&amp;k=20&amp;m=185262648&amp;s=170667a&amp;w=0&amp;h=2ouM2rkF5oBplBmZdqs3hSOdBzA4mcGNCoF2P0KUMTM=" alt="" width="150" height="150">
-        </p> <ul> <li>List 1</li> <li>List 2</li> </ul> <ol> <li>Number list 1</li> <li>Number list 2</li> </ol> <p>&nbsp;</p>`,
-        tags: [{
-            _id: '534567',
-            name: 'java'
-        },
-        {
-            _id: '546573',
-            name: 'php'
-        }],
-        user: {
-            _id: '5345',
-            username: 'Phillip Nguyen'
-        },
-        createdAt: new Date(2022, 0, 6)
-    },
-    {
-        type: 'question',
-        score: 7,
-        answer_id: [{
-            _id: '5436',
-            isBest: false
-        },
-        {
-            _id: '23435',
-            isBest: false
-        }],
-        title: 'Question title',
-        body: 'Here is a piece of C++ code that shows some very peculiar behavior. For some strange reason, sorting the data (before the timed region) miraculously makes the loop almost six times faster. #include <a ',
-        tags: [{
-            _id: '534567',
-            name: 'java'
-        },
-        {
-            _id: '546573',
-            name: 'php'
-        }],
-        user: {
-            _id: '5345',
-            username: 'Phillip Nguyen'
-        },
-        createdAt: new Date(2022, 3, 12)
-    },
-    {
-        type: 'answer',
-        score: 6,
-        question_id: {
-            _id: '45346',
-            title: 'Answer title',
-            tags: [{
-                _id: '534567',
-                name: 'java'
-            },
-            {
-                _id: '546573',
-                name: 'php'
-            }]
-        },
-        answer: 'Description of answer',
-        isBest: false,
-        user_id: {
-            _id: '5345',
-            username: 'Phillip Nguyen'
-        },
-        createdAt: new Date(2022, 3, 27)
-    },
-    {
-        type: 'answer',
-        score: 6,
-        question_id: {
-            _id: '45346',
-            title: 'Answer title',
-            tags: [{
-                _id: '534567',
-                name: 'java'
-            },
-            {
-                _id: '546573',
-                name: 'php'
-            }]
-        },
-        answer: 'Description of answer',
-        isBest: true,
-        user_id: {
-            _id: '5345',
-            username: 'Phillip Nguyen'
-        },
-        createdAt: new Date(2022, 1, 3)
-    },
-    ]*/
 
     useEffect(() => {
         axios.get(`${API_URL}/api/question/search/${search_query}`)
@@ -138,12 +31,13 @@ const Search = () => {
                 } else if (data[i].type === 'answer') {
                     desc = data[i].answer
                     let plainDesc = desc.replace(/<[^>]+>/g, '');
+
+                    plainDesc = plainDesc.replace('&nbsp;', ' ')
     
                     data[i].answer = plainDesc
                 }           
             }
-    
-    
+       
             setPosts(data)
         })
         .catch(err => {
@@ -164,7 +58,7 @@ const Search = () => {
             <Container className='mt-3 search-head-container'>
                 <div>
                     <h3 className='search-results-title'>Search results</h3>
-                    <Button className='ask-question-button' onClick={() => navigate('/askQuestion')}>Ask question</Button>
+                    <Button className='search-ask-question-button' onClick={() => navigate('/askQuestion')}>Ask question</Button>
                 </div>
             </Container>
             <Container className='mt-3'>
@@ -198,10 +92,10 @@ const Search = () => {
                                 <Link to='/' className='search-question-title mb-2'>{post.type === 'question' ? 'Q' : 'A'}: {post.type === 'question' ? post.title : post.question_id.title}</Link>
                                 <p className='search-question-desc mb-1'>{post.type === 'question' ? post.body : post.answer}</p>
                                 {post.type === 'question' ? post.tags.map(tag => (
-                                    <div className='search-tag-block me-1'>{tag.name}</div>
+                                    <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>
                                 )) :
                                 post.question_id.tags.map(tag => (
-                                    <div className='search-tag-block me-1'>{tag.name}</div>
+                                    <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>
                                 ))}
                                 <p className='search-author'>{post.type === 'question' ? 'Asked' : 'Answered'} 
                                     {' ' + new Date(post.createdAt).toLocaleDateString('en-us', { year: "numeric", day: 'numeric', month: "short" })} by 

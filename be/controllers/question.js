@@ -209,6 +209,7 @@ router.get('/search/:query', async (req, res) => {
                     response.success = true;
                     response.status = "200";
                     response.questions= result.data;
+                    response.description = result.description
                     res.status(200).send(response);
             }
             else {

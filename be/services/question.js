@@ -147,10 +147,12 @@ class Question {
                                         }
                                 }
                                 const questions = await QuestionModel.find(query).populate('tags', 'name')
-                                        .populate('user', 'username reputation');
+                                        .populate('user', 'username reputation')
+                                        .populate('answer_id', 'isBest')
                                 if(questions?.length)
                                 {
                                         result.data=questions
+                                        result.description = tag[0].description
                                         return result;
                                 }
                                 else{
