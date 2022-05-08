@@ -1,20 +1,18 @@
+import "./Toptags.css";
 import AdminSidebar from './Sidebar';
-import AddTag from './AddTag';
-import "./Admin.css";
 
+export default function Toptags() {
+  return (
+    <>
+    <div className="containers">
+       <AdminSidebar />
+    
+   
+    <div className="containerside">
+        para
 
-
-
-function Admin() {
-    return (
-
-        <div className="container">
-          {/* <AdminSidebar /> */}
-          <AddTag/>
-        </div>
-
-    );
-  }
-
-  
-  export default Admin;
+    </div>
+    </div>
+    </>
+  );
+}
