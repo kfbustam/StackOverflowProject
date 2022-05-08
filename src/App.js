@@ -36,6 +36,7 @@ import AllTags from './components/AllTags/AllTags'
 import Toptags from './components/Admin/Toptags';
 
 import TagsOverview from './components/TagsOverview/TagsOverview';
+import MyMessages from './components/MyMessages/MyMessages';
 
 
 const messageCountStyle = {
@@ -128,7 +129,7 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   //const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
-  const user = JSON.parse(localStorage.getItem('user'))
+  let user = JSON.parse(localStorage.getItem('user'))
 
   useEffect(() => {
     //setUser(JSON.parse(localStorage.getItem('user')));
@@ -206,6 +207,8 @@ function App() {
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/askQuestion" element={<PostQuestion />} />
+        <Route path="/myMessages" element={<MyMessages />} />
+        <Route exact path="/myMessages/:roomID" element={<MyMessages />} />
 
         <Route exact path="/admin" element={(user && user.email === 'admin@gmail.com') ? <Admin /> : <Navigate to='/' />} />
 
