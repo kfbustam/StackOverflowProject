@@ -32,6 +32,7 @@ import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
 import Search from './components/Search/Search';
 import AllUsers from './components/AllUsers/AllUsers'
 import AllTags from './components/AllTags/AllTags'
+import TagsOverview from './components/TagsOverview/TagsOverview';
 
 const messageCountStyle = {
   color: '#525960',
@@ -222,6 +223,14 @@ function App() {
             <div >
               <LeftSideBar activeTab='users'/>
               <AllUsers/>
+            </div>    
+          </div>
+        }/>
+        <Route exact path="/questions/tagged/:tagName" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='questions'/>
+              <TagsOverview/>
             </div>    
           </div>
         }/>

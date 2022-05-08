@@ -28,10 +28,18 @@ const answersSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    upvote:{
+        type:Number,
+        default:0
+    },
+    downvote:{
+        type:Number,
+        default:0
+    },
     score:{
         type:Number,
-        default:0   
-    },
+        default:0
+    }
 }, { timestamps: true });
 
 
