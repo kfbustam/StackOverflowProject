@@ -153,5 +153,34 @@ router.get("/getBasicDetails",passport.authenticate('jwt',{session: false}), asy
     }
 })
 
+router.get("/top10Results", async (req, res) => {
+    const response={}
+    try{
+        const result = await User.top10Results();          
+
+        if(result){
+            response.success = true;
+            response.top10Results = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Top 10 results not found";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+
+
+
 
 module.exports = router;
