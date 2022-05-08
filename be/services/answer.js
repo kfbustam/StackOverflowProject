@@ -62,40 +62,86 @@ class Answer {
 
     }
 
+    static upvoteAnswer = async(data) =>{
+        //Sample Request Params {"answerId": "","userId":""}
 
-    static addComment = async (data) => {
-        try {
-                let addQuery;
-                
-                         addQuery= {
-                                 "comment": data.comment,                                       
-                                 "user" : data.user_id,
-                                 "answer_id" : data.answer_id
-                         } 
-                 
-                 const comment = new CommentsModel(addQuery);
-                 const newComment = await comment.save();                    
-                 
-                 const findAnswerConditionForComment = {
-                         "_id":mongoose.Types.ObjectId(data.answer_id)
-                         
-                 }                        
+        //Updating Question Params
+        let answer_doc = await AnswerModel.findOne({"_id":data.answerId})
+        const upvoteval = answer_doc["upvote"]+1
+        const  scoreval = upvoteval -  answer_doc["downvote"]
 
-                 const updateAnswerConditionForComment = {
-                         $push: {"comment_id": newComment._id}
-                 }
-                 console.log("PUSHing value",newComment._id);
+        // Updating Owner Reputation Params
+        let owner_doc = await UserModel.findOne({"_id":answer_doc.user_id})
+        //console.log(owner_doc)
+        let ownerid = answer_doc.user_id
+        let reputationval = owner_doc["reputation"]+5
 
-                 const updateAnswerComment = await AnswerModel.updateOne(findAnswerConditionForComment,updateAnswerConditionForComment)
+
+        //Updating User upvote count
+        let user_doc = await UserModel.findOne({"_id":data.userId})
+        let upvotegnval = user_doc["upvote_given"]+1
+
+
+        let score_update = await AnswerModel.findOneAndUpdate({"_id":data.answerId}, {"upvote":upvoteval,"score":scoreval})
+        let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerid},{"reputation":reputationval})
+        let upvotegn_update = await UserModel.findOneAndUpdate({"_id":data.userId},{"upvote_given":upvotegnval}) 
+
+        return scoreval
+    }
+
+
+    static downvoteAnswer = async(data) =>{
+        //Sample Request Params {"answerId": "","userId":""}
+
+        //Updating Question Params
+        let answer_doc = await AnswerModel.findOne({"_id":data.answerId})
+        const downvoteval = answer_doc["downvote"]+1
+        const scoreval = answer_doc["upvote"] - downvoteval 
         
-                 return newComment;
-         }
-         catch(err){
-                 console.log(err);
-                 console.log("Some unexpected error occured while adding Comment")
-         }
+        // Updating Owner Reputation Params
+        let owner_doc = await UserModel.findOne({"_id":answer_doc.user_id})
+        let ownerid = answer_doc.user_id
+        let reputationval = owner_doc["reputation"]-5
 
-}
+        //Updating User upvote count
+        let user_doc = await UserModel.findOne({"_id":data.userId})
+        let downvotegnval = user_doc["downvote_given"]+1
+
+        let score_update = await AnswerModel.findOneAndUpdate({"_id":data.answerId}, {"downvote":downvoteval, "score":scoreval})
+        let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerid},{"reputation":reputationval})
+        let upvotegn_update = await UserModel.findOneAndUpdate({"_id":data.userId},{"downvote_given":downvotegnval}) 
+
+        return scoreval
+    }
+
+    static bestAnswer = async(data) =>{
+        //Sample params: {"answerId":""}
+
+        let answer_doc = await AnswerModel.findOne({"_id":data.answerId})
+        const ownerId = answer_doc.user_id
+        const questionId = answer_doc.question_id
+
+        let question_doc = await QuestionModel.findOne({"_id":questionId})
+        //console.log(question_doc)
+        if(question_doc["best_ans"])
+        {
+
+            let current_bestans = await AnswerModel.findOneAndUpdate({"_id":question_doc["best_ans"]}, {"isBest":false})
+            let current_bestans_user = await UserModel.findOne({"_id":current_bestans.user_id})
+            let decrement_reputation = current_bestans_user["reputation"]-15
+            let updated_reputation = await UserModel.findOneAndUpdate({"_id":current_bestans.user_id},{"reputation":decrement_reputation})
+        }
+
+        //Updating User upvote count
+        let user_doc = await UserModel.findOne({"_id":ownerId})
+        let reputationval = user_doc["reputation"]+15
+
+
+        let score_update = await QuestionModel.findOneAndUpdate({"_id":questionId}, {"best_ans":mongoose.Types.ObjectId(data.answerId)})
+        let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerId},{"reputation":reputationval})
+        let makebest = await AnswerModel.findOneAndUpdate({"_id":data.answerId}, {"isBest":true})
+        return {}
+    }
 
 }
 

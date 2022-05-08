@@ -51,7 +51,7 @@ app.use('/uploads', express.static('uploads'));
 
 app.use("/api/auth", authenticatectrl)
 
-app.post("/uploadshopdp",upload.single('profile-file'), imgctrl.uploadpic)
+app.post("/uploadprofiledp",upload.single('profile-file'), imgctrl.uploadpic)
 app.get("/image/:key",imgctrl.retrieveImg)
 
 app.use('/api/tag',tag)

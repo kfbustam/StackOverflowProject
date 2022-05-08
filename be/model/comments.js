@@ -5,7 +5,7 @@ const commentsSchema = new mongoose.Schema({
 
     question_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Questions"
+        ref:"questions"
     },  
     answer_id:{
         type:mongoose.Schema.Types.ObjectId,

@@ -26,7 +26,11 @@ const questionsSchema = new mongoose.Schema({
         default:0
     },
     tags: [{ type:mongoose.Schema.Types.ObjectId, ref:"tag" , required: true }],    
-    
+    best_ans : {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Answers",
+        default:null
+    },    
     answer_id:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Answers",
@@ -63,4 +67,4 @@ const questionsSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Questions',questionsSchema)
+module.exports = mongoose.model('questions',questionsSchema)
