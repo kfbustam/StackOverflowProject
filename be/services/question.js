@@ -4,6 +4,7 @@ const tagModel = require('../model/tag.js');
 const UserModel = require('../model/user.js')
 //const TagModel = require("../model/tag.js")
 const { DateTime } = require("luxon");
+const AnswerModel = require('../model/answers')
 
 class Question {
 
@@ -145,7 +146,8 @@ class Question {
                                                 $in:tag[0]._id
                                         }
                                 }
-                                const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
+                                const questions = await QuestionModel.find(query).populate('tags', 'name')
+                                        .populate('user', 'username reputation');
                                 if(questions?.length)
                                 {
                                         result.data=questions
@@ -164,7 +166,7 @@ class Question {
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
@@ -172,51 +174,45 @@ class Question {
         }
 
 
-        static getQuestionByTag = async (data) => {
+        /*static getQuestionByTag = async (data) => {
 
                 try {
-                        let result={}
+                        let result = {}
                         const tagQuery = {
-                                name:data
+                                name: data
                         }
                         const tag = await tagModel.find(tagQuery)
                         if(tag.length != 0)
                         {
                                 const query = {
                                         "tags": {
-                                                $in:tag[0]._id
+                                                $in: tag[0]._id
                                         }
                                 }
                                 const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
-                                if(questions?.length)
-                                {
-                                        result.data=questions
+                                if (questions?.length) {
+                                        result.data = questions
                                         return result;
                                 }
-                                else{
-                                        result.errorMessage="No questions found with this Tag"
+                                else {
+                                        result.errorMessage = "No questions found with this Tag"
                                         return [];
                                 }
                         }
-                        else{
-                                result.errorMessage="There is no Tag available with the entered text "+data
+                        else {
+                                result.errorMessage = "There is no Tag available with the entered text " + data
                                 //throw new Error("Some unexpected error occurred with the Tag")
 
                                 return result;
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
 
-                /*let x;
-                x = "This api should give all the questions based on Tag " + data
-                console.log(x)
-                return x;*/
-
-        }
+        }*/
 
         static getQuestionByExactmatch = async (data) => {
 
@@ -226,16 +222,15 @@ class Question {
                                 "title": searchRegex
                         }
                         const questions = await QuestionModel.find(query);
-                        if(questions?.length)
-                        {
+                        if (questions?.length) {
                                 return questions;
                         }
-                        else{
+                        else {
                                 return [];
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by search data")
                 }
@@ -246,24 +241,23 @@ class Question {
 
         static getQuestionByAuthor = async (data) => {
                 try {
-                        let result={}
+                        let result = {}
                         console.log(data)
                         const query = {
                                 "user": data
                         }
                         const questions = await QuestionModel.find(query);
-                        if(questions?.length)
-                        {
-                                result.data=questions
+                        if (questions?.length) {
+                                result.data = questions
                                 return result;
                         }
-                        else{
-                                result.errorMessage="No questions found with user id "+data
+                        else {
+                                result.errorMessage = "No questions found with user id " + data
                                 return [];
                         }
 
                 }
-                catch(err){
+                catch (err) {
                         console.log(err);
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
@@ -275,18 +269,21 @@ class Question {
         static getAllQuestions = async (data) => {
                 try {
                         let result = {}
-                        const questions = await QuestionModel.find({}).sort({"createAt":1});
+                        const questions = await QuestionModel.find({})
+                                .populate('tags', 'name')
+                                .populate('user', 'username reputation')   
+                                .sort({"createdAt":1});
                         if (questions?.length) {
-                                result.data=questions
-                            return result;
+                                result.data = questions
+                                return result;
                         } else {
-                            return [];
+                                return [];
                         }
-            
-                    } catch (err) {
+
+                } catch (err) {
                         console.log(err);
                         throw new Error("Some unexpected error occurred while getting the questions");
-                    }
+                }
         }
 
         static getQuestionByAcceptance = async (data) => {
@@ -345,6 +342,118 @@ class Question {
                 return {"score":scoreval}
         }
 
+        static getQuestionById = async (data) => {
+                try {
+                        let result = {}
+                        const question = await QuestionModel.findById(data)
+                                                .populate('user', '_id username reputation')
+                                                .populate('tags', '_id name')
+                                                .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } , })
+
+                        if (question) {
+                                result = question
+                                return result
+                        }
+                        else {
+                                result.errorMessage = "No questions found with question id " + data
+                                return {};
+                        }
+
+                } catch (err) {
+                        console.log(err);
+                        throw new Error("Some unexpected error occurred while getting the questions");
+                }
+        }
+
+        static search = async(data) => {
+                const searchCriteria = data.match(/"[^"]*"|[^\s"]+/g)
+
+                try {
+                        let result = []
+
+                        let questions = await QuestionModel.find({}).select('title body tags user score createdAt updatedAt answer_id').lean()
+                                .populate('tags', '_id name')
+                                .populate('answer_id', '_id isBest')
+                                .populate('user', '_id username').limit(10)
+                        let answers = await AnswerModel.find({}).select('answer question_id isBest score createdAt updatedAt').lean()
+                                .populate({ path: 'question_id', populate: { path: 'tags', select: 'name' }, select: 'tags title'})
+                                .populate('user_id', '_id username')
+
+                        searchCriteria.forEach(criteria => {
+                                if (criteria.substring(0, 3) === 'is:') {
+                                        const type = criteria.substring(3, criteria.length)
+
+                                        if (type === 'question') answers = []
+                                        else if (type === 'answer') questions = []
+                                }
+                                else if (criteria.substring(0, 11) === 'isaccepted:') {
+                                        const res = criteria.substring(11, criteria.length)
+
+                                        questions = []
+
+                                        if (res === 'yes') answers = answers.filter(answer => answer.isBest)
+                                        else if (res === 'no') answers = answers.filter(answer => !answer.isBest)
+                                }
+                                else if (criteria.charAt(0) === '[' && criteria.charAt(criteria.length - 1) === ']') {
+                                        const tag = criteria.substring(1, criteria.length - 1)
+
+                                        questions = questions.filter(question => {
+                                                for (const questionTag of question.tags) {
+                                                        if (questionTag.name.toLowerCase() === tag.toLowerCase()) return true
+                                                }
+
+                                                return false
+                                        })
+
+                                        answers = answers.filter(answer => {
+                                                for (const questionTag of answer.question_id.tags) {
+                                                        if (questionTag.name.toLowerCase() === tag.toLowerCase()) return true
+                                                }
+
+                                                return false
+                                        })
+                                }
+                                else if (criteria.substring(0, 5) === 'user:') {
+                                        const userID = criteria.substring(5, criteria.length)
+
+                                        questions = questions.filter(question => question.user._id.toString() === userID)
+
+                                        answers = answers.filter(answer => answer.user_id._id.toString() === userID)
+                                }
+                                else if (criteria.charAt(0) === '"' && criteria.charAt(criteria.length - 1) === '"') {
+                                        const exact = criteria.substring(1, criteria.length - 1).toLowerCase()
+                                        
+                                        questions = questions.filter(question => {
+                                                return question.title.toLowerCase().includes(exact) || 
+                                                        question.body.toLowerCase().includes(exact)
+                                        })
+
+                                        answers = answers.filter(answer => answer.answer.toLowerCase().includes(exact))
+                                }
+                                else {
+                                        const word = criteria
+
+                                        questions = questions.filter(question => {
+                                                return question.title.toLowerCase().includes(word) || 
+                                                        question.body.toLowerCase().includes(word)
+                                        })
+
+                                        answers = answers.filter(answer => answer.answer.toLowerCase().includes(word))
+                                }
+                        })
+
+                        questions.forEach(question => question.type = 'question')
+                        answers.forEach(answer => answer.type = 'answer')
+
+                        result = [...questions, ...answers]
+
+                        return result
+
+                } catch (err) {
+                        console.log(err);
+                        throw new Error("Some unexpected error occurred while getting the posts");
+                }
+        }
 
 }
 

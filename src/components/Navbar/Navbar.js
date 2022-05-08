@@ -6,6 +6,13 @@ import { useNavigate } from 'react-router-dom'
 function Navbar({leftOfTheSearchBarLinkComponents, rightOfTheSearchBarLinkComponents}) {
   const navigate = useNavigate()
 
+  const handleSearch = (e) => {
+    if (e.key === 'Enter') {
+      console.log(e.target.value)
+      navigate(`/search/${e.target.value}`)
+    }
+  }
+
   return ( 
     <div className='navbar-container'>
       <div className='navbar-left'>
@@ -15,7 +22,7 @@ function Navbar({leftOfTheSearchBarLinkComponents, rightOfTheSearchBarLinkCompon
       <div className='navbar-mid'>
         <div className='navbar-search-container'>
           <SearchIcon/>
-          <input type='text' placeholder='Search...' />
+          <input type='text' placeholder='Search...' onKeyDown={handleSearch}/>
         </div>
       </div>
       <div className='navbar-right'>
