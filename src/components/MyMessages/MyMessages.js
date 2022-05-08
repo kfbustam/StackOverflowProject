@@ -11,45 +11,58 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en.json'
 import ru from 'javascript-time-ago/locale/ru.json'
 import ReactTimeAgo from 'react-time-ago'
+import { useParams, useNavigate } from 'react-router-dom'
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
 
 const MyMessages = () => {
     const date = new Date()
+    const { roomID } = useParams()
+    const navigate = useNavigate()
 
-    const users = [{
+    const rooms = [{
+        _id: 1,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
     },
     {
+        _id: 2,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
     },
     {
+        _id: 3,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
     },
     {
+        _id: 4,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
     },
     {
+        _id: 5,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
     },
     {
+        _id: 6,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
     },
     {
+        _id: 7,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
     },
     {
+        _id: 8,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
-    }, {
+    }, 
+    {
+        _id: 9,
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
     }]
@@ -106,7 +119,6 @@ const MyMessages = () => {
     }]
 
     const userID = JSON.parse(localStorage.getItem('user'))._id.toString()
-    console.log(userID)
 
     return (
         <div className='my-messages-container'>
@@ -116,14 +128,18 @@ const MyMessages = () => {
                 </div>
                 <div style={{ overflow: 'auto', height: '75vh' }}>
                     <ListGroup variant='flush'>
-                        {users.map(user => (
-                            <ListGroup.Item>
+                        {rooms.map(room => (
+                            <ListGroup.Item 
+                            onClick={() => navigate(`/mymessages/${room._id}`)} 
+                            active={roomID === room._id.toString()}
+                            action
+                            className={roomID === room._id.toString() && 'my-messages-active'}>
                                 <Row>
                                     <Col md={3}>
-                                        <Image src={user.picture} roundedCircle />
+                                        <Image src={room.picture} roundedCircle />
                                     </Col>
                                     <Col md={9}>
-                                        <p className='my-messages-name-list'>{user.username}</p>
+                                        <p className='my-messages-name-list'>{room.username}</p>
                                         <p className='my-messages-name-list'>Messages example</p>
                                     </Col>
                                 </Row>

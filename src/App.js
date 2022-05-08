@@ -203,7 +203,8 @@ function App() {
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/askQuestion" element={<PostQuestion />} />
-        <Route exact path="/myMessages" element={<MyMessages />} />
+        <Route path="/myMessages" element={<MyMessages />} />
+        <Route exact path="/myMessages/:roomID" element={<MyMessages />} />
 
         <Route exact path="/admin" element={(user && user.email === 'admin@gmail.com') ? <Admin /> : <Navigate to='/' />} />
         <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') ? <AddTag /> : <Navigate to='/' />} />
