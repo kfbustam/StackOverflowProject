@@ -5,8 +5,9 @@ const {Question} = require("../services/question.js")
 const bcrypt = require('bcryptjs');
 //const kafka = require("../kafka/client");
 const { response } = require("../index.js");
-
-// const redis = require('redis')
+const jwt = require("jsonwebtoken");
+const redis = require('redis')
+const passport = require('passport')
 // var client;
 // const runApp = async () => {  client = redis.createClient()
 //     client.on('error', (err) => console.log('Redis Client Error', err));
@@ -17,20 +18,7 @@ const { response } = require("../index.js");
 
 
 router.post("/addQuestion",  async (req, res) => {
-    /*const msg = {};
-    msg.question = req.body;
-    msg.path = "add_question";
-    kafka.make_request('question',msg, function(err,results){
-        if (err){
-            console.log("kafka error");
-            res.json({
-                status:"error",
-                msg:"System Error, Try Again."
-            })
-        }else{
-            res.status(results.status).send(results);
-        }
-    });*/
+
     
     const data = req.body;
     const response={}
@@ -118,63 +106,14 @@ router.get('/search/:query', async (req, res) => {
     }
 })
 
-// router.get("/getAllQuestions",  async (req, res) => {
 
-//     const msg = {};
-//     msg.path = "get_all_questions";
-//     kafka.make_request('question',msg, function(err,results){
-//         if (err){
-//             console.log("kafka error");
-//             res.json({
-//                 status:"error",
-//                 msg:"System Error, Try Again."
-//             })
-//         }else{
-//             res.status(results.status).send(results);
-//         }
-//     });
-// });
-    /*let response={}
-    try{
-        const result = await Question.upvoteQuestion(data);
-        if(result){
-            response.success = true;
-            response.user = data.user;
-            response.status = "200";
-            res.status(200).send(response);
-        }else{
-            response.success = false;
-            response.error = "Cannot upvote the question";
-            response.status = "400";
-            res.status(400).send(response);
-        }
-    }catch(e){
-        console.log(e);
-        response.success = false;
-        response.error = "Some error occurred. Please try again later";
-        response.status = "500";
-        res.status(500).send(response);
-    }*/
-
-// const runRedis = async() =>{
+    //Base
     router.get("/getAllQuestions",  async (req, res) => {
         let response={}
 
         try{
-
-            // const cacheQuestions = await client.get('allQuestions')
-            // if (cacheQuestions) {
-            //   {
-            //     const temp = JSON.parse(cacheQuestions)
-            //     response.success = true;
-            //     response.user = temp;
-            //     response.status = "200";
-            //     res.status(200).send(response);
-            //   }
-            // }
-            // else{
                 result = await Question.getAllQuestions();
-                //await client.set('allQuestions', JSON.stringify(result))
+
     
                 if(result){
                     response.success = true;
@@ -187,7 +126,6 @@ router.get('/search/:query', async (req, res) => {
                     response.status = "400";
                     res.status(400).send(response);
                 }
-            //}
            
         }catch(e){
             console.log(e);
@@ -198,8 +136,135 @@ router.get('/search/:query', async (req, res) => {
         }
     
     })    
+
+// const runRedis = async() =>{
+//     router.get("/getAllQuestions",  async (req, res) => {
+//         let response={}
+
+//         try{
+
+//             const cacheQuestions = await client.get('allQuestions')
+//             if (cacheQuestions) {
+//               {
+//                 const temp = JSON.parse(cacheQuestions)
+//                 response.success = true;
+//                 response.user = temp;
+//                 response.status = "200";
+//                 res.status(200).send(response);
+//               }
+//             }
+//             else{
+//                 result = await Question.getAllQuestions();
+
+    
+//                 if(result){
+//                     response.success = true;
+//                     response.status = "200";
+//                     response.question= result.data;
+//                     res.status(200).send(response);
+//                 }else{
+//                     response.success = false;
+//                     response.error = "Cannot fetch the questions";
+//                     response.status = "400";
+//                     res.status(400).send(response);
+//                 }
+           
+//         }catch(e){
+//             console.log(e);
+//             response.success = false;
+//             response.error = "Some error occurred. Please try again later";
+//             response.status = "500";
+//             res.status(500).send(response);
+//         }
+    
+//     })    
+    router.get('/getByTag/:tag', async (req, res) => {
+        let response = {}
+
+        try {
+            const result = await Question.getQuestionByTag(req.params.tag)
+
+            if (result) {
+                    response.success = true;
+                    response.status = "200";
+                    response.questions= result.data;
+                    response.description = result.description
+                    res.status(200).send(response);
+            }
+            else {
+                    response.success = false;
+                    response.error = "Cannot fetch the questions by tag";
+                    response.status = "400";
+                    res.status(400).send(response);
+            }
+        } catch(e) {
+            console.log(e);
+            response.success = false;
+            response.error = "Some error occurred. Please try again later";
+            response.status = "500";
+            res.status(500).send(response);
+        }
+    })
+
 // }
 // runRedis()
 
+router.post("/upvoteQuestion",  async (req, res) => {
+    let response={}
+
+    try{
+            result = await Question.upvoteQuestion(req.body);
+
+
+            if(result){
+                response.success = true;
+                response.status = "200";
+                response.question= result.data;
+                res.status(200).send(response);
+            }else{
+                response.success = false;
+                response.error = "Cannot fetch the questions";
+                response.status = "400";
+                res.status(400).send(response);
+            }
+       
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+
+})   
+
+router.post("/downvoteQuestion",  async (req, res) => {
+    let response={}
+
+    try{
+            result = await Question.downvoteQuestion(req.body);
+
+
+            if(result){
+                response.success = true;
+                response.status = "200";
+                response.question= result.data;
+                res.status(200).send(response);
+            }else{
+                response.success = false;
+                response.error = "Cannot fetch the questions";
+                response.status = "400";
+                res.status(400).send(response);
+            }
+       
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+
+})   
 
 module.exports = router;

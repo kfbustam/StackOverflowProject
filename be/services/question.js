@@ -146,10 +146,13 @@ class Question {
                                                 $in:tag[0]._id
                                         }
                                 }
-                                const questions = await QuestionModel.find(query).populate('tags').populate('answer_id');
+                                const questions = await QuestionModel.find(query).populate('tags', 'name')
+                                        .populate('user', 'username reputation')
+                                        .populate('answer_id', 'isBest')
                                 if(questions?.length)
                                 {
                                         result.data=questions
+                                        result.description = tag[0].description
                                         return result;
                                 }
                                 else{
@@ -173,7 +176,7 @@ class Question {
         }
 
 
-        static getQuestionByTag = async (data) => {
+        /*static getQuestionByTag = async (data) => {
 
                 try {
                         let result = {}
@@ -211,12 +214,7 @@ class Question {
                         console.log("Some unexpected error while fethching the questions by tag")
                 }
 
-                /*let x;
-                x = "This api should give all the questions based on Tag " + data
-                console.log(x)
-                return x;*/
-
-        }
+        }*/
 
         static getQuestionByExactmatch = async (data) => {
 
@@ -273,7 +271,10 @@ class Question {
         static getAllQuestions = async (data) => {
                 try {
                         let result = {}
-                        const questions = await QuestionModel.find({}).sort({"createAt":1});
+                        const questions = await QuestionModel.find({})
+                                .populate('tags', 'name')
+                                .populate('user', 'username reputation')   
+                                .sort({"createdAt":1});
                         if (questions?.length) {
                                 result.data = questions
                                 return result;
@@ -295,15 +296,52 @@ class Question {
         }
 
         static upvoteQuestion = async(data) =>{
-                let qtemp = await QuestionModel.findOne({"_id":data.questionId})
-                let upvoteval = qtemp["upvote"]+1
-                let scoreval = upvoteval -  qtemp["downvote"]
-                let usertemp = await UserModel.findOne({"questionIds":data.questionId})
-                console.log(upvoteval)
-                console.log(scoreval)
-                console.log(usertemp)
-                //let temp2 = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"upvote":upvoteval, "score":scoreval})
-                return "Done"
+                //Updating Question Params
+                let question_doc = await QuestionModel.findOne({"_id":data.questionId})
+                const upvoteval = question_doc["upvote"]+1
+                const  scoreval = upvoteval -  question_doc["downvote"]
+                
+                // Updating Owner Reputation Params
+                let owner_doc = await UserModel.findOne({"questionIds":data.questionId})
+                //console.log(owner_doc)
+                let ownerid = owner_doc["_id"]
+                let reputationval = owner_doc["reputation"]+10
+
+
+                //Updating User upvote count
+                let user_doc = await UserModel.findOne({"_id":data.userId})
+                let upvotegnval = user_doc["upvote_given"]+1
+
+
+                let score_update = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"upvote":upvoteval, "score":scoreval})
+                let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerid},{"reputation":reputationval})
+                let upvotegn_update = await UserModel.findOneAndUpdate({"_id":data.userId},{"upvote_given":upvotegnval}) 
+
+                return {"score":scoreval}
+        }
+
+        static downvoteQuestion = async(data) =>{
+                //Updating Question Params
+                let question_doc = await QuestionModel.findOne({"_id":data.questionId})
+                const downvoteval = question_doc["downvote"]+1
+                const  scoreval = question_doc["upvote"] - downvoteval  
+                
+                // Updating Owner Reputation Params
+                let owner_doc = await UserModel.findOne({"questionIds":data.questionId})
+                let ownerid = owner_doc["_id"]
+                let reputationval = owner_doc["reputation"]-10
+
+
+                //Updating User upvote count
+                let user_doc = await UserModel.findOne({"_id":data.userId})
+                let downvotegnval = user_doc["downvote_given"]+1
+
+
+                let score_update = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"downvote":downvoteval, "score":scoreval})
+                let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerid},{"reputation":reputationval})
+                let downvotegn_update = await UserModel.findOneAndUpdate({"_id":data.userId},{"downvote_given":downvotegnval}) 
+
+                return {"score":scoreval}
         }
 
         static getQuestionById = async (data) => {
@@ -420,6 +458,8 @@ class Question {
         }
 
 }
+
+
 
 
 

@@ -32,7 +32,11 @@ import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
 import Search from './components/Search/Search';
 import AllUsers from './components/AllUsers/AllUsers'
 import AllTags from './components/AllTags/AllTags'
+
 import Toptags from './components/Admin/Toptags';
+
+import TagsOverview from './components/TagsOverview/TagsOverview';
+
 
 const messageCountStyle = {
   color: '#525960',
@@ -123,16 +127,18 @@ const getRightOfTheSearchBarLinkComponents = (navigate, user, logout) => {
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  //const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const user = JSON.parse(localStorage.getItem('user'))
 
   useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem('user')));
+    //setUser(JSON.parse(localStorage.getItem('user')));
   }, [location]);
 
   const logout = () => {
     navigate('/');
     localStorage.clear();
-    setUser(null);
+    //setUser(null);
+    user = null
   }
 
   // const isUserLoggedIn = true;
@@ -202,8 +208,13 @@ function App() {
         <Route exact path="/askQuestion" element={<PostQuestion />} />
 
         <Route exact path="/admin" element={(user && user.email === 'admin@gmail.com') ? <Admin /> : <Navigate to='/' />} />
+
         <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') === 'admin@gmail.com' ? <AddTag /> : <Navigate to='/' />} />
         <Route exact path="/questionlist" element={(user && user.email === 'admin@gmail.com') ? <QuestionList /> : <Navigate to='/' />} />
+
+        <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') ? <AddTag /> : <Navigate to='/' />} />
+        <Route exact path="/question" element={(user && user.email === 'admin@gmail.com') ? <Question /> : <Navigate to='/' />} />
+
         <Route exact path="/userlist" element={(user && user.email === 'admin@gmail.com') ? <UserList /> : <Navigate to='/' />} />
         <Route exact path="/questionsgraph" element={(user && user.email === 'admin@gmail.com') ? <QuestionsGraph /> : <Navigate to='/' />} />
         <Route exact path="/quesgraph" element={(user && user.email === 'admin@gmail.com') ? <Quesgraph /> : <Navigate to='/' />} />
@@ -223,6 +234,14 @@ function App() {
             <div >
               <LeftSideBar activeTab='users'/>
               <AllUsers/>
+            </div>    
+          </div>
+        }/>
+        <Route exact path="/questions/tagged/:tagName" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='questions'/>
+              <TagsOverview/>
             </div>    
           </div>
         }/>
