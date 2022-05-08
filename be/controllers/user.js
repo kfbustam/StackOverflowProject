@@ -3,15 +3,19 @@ const {User} = require("../services/user")
 const jwt = require("jsonwebtoken");
 const passport = require('passport')
 const router = express.Router();
+//const redis = require("./rediscxn")
 
 
-
+// const runApp1 = async () => {
+// console.log(client)
 router.get("/getPopularUsers", async (req, res) => {
     const data = req.body;
     const response={}
     try{
-        const result = await User.getPopularUsers(data);          
 
+
+        const result = await User.getPopularUsers(data);          
+        //await client.set('user', JSON.stringify(result))
         if(result){
             response.success = true;
             response.user = result;
@@ -32,6 +36,8 @@ router.get("/getPopularUsers", async (req, res) => {
         res.status(500).send(response);
     }
 })
+//}
+//runApp1()
 
 
 router.get("/getNewUsers", async (req, res) => {

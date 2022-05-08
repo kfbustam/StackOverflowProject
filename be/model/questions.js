@@ -34,7 +34,7 @@ const questionsSchema = new mongoose.Schema({
     }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: "User",
         required:true
       },
     comment_id:[{
@@ -56,11 +56,7 @@ const questionsSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
-    score:{
-        type:Number,
-        default:0   
-    },
-    
+       
     history:{
         // If needed, create a history model
         type: String

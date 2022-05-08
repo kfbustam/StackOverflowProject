@@ -14,6 +14,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default:null,
   },
+  upvotenum:{
+    type:Number,
+    default:0
+  },
+  downvotenum:{
+    type:Number,
+    default:0
+  },
   reputation:{
     type:Number,
     default: 0
@@ -38,9 +46,10 @@ const UserSchema = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:"questions"
   }],
-  answerIds:{
-    type:[String]
-  },
+  answerIds:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"answers"
+  }],
   comments:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Comments"
