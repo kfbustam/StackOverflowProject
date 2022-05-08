@@ -348,7 +348,7 @@ class Question {
                 let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerid},{"reputation":reputationval})
                 let upvotegn_update = await UserModel.findOneAndUpdate({"_id":data.userId},{"upvote_given":upvotegnval}) 
 
-                return {"score":scoreval}
+                return scoreval
         }
 
         static downvoteQuestion = async(data) =>{
@@ -372,7 +372,7 @@ class Question {
                 let reputation_update = await UserModel.findOneAndUpdate({"_id":ownerid},{"reputation":reputationval})
                 let downvotegn_update = await UserModel.findOneAndUpdate({"_id":data.userId},{"downvote_given":downvotegnval}) 
 
-                return {"score":scoreval}
+                return scoreval
         }
 
         static questionAnalysis = async() =>{

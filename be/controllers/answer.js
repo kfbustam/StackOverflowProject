@@ -66,11 +66,11 @@ router.post("/upvoteAnswer",  async (req, res) => {
             if(result){
                 response.success = true;
                 response.status = "200";
-                response.question= result.data;
+                response.score= result;
                 res.status(200).send(response);
             }else{
                 response.success = false;
-                response.error = "Cannot fetch the questions";
+                response.error = "Cannot upvote the answers";
                 response.status = "400";
                 res.status(400).send(response);
             }
@@ -95,11 +95,11 @@ router.post("/downvoteAnswer",  async (req, res) => {
             if(result){
                 response.success = true;
                 response.status = "200";
-                response.question= result.data;
+                response.score= result;
                 res.status(200).send(response);
             }else{
                 response.success = false;
-                response.error = "Cannot fetch the questions";
+                response.error = "Cannot downvote the answers";
                 response.status = "400";
                 res.status(400).send(response);
             }
@@ -124,11 +124,11 @@ router.post("/bestAnswer",  async (req, res) => {
             if(result){
                 response.success = true;
                 response.status = "200";
-                response.question= result.data;
+                response.status= "Best Answer Set Successfully";
                 res.status(200).send(response);
             }else{
                 response.success = false;
-                response.error = "Cannot fetch the questions";
+                response.error = "Cannot set the best Answer";
                 response.status = "400";
                 res.status(400).send(response);
             }

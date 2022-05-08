@@ -258,11 +258,11 @@ router.post("/upvoteQuestion",  async (req, res) => {
             if(result){
                 response.success = true;
                 response.status = "200";
-                response.question= result.data;
+                response.score= result;
                 res.status(200).send(response);
             }else{
                 response.success = false;
-                response.error = "Cannot fetch the questions";
+                response.error = "Cannot upvote the questions";
                 response.status = "400";
                 res.status(400).send(response);
             }
@@ -287,11 +287,11 @@ router.post("/downvoteQuestion",  async (req, res) => {
             if(result){
                 response.success = true;
                 response.status = "200";
-                response.question= result.data;
+                response.score= result;
                 res.status(200).send(response);
             }else{
                 response.success = false;
-                response.error = "Cannot fetch the questions";
+                response.error = "Cannot downvote the questions";
                 response.status = "400";
                 res.status(400).send(response);
             }
