@@ -3,7 +3,7 @@ const answersSchema = new mongoose.Schema({
 
     question_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Questions"
+        ref:"questions"
     },
     answer: String,
     /*tags: [{ type: String, required: true }],*/
