@@ -56,24 +56,25 @@ router.post("/getAllAnswers", async (req, res) => {
     }
 });
 
-router.post("/addComment",  async (req, res) => {
-    
-    const data = req.body;
-    const response={}
+router.post("/upvoteAnswer",  async (req, res) => {
+    let response={}
+
     try{
-        const result = await Answer.addComment(data);
-        if(result){
-            response.success = true;
-            response.user = data.user;
-            response.status = "200";
+            let result = await Answer.upvoteAnswer(req.body);
+
+
+            if(result){
+                response.success = true;
+                response.status = "200";
+                response.score= result;
+                res.status(200).send(response);
+            }else{
+                response.success = false;
+                response.error = "Cannot upvote the answers";
+                response.status = "400";
+                res.status(400).send(response);
+            }
        
-            res.status(200).send(response);
-        }else{
-            response.success = false;
-            response.error = "Cannot add the Comment for answer";
-            response.status = "400";
-            res.status(400).send(response);
-        }
     }catch(e){
         console.log(e);
         response.success = false;
@@ -82,8 +83,65 @@ router.post("/addComment",  async (req, res) => {
         res.status(500).send(response);
     }
 
-});
+}) 
 
+router.post("/downvoteAnswer",  async (req, res) => {
+    let response={}
+
+    try{
+            let result = await Answer.downvoteAnswer(req.body);
+
+
+            if(result){
+                response.success = true;
+                response.status = "200";
+                response.score= result;
+                res.status(200).send(response);
+            }else{
+                response.success = false;
+                response.error = "Cannot downvote the answers";
+                response.status = "400";
+                res.status(400).send(response);
+            }
+       
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+
+}) 
+
+router.post("/bestAnswer",  async (req, res) => {
+    let response={}
+
+    try{
+            let result = await Answer.bestAnswer(req.body);
+
+
+            if(result){
+                response.success = true;
+                response.status = "200";
+                response.status= "Best Answer Set Successfully";
+                res.status(200).send(response);
+            }else{
+                response.success = false;
+                response.error = "Cannot set the best Answer";
+                response.status = "400";
+                res.status(400).send(response);
+            }
+       
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+
+}) 
 
 
 module.exports = router;
