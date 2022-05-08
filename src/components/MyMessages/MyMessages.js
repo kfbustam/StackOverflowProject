@@ -7,8 +7,17 @@ import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Button from 'react-bootstrap/Button'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en.json'
+import ru from 'javascript-time-ago/locale/ru.json'
+import ReactTimeAgo from 'react-time-ago'
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(ru)
 
 const MyMessages = () => {
+    const date = new Date()
+
     const users = [{
         picture: 'http://placekitten.com/200/300',
         username: 'Username test'
@@ -130,6 +139,8 @@ const MyMessages = () => {
                         <div className={message.sender === userID ? 'mb-3 my-messages-right' : 'mb-3 my-messages-left'}>
                             <div className='my-messages-post' style={{ backgroundColor: message.sender === userID ? '#F48023' : '#242629' }}>
                                 {message.body}
+                                <br />
+                                <ReactTimeAgo date={date} locale="en-US" className='my-messages-time'/>
                             </div>
                         </div>
                     ))}

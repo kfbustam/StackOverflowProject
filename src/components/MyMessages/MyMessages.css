@@ -55,3 +55,9 @@
     padding: 3px 7px;
 }
 
+.my-messages-time {
+    float: right;
+    font-size: 12px;
+    font-style: italic;
+}
+
