@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 const AnswerModel = require("../model/answers.js");
 const TagModel = require("../model/tag.js")
+const CommentsModel = require("../model/comments.js")
 const QuestionModel = require('../model/questions.js')
 const UserModel = require('../model/user')
 

@@ -1,7 +1,9 @@
 var mongoose = require('mongoose');
 const QuestionModel = require("../model/questions.js");
 const tagModel = require('../model/tag.js');
-const UserModel = require('../model/user.js')
+const TagModel = require("../model/tag.js")
+const UserModel = require("../model/user.js")
+const CommentsModel = require("../model/comments.js")
 //const TagModel = require("../model/tag.js")
 const { DateTime } = require("luxon");
 const CountModel = require("../model/count.js");
@@ -236,8 +238,8 @@ class Question {
                                 result.errorMessage = "There is no Tag available with the entered text " + data
                                 //throw new Error("Some unexpected error occurred with the Tag")
 
-                                return result;
-                        }
+        //                         return result;
+        //                 }
 
                 }
                 catch (err) {
@@ -319,6 +321,7 @@ class Question {
                 }
         }
 
+
         static getQuestionByAcceptance = async (data) => {
                 let x;
 
@@ -391,10 +394,13 @@ class Question {
         static getQuestionById = async (data) => {
                 try {
                         let result = {}
+                        console.log("DATA",data)
                         const question = await QuestionModel.findById(data)
                                                 .populate('user', '_id username reputation')
                                                 .populate('tags', '_id name')
-                                                .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } , })
+                                                .populate("comment_id")
+                                                .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } })
+                                                .populate({ path: 'answer_id', populate: { path: 'comment_id', select:'comment'}})
 
                         const viewUpdate = await QuestionModel.updateOne({"_id":mongoose.Types.ObjectId(data)}, {$inc:{views:1}})
                         if (question) {
@@ -501,6 +507,84 @@ class Question {
                         throw new Error("Some unexpected error occurred while getting the posts");
                 }
         }
+
+
+        static addComment = async (data) => {
+                try {
+                        let addQuery;
+                        
+                                 addQuery= {
+                                         "comment": data.comment,                                       
+                                         "user" : data.user_id,
+                                         "question_id" : data.question_id
+                                 } 
+                         
+                         const comment = new CommentsModel(addQuery);
+                         const newComment = await comment.save();                    
+                         
+                         const findQuestionConditionForComment = {
+                                 "_id":mongoose.Types.ObjectId(data.question_id)
+                                 
+                         }                        
+ 
+                         const updateQuestionConditionForComment = {
+                                 $push: {"comment_id": newComment._id}
+                         }
+                         console.log("PUSHing value",newComment._id);
+ 
+                         const updateQuestionComment = await QuestionModel.updateOne(findQuestionConditionForComment,updateQuestionConditionForComment)
+                
+                         return newComment;
+                 }
+                 catch(err){
+                         console.log(err);
+                         console.log("Some unexpected error occured while adding Comment")
+                 }
+ 
+        }
+
+        // static getQuestionsByFilter = async (data) => {
+
+        //         try {
+        //                  let result={}
+
+        //                  let filter = data;
+        //                   let questions;
+                        
+        //                 if(filter === "Interesting")
+        //                 {       
+        //                         questions = await QuestionModel.find({}).sort({"updatedAt":1});
+             
+        //                         console.log("FILTER", questions);
+        //                 }
+        //                 else if(filter === "Hot")
+        //                 {
+        //                         questions = await QuestionModel.find({}).sort({"todayview":-1})
+        //                 }
+        //                 else if(filter === "Score")
+        //                 {
+        //                         questions = await QuestionModel.find({}).sort({"score":-1})
+        //                 }
+        //                 else if (filter === "Unanswered")
+        //                 {
+        //                         //questions.find where answer_id.length=0 
+        //                         questions = await (await QuestionModel.find({}).where({'answer_id.0' : { $exists : true } } ));
+        //                 }
+                     
+        //                  else{
+        //                          result.errorMessage="There is no filter with the entered text "+ data                                 
+        //                  }
+        //                  result.questions = questions;
+                         
+        //                  return result;
+
+        //          }
+        //          catch (err) {
+        //                  console.log(err);
+        //                  console.log("Some unexpected error while fethching the questions by tag")
+        //          }
+
+        //  }
 
 }
 

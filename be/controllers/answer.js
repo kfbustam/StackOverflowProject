@@ -60,7 +60,7 @@ router.post("/upvoteAnswer",  async (req, res) => {
     let response={}
 
     try{
-            result = await Answer.upvoteAnswer(req.body);
+            let result = await Answer.upvoteAnswer(req.body);
 
 
             if(result){
@@ -89,7 +89,7 @@ router.post("/downvoteAnswer",  async (req, res) => {
     let response={}
 
     try{
-            result = await Answer.downvoteAnswer(req.body);
+            let result = await Answer.downvoteAnswer(req.body);
 
 
             if(result){
@@ -118,7 +118,7 @@ router.post("/bestAnswer",  async (req, res) => {
     let response={}
 
     try{
-            result = await Answer.bestAnswer(req.body);
+            let result = await Answer.bestAnswer(req.body);
 
 
             if(result){

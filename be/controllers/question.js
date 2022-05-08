@@ -18,7 +18,6 @@ const passport = require('passport')
 
 
 router.post("/addQuestion",  async (req, res) => {
-
     
     const data = req.body;
     const response={}
@@ -252,7 +251,7 @@ router.post("/upvoteQuestion",  async (req, res) => {
     let response={}
 
     try{
-            result = await Question.upvoteQuestion(req.body);
+            let result = await Question.upvoteQuestion(req.body);
 
 
             if(result){
@@ -281,7 +280,7 @@ router.post("/downvoteQuestion",  async (req, res) => {
     let response={}
 
     try{
-            result = await Question.downvoteQuestion(req.body);
+            let result = await Question.downvoteQuestion(req.body);
 
 
             if(result){

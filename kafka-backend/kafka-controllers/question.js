@@ -36,7 +36,7 @@ const addQuestion = async (msg, callback) => {
     const getAllQuestions = async (msg, callback) => {
         const response={}
     try{
-        result = await Question.getAllQuestions();
+        const result = await Question.getAllQuestions();
         if(result){
             response.success = true;
             response.status = "200";
@@ -57,11 +57,42 @@ const addQuestion = async (msg, callback) => {
     }
     };
 
+    const addComment = async (msg, callback) => {
+
+        const question = msg.question;
+        const response={}
+        try{
+            const result = await Question.addComment(question);
+            if(result){
+                response.success = true;
+                response.user = question.user;
+                response.status = "200";
+           
+                response.userUpdated=result.userUpdated;
+                callback(null,response);
+            }else{
+                response.success = false;
+                response.error = "Cannot add the Comment";
+                response.status = "400";
+                callback(null,response);
+            }
+        }catch(e){
+            console.log(e);
+            response.success = false;
+            response.error = "Some error occurred. Please try again later";
+            response.status = "500";
+            callback(null,response);
+        }
+        };
+
+
     function handle_request(msg, callback) {
         if (msg.path === "add_question") {
             addQuestion(msg, callback);
         }else if (msg.path === "get_all_questions") {
           getAllQuestions(msg, callback);
+        }else if(msg.path ==="addQuestionComments"){
+          addComment(msg, callback)
         }
       }
     

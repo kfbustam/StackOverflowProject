@@ -60,11 +60,7 @@ const questionsSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
-    score:{
-        type:Number,
-        default:0   
-    },
-    
+       
     history:{
         // If needed, create a history model
         type: String
