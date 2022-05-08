@@ -1,6 +1,8 @@
+//const { path } = require("d3");
+//const { index } = require("d3");
 const { type } = require("express/lib/response");
 
-
+const QuestionModel = require("../model/questions.js")
 const UserModel = require("../model/user");
 
 class User {
@@ -77,6 +79,71 @@ class User {
                 catch(err){
                         console.log(err);
                         console.log("Error occured while getting while getting the details of the user")
+                }
+        }
+
+        static getAllBadges = async(data) => {
+                try{
+                        let result = {}
+                        const userDetails=await UserModel.findById(data).
+                        populate({path:'questionIds', populate:{path: 'tags', select: 'name'} })
+                        let tagData=[]
+                        let score=[]
+                        let badges=[]
+                        userDetails.questionIds.forEach(question => {
+                                let tags=question.tags;
+                                tags.forEach(tag => {
+                                        if(tagData.includes(tag.name))
+                                        {
+                                              ind=tagData.indexOf(tag.name);
+                                              score[ind]=score[ind]+question.score;
+                                        }
+                                        else
+                                        {
+                                                tagData.push(tag.name)
+                                                score.push(question.score)
+                                        }
+                                        
+                                });                                
+                        });
+
+                        for(let i=0;i<tagData.length;i++)
+                        {
+                                let badge;
+                                if(score[i]<=10)
+                                {
+                                        badge={
+                                                'badgeName': tagData[i],
+                                                'type': 'Bronze',
+                                                'score': score[i]
+                                        }
+
+                                }
+                                else if(score[i]>10 && score[i]<=15)
+                                {
+                                        badge={
+                                                'badgeName': tagData[i],
+                                                'type': 'Silver',
+                                                'score': score[i]
+                                        }
+                                }
+                                else if(score[i]>20)
+                                {
+                                        badge={
+                                                'badgeName': tagData[i],
+                                                'type': 'Gold',
+                                                'score': score[i]
+                                        }
+                                }
+                                badges.push(badge)
+
+                        }
+                        
+                        return result=badges;
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting all the badges.")
                 }
         }
 

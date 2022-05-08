@@ -5,7 +5,6 @@ const UserModel = require('../model/user.js')
 //const TagModel = require("../model/tag.js")
 const { DateTime } = require("luxon");
 const CountModel = require("../model/count.js");
-const count = require('../model/count.js');
 const AnswerModel = require('../model/answers')
 
 class Question {
@@ -337,6 +336,19 @@ class Question {
                 return "Done"
         }
 
+        static questionAnalysis = async() =>{
+                let result={}
+                let data = await CountModel.find()
+                console.log(data)
+
+                if(data?.length)
+                {
+                        result.data=data;
+                        return result;
+                }
+                else return [];
+                }
+
         static getQuestionById = async (data) => {
                 try {
                         let result = {}
@@ -345,6 +357,7 @@ class Question {
                                                 .populate('tags', '_id name')
                                                 .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } , })
 
+                        const viewUpdate = await QuestionModel.updateOne({"_id":mongoose.Types.ObjectId(data)}, {$inc:{views:1}})
                         if (question) {
                                 result = question
                                 return result
