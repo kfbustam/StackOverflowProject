@@ -254,9 +254,31 @@ router.get('/search/:query', async (req, res) => {
     
     });
 
-// }
-// runRedis()
+    router.get("/getQuestions/:filter",  async (req, res) => {
+        let response={}
 
+        try{
+               let result = await Question.getQuestionsByFilter(req.params.filter);    
+                if(result){
+                    response.success = true;
+                    response.status = "200";
+                    response.question= result.questions;
+                    res.status(200).send(response);
+                }else{
+                    response.success = false;
+                    response.error = "Cannot fetch the questions";
+                    response.status = "400";
+                    res.status(400).send(response);
+                }      
+
+        }catch(e){
+            console.log(e);
+            response.success = false;
+            response.error = "Some error occurred. Please try again later";
+            response.status = "500";
+            res.status(500).send(response);
+        }    
+    })   
 
 
 module.exports = router;

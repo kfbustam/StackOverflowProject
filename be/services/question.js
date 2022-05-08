@@ -491,11 +491,48 @@ class Question {
  
         }
 
-        
+        // static getQuestionsByFilter = async (data) => {
 
-        
+        //         try {
+        //                  let result={}
 
+        //                  let filter = data;
+        //                   let questions;
+                        
+        //                 if(filter === "Interesting")
+        //                 {       
+        //                         questions = await QuestionModel.find({}).sort({"updatedAt":1});
+             
+        //                         console.log("FILTER", questions);
+        //                 }
+        //                 else if(filter === "Hot")
+        //                 {
+        //                         questions = await QuestionModel.find({}).sort({"todayview":-1})
+        //                 }
+        //                 else if(filter === "Score")
+        //                 {
+        //                         questions = await QuestionModel.find({}).sort({"score":-1})
+        //                 }
+        //                 else if (filter === "Unanswered")
+        //                 {
+        //                         //questions.find where answer_id.length=0 
+        //                         questions = await (await QuestionModel.find({}).where({'answer_id.0' : { $exists : true } } ));
+        //                 }
+                     
+        //                  else{
+        //                          result.errorMessage="There is no filter with the entered text "+ data                                 
+        //                  }
+        //                  result.questions = questions;
+                         
+        //                  return result;
 
+        //          }
+        //          catch (err) {
+        //                  console.log(err);
+        //                  console.log("Some unexpected error while fethching the questions by tag")
+        //          }
+
+        //  }
 
 }
 
