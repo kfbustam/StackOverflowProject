@@ -463,7 +463,6 @@ class Question {
         static getQuestionById = async (data) => {
                 try {
                         let result = {}
-                        console.log("DATA",data)
                         const question = await QuestionModel.findById(data)
                                                 .populate('user', '_id username reputation')
                                                 .populate('tags', '_id name')
