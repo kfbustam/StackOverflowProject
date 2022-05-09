@@ -214,4 +214,111 @@ router.get("/top10Results", async (req, res) => {
 
 
 
+router.get("/getProfileTab/:id", async (req, res) => {
+    const userId = req.params.id;
+    const response={} 
+    try{
+        //console.log(userId)
+        const result = await User.getProfileTab(userId);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot retrieve the profile tab details";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.post("/editAbout", async (req, res) => {
+    const data = req.body;
+    const response={} 
+    try{
+        //console.log(userId)
+        const result = await User.editAbout(data);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot edit the about of the user";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.get("/getAnswersTab/:id", async (req, res) => {
+    const response={} 
+    try{
+        //console.log(userId)
+        const result = await User.getAnswersTab(req.params.id);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot get the answers tab of the user";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.get("/getQuestionsTab/:id", async (req, res) => {
+    const response={} 
+    try{
+        //console.log(userId)
+        const result = await User.getQuestionsTab(req.params.id);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot get the questions tab of the user";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+
 module.exports = router;
