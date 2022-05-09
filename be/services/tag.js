@@ -11,11 +11,13 @@ class Tag {
                                 name : data.name,
                                 description : data.description                                
                         }
+                        console.log(data);
                         const tag = new tagModel(query);
-                        const result = tag.save();
+                        const result = await tag.save();
                         if(result)
                         {
                                 return result;
+                                console.log("success")
                         }
                         else{
                                 return {};
