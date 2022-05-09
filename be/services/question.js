@@ -7,7 +7,8 @@ const CommentsModel = require("../model/comments.js")
 //const TagModel = require("../model/tag.js")
 const { DateTime } = require("luxon");
 const CountModel = require("../model/count.js");
-const AnswerModel = require('../model/answers')
+const AnswerModel = require('../model/answers');
+const { string } = require('prop-types');
 
 class Question {
 
@@ -115,11 +116,11 @@ class Question {
                                  result.weekCountUpdated = true
                          }
                          //measuring count of questions
-                         const countData = await CountModel.find({"date":new Date().toDateString()})
+                         const countData = await CountModel.find({"date":new Date().toJSON().substring(0,10)})
                         if(countData?.length)
                         {
 
-                                if(countData[0].date === new Date().toDateString())
+                                if(countData[0].date === new Date().toJSON().substring(0,10))
                                 {
                                         const updateCount = await CountModel.updateOne({"_id":countData[0]._id},{$inc:{"count":1}})
 
@@ -127,7 +128,7 @@ class Question {
                                 else
                                 {
                                         const addCountCondition = {
-                                                date: new Date().toDateString(),
+                                                date: new Date().toJSON().substring(0,10),
                                                  count:1
                                                 }        
                                         
@@ -139,7 +140,7 @@ class Question {
                         else
                         {
                                 const addCountQuery = {
-                                        date: new Date().toDateString(),
+                                        date: new Date().toJSON().substring(0,10),
                                         count: 1
                                 }
                                 const addCount = new CountModel(addCountQuery);
@@ -332,7 +333,6 @@ class Question {
         static addBookmark = async (data) => {
                 let result = {}
                 let bookmark = await UserModel.updateOne({"_id":data.user}, {$addToSet: {"bookmarks": data.question}})
-                
                 if(bookmark)
                 {
                         result.updated=true
