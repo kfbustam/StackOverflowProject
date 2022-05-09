@@ -90,13 +90,13 @@ class User {
                         let result = {}
                         let top10Questions = await QuestionModel.find({}).sort({"views":-1}).limit(10);
                         let top10Tags = await TagModel.find({}).sort({"count":-1}).limit(10);
-                        let top10Users_high_reputation = await UserModel.find({}).sort({"reputation":-1}).limit(10);
+                        let top10Users_high_reputation = await UserModel.find({},{username:1,reputation:1,_id:0}).sort({"reputation":-1}).limit(10);
                         let top10Users_low_reputation = await UserModel.find({},{username:1,reputation:1,_id:0}).sort({"reputation":1}).limit(10);
 
                         result = {
                                 // "top10Questions" : top10Questions,
-                                // "top10Tags" : top10Tags,
-                                // "top10Users_high_reputation": top10Users_high_reputation,
+                                "top10Tags" : top10Tags,
+                                "top10Users_high_reputation": top10Users_high_reputation,
                                 "top10Users_low_reputation": top10Users_low_reputation
                         }                        
                         if(result)
