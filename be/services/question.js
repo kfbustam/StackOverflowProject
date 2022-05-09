@@ -661,8 +661,6 @@ class Question {
 
          }
 
-
-
          static updateQuestion = async (_id, data) => {
                 try {
                         let query = { 
@@ -677,6 +675,28 @@ class Question {
                         }
 
                         const result = await QuestionModel.findByIdAndUpdate(_id, query);
+                        
+                         if(result)
+                         {
+                                 return result;
+                         }
+                         else{
+                                 return {};
+                         }
+                 }
+                 catch(err){
+                         console.log(err);
+                         console.log("Some unexpected error occured while updating question")
+                 }
+ 
+
+        }
+
+
+
+         static getAllQuestionActivities = async (id) => {
+                try {
+                        const result = await QuestionModel.find({"_id":id},{activity:1,_id:0}).populate('activity');
                         
                          if(result)
                          {
