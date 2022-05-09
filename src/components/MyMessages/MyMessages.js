@@ -27,6 +27,7 @@ const MyMessages = () => {
     const [conversations, setConversations] = useState([{}])
     const [messages, setMessages] = useState([{}])
     const messageInput = useRef(null)
+    const [allUsers, setAllUsers] = useState([{}])
 
     const userID = JSON.parse(localStorage.getItem('user'))._id.toString()
     
@@ -42,7 +43,19 @@ const MyMessages = () => {
         getConversations()
 
         getMessages()
+
+        getAllUsers()
     }, [userID, roomID])
+
+    const getAllUsers = () => {
+        axios.get(`${API_URL}/api/user/getNewUsers`)
+        .then(res => {
+            setAllUsers(res.data.user)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
 
     const getConversations = () => {
         axios.get(`${API_URL}/api/message/getAllUserConversations/${userID}`)
@@ -101,7 +114,7 @@ const MyMessages = () => {
             <div className='my-messages-list me-3'>
                 <div className='my-messages-header text-center pt-2 pb-2'>
                     <DropdownButton title="Start a conversation" size='sm' variant='dark'>
-                        {users.map(user => (
+                        {allUsers.map(user => (
                             <Dropdown.Item >
                                 <Image src='http://placekitten.com/200/300' roundedCircle className='my-messages-dropdown-image me-2'/>
                                 {user.username}
