@@ -16,9 +16,9 @@ export default function Toptags() {
     const [searchText, setSearchText] = useState('')
   
     useEffect(() => {
-      axios.get(`${API_URL}/api/tag/getPopularTags`)
+      axios.get(`${API_URL}/api/user/top10Results`)
       .then(res => {
-        const dataTags = res.data.tags
+        const dataTags = res.data.top10Results.top10Tags
   
         setTags(dataTags)
         setFilteredTags(dataTags)
@@ -39,7 +39,7 @@ export default function Toptags() {
     
    
     <div className="containerside">
-    <Container className='all-tags-container mt-4'>
+    <Container className='all-tags-containers mt-4'>
       <h1 className='all-tags-header mb-3'>Top 10 Tags</h1>
      
       <Row className='mt-5'>

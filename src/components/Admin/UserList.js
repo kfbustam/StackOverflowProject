@@ -1,5 +1,9 @@
-import React, { useState } from "react"
+import React, { useState,useEffect } from "react"
 import AdminSidebar from './Sidebar';
+import axios from 'axios'
+import API_URL from '../../apiConfig'
+
+
 
 const btnStyle = {
   backgroundColor: "black",
@@ -9,23 +13,23 @@ const btnStyle = {
 }
 
 function Table({
-  list = [
-    {  name: "John Doe", Age: 28 },
-    {  name: "Jane Doe", Age: 45 },
-    {  name: "John Smith", Age: 32 },
-    {  name: "John Doe", Age: 28 },
-    {  name: "Jane Doe", Age: 45 },
-    {  name: "John Smith", Age: 32 },
-    {  name: "John Doe", Age: 28 },
-    {  name: "Jane Doe", Age: 45 },
-    {  name: "John Smith", Age: 32 },
-    {  name: "John Doe", Age: 28 },
-    {  name: "Jane Doe", Age: 45 },
-    {  name: "John Smith", Age: 32 },
-    {  name: "John Doe", Age: 28 },
-    {  name: "Jane Doe", Age: 45 },
-    {  name: "John Smith", Age: 32 },
-  ],
+  // list = [
+  //   {  name: "John Doe", Age: 28 },
+  //   {  name: "Jane Doe", Age: 45 },
+  //   {  name: "John Smith", Age: 32 },
+  //   {  name: "John Doe", Age: 28 },
+  //   {  name: "Jane Doe", Age: 45 },
+  //   {  name: "John Smith", Age: 32 },
+  //   {  name: "John Doe", Age: 28 },
+  //   {  name: "Jane Doe", Age: 45 },
+  //   {  name: "John Smith", Age: 32 },
+  //   {  name: "John Doe", Age: 28 },
+  //   {  name: "Jane Doe", Age: 45 },
+  //   {  name: "John Smith", Age: 32 },
+  //   {  name: "John Doe", Age: 28 },
+  //   {  name: "Jane Doe", Age: 45 },
+  //   {  name: "John Smith", Age: 32 },
+  // ],
   colNames = ['username', 'reputation'],
   pageNum = 0,
   pageSize = 15,
@@ -41,6 +45,23 @@ function Table({
 //   const onNext = () => {
 //     setPage(page + 1 < list.length / pageSize ? page + 1 : page)
 //   }
+const [list, setList] = useState([{}]);
+useEffect(() => {
+  axios.get(`${API_URL}/api/user/top10Results`)
+  .then(res => {
+    const Lists = res.data.top10Results.top10Users_low_reputation
+
+    setList(Lists)
+    // setFilteredTags(dataTags)
+
+    // const nameData = dataTags.map(tag => tag.name)
+    // const distinctNames = [...new Set(nameData)]
+    // setTagNames(distinctNames)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}, [])
 
 
 
@@ -48,7 +69,7 @@ function Table({
     <div className="containers"><AdminSidebar />
     <div className="userList" style={{ width: "90%"}}>
       {list.length > 0 && (
-        <table cellSpacing="0" style={{ width: "40%", height: height, padding: "5px 10px" ,marginleft: "600px" }} >
+        <table cellSpacing="30px" style={{ width: "40%", height: height, padding: "5px 10px" ,marginleft: "200px" }} >
           <thead style={{ backgroundColor: "white", color: "black" }}>
             <tr>
               {colNames.map((headerItem, index) => (
