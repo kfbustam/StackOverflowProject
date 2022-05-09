@@ -7,7 +7,12 @@ const CommentsModel = require("../model/comments.js")
 //const TagModel = require("../model/tag.js")
 const { DateTime } = require("luxon");
 const CountModel = require("../model/count.js");
-const AnswerModel = require('../model/answers')
+const AnswerModel = require('../model/answers.js');
+const ActivityModel = require('../model/activity.js');
+var moment = require('moment');
+
+const { string } = require('prop-types');
+const { AddTaskRounded } = require('@mui/icons-material');
 
 class Question {
 
@@ -115,11 +120,11 @@ class Question {
                                  result.weekCountUpdated = true
                          }
                          //measuring count of questions
-                         const countData = await CountModel.find({"date":new Date().toDateString()})
+                         const countData = await CountModel.find({"date":new Date().toJSON().substring(0,10)})
                         if(countData?.length)
                         {
 
-                                if(countData[0].date === new Date().toDateString())
+                                if(countData[0].date === new Date().toJSON().substring(0,10))
                                 {
                                         const updateCount = await CountModel.updateOne({"_id":countData[0]._id},{$inc:{"count":1}})
 
@@ -127,7 +132,7 @@ class Question {
                                 else
                                 {
                                         const addCountCondition = {
-                                                date: new Date().toDateString(),
+                                                date: new Date().toJSON().substring(0,10),
                                                  count:1
                                                 }        
                                         
@@ -139,12 +144,23 @@ class Question {
                         else
                         {
                                 const addCountQuery = {
-                                        date: new Date().toDateString(),
+                                        date: new Date().toJSON().substring(0,10),
                                         count: 1
                                 }
                                 const addCount = new CountModel(addCountQuery);
                                 const result = await addCount.save();
                         }
+                        //creating question activity
+                        const activityQuery = {
+                                date: new Date(),
+                                what: "asked",
+                                user: data.user,
+                                comment: "Question created"
+                        }
+                        const addActivity = new ActivityModel(activityQuery)
+                        const activity = await addActivity.save()
+                        const updateQuestion = await QuestionModel.findOneAndUpdate({"_id":result._id},{$push: {activity: activity._id}})
+
 
                         //sending the add question results
                          if(result)
@@ -329,6 +345,59 @@ class Question {
                 return (x)
         }
 
+        static addBookmark = async (data) => {
+                let result = {}
+                let bookmark = await UserModel.updateOne({"_id":data.user}, {$addToSet: {"bookmarks": data.question}})
+                if(bookmark)
+                {
+                        result.updated=true
+                        return result
+                }
+                else
+                {
+                        return []
+                }
+        }
+
+        static deleteBookmark = async (data) => {
+                let result = {}
+                let bookmark = await UserModel.updateOne({"_id":data.user}, {$pull: {"bookmarks": data.question}})
+                
+                let a =new Date()
+                
+                if(bookmark)
+                {
+                        result.updated=true
+                        return result
+                }
+                else
+                {
+                        return []
+                }
+        }
+
+        static getAllBookmarkedQuestions = async (data) => {
+                let result = {}
+                let bookmarkedQuestions = await QuestionModel.find({"_id":{$in : (await UserModel.findById(data.user)).bookmarks}})
+
+                // let bookmarkedQuestions = await UserModel.find({"_id":data.user},{bookmarks:1,_id:0})
+
+                // let questions=bookmarkedQuestions[0].bookmarks
+                // console.log(questions)
+                // let a = await QuestionModel.find({"_id" : {$in: questions} })
+                if(bookmarkedQuestions)
+                {
+                        result.questions=bookmarkedQuestions
+                        return result
+                }
+                else
+                {
+                        return []
+                }
+        }
+
+
+
         static upvoteQuestion = async(data) =>{
                 //Updating Question Params
                 let question_doc = await QuestionModel.findOne({"_id":data.questionId})
@@ -382,8 +451,6 @@ class Question {
         static questionAnalysis = async() =>{
                 let result={}
                 let data = await CountModel.find()
-                console.log(data)
-
                 if(data?.length)
                 {
                         result.data=data;
@@ -532,9 +599,18 @@ class Question {
                          const updateQuestionConditionForComment = {
                                  $push: {"comment_id": newComment._id}
                          }
- 
                          const updateQuestionComment = await QuestionModel.updateOne(findQuestionConditionForComment,updateQuestionConditionForComment)
                 
+                         const activityQuery = {
+                                date: new Date(),
+                                what: "comment added",
+                                user: data.user_id,
+                                comment: data.comment
+                        }
+                        const addActivity = new ActivityModel(activityQuery)
+                        const activity = await addActivity.save()
+                        const updateQuestion = await QuestionModel.findOneAndUpdate({"_id":data.question_id},{$push: {activity: activity._id}})
+
                          return newComment;
                  }
                  catch(err){
@@ -584,8 +660,6 @@ class Question {
 
          }
 
-
-
          static updateQuestion = async (_id, data) => {
                 try {
                         let query = { 
@@ -600,6 +674,28 @@ class Question {
                         }
 
                         const result = await QuestionModel.findByIdAndUpdate(_id, query);
+                        
+                         if(result)
+                         {
+                                 return result;
+                         }
+                         else{
+                                 return {};
+                         }
+                 }
+                 catch(err){
+                         console.log(err);
+                         console.log("Some unexpected error occured while updating question")
+                 }
+ 
+
+        }
+
+
+
+         static getAllQuestionActivities = async (id) => {
+                try {
+                        const result = await QuestionModel.find({"_id":id},{activity:1,_id:0}).populate('activity');
                         
                          if(result)
                          {
