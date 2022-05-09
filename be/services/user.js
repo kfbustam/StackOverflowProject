@@ -449,6 +449,45 @@ class User {
                 }
         }
 
+        static getQuestionsTab = async (data) => {
+                try {    
+                        let result = []
+                        let question_doc = await UserModel.findOne({"_id":mongoose.Types.ObjectId(data)})
+                                                        .populate([{ path: 'questionIds', populate: { path: 'tags'}}])
+                        console.log(question_doc)
+                        question_doc["questionIds"].forEach(element=>{
+                                let every_ques = {}
+                                let tags = []
+                                every_ques["askedDate"] = element["createdAt"]
+                                every_ques["admin_approval"] = element["isApproved"]
+                                if(element["best_ans"])
+                                {
+                                        every_ques["isAccepted"] = true
+                                }
+                                else{
+                                        every_ques["isAccepted"] = false
+                                }
+                                every_ques["numOfVotes"] = element["upvote"] + element["downvote"]
+                                every_ques["questionTitle"] = element["title"]
+                                every_ques["questionId"] = element["_id"]
+                                element["tags"].forEach(e=>{
+                                        tags.push({
+                                                "name":e["name"],
+                                                "tag_id":e["_id"]
+                                        })
+                                })
+                                every_ques["tags"] = tags
+                                result.push(every_ques)
+                                })
+
+                        return result
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting the question tab of the user")
+                }
+        }
+
 
 }
 
