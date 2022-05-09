@@ -329,6 +329,58 @@ class Question {
                 return (x)
         }
 
+        static addBookmark = async (data) => {
+                let result = {}
+                let bookmark = await UserModel.updateOne({"_id":data.user}, {$addToSet: {"bookmarks": data.question}})
+                
+                if(bookmark)
+                {
+                        result.updated=true
+                        return result
+                }
+                else
+                {
+                        return []
+                }
+        }
+
+        static deleteBookmark = async (data) => {
+                let result = {}
+                let bookmark = await UserModel.updateOne({"_id":data.user}, {$pull: {"bookmarks": data.question}})
+                
+                if(bookmark)
+                {
+                        result.updated=true
+                        return result
+                }
+                else
+                {
+                        return []
+                }
+        }
+
+        static getAllBookmarkedQuestions = async (data) => {
+                let result = {}
+                let bookmarkedQuestions = await QuestionModel.find({"_id":{$in : (await UserModel.findById(data.user)).bookmarks}})
+
+                // let bookmarkedQuestions = await UserModel.find({"_id":data.user},{bookmarks:1,_id:0})
+
+                // let questions=bookmarkedQuestions[0].bookmarks
+                // console.log(questions)
+                // let a = await QuestionModel.find({"_id" : {$in: questions} })
+                if(bookmarkedQuestions)
+                {
+                        result.questions=bookmarkedQuestions
+                        return result
+                }
+                else
+                {
+                        return []
+                }
+        }
+
+
+
         static upvoteQuestion = async(data) =>{
                 //Updating Question Params
                 let question_doc = await QuestionModel.findOne({"_id":data.questionId})
@@ -381,8 +433,6 @@ class Question {
         static questionAnalysis = async() =>{
                 let result={}
                 let data = await CountModel.find()
-                console.log(data)
-
                 if(data?.length)
                 {
                         result.data=data;
