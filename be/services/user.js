@@ -1,11 +1,9 @@
 //const { path } = require("d3");
 //const { index } = require("d3");
 const { type } = require("express/lib/response");
-
 const QuestionModel = require("../model/questions.js")
 const UserModel = require("../model/user");
 const TagModel = require("../model/tag");
-const QuestionModel = require("../model/questions");
 const res = require("express/lib/response");
 
 class User {
@@ -134,7 +132,7 @@ class User {
                                 tags.forEach(tag => {
                                         if(tagData.includes(tag.name))
                                         {
-                                              ind=tagData.indexOf(tag.name);
+                                              let ind=tagData.indexOf(tag.name);
                                               score[ind]=score[ind]+question.score;
                                         }
                                         else
