@@ -44,7 +44,6 @@ router.get("/getPopularUsers", async (req, res) => {
     const response={}
     try{
 
-
         const result = await User.getPopularUsers(data);          
         //await client.set('user', JSON.stringify(result))
         if(result){
