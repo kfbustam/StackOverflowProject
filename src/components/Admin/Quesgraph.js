@@ -1,62 +1,88 @@
 import React, { useState, useEffect } from "react";
 import LineChart from "./LineChart";
-import { QuestionsData } from "./Data";
+// import { QuestionsData } from "./Data";
 import AdminSidebar from './Sidebar';
 import "./Quesgraph.css";
 
-// import connection from "../../config.json";
-// import axios from "axios";
+import axios from 'axios'
+import API_URL from '../../apiConfig'
 
 function QuestionAnalytics() {
+  const [questionsPerDay, setQuestionsPerDay] = useState([]);
+  const [dates, setDates] = useState([]);
+  const [count, setCount] = useState([]);
+  const [questionsData, setQuestionsData] = useState(false);
 
 
   let data = [];
+  
 
-//   useEffect(() => {
-    // axios
-    //   .get(`${connection.connectionURL}/api/analytics/questionsPostedPerDay`)
-    //   .then((response) => {
-    //     console.log(
-    //       "-----------------Question analytics----------------------"
-    //     );
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/api/Question/questionAnalysis`)
+      .then((response) => {
+      
+        data = response.data.data;
+        console.log("data",data);
+        setQuestionsPerDay(response.data.data);
+        setQuestionsData({
+          labels: data.map((res) => res.date),
+          datasets: [
+            {
+              label: "Questions per day",
+              data: data.map((res) => res.count),
+              backgroundColor: ["rgb(244, 130, 37)"],
+              borderColor: "black",
+              borderWidth: 2,
+            },
+          ],
+        });
 
-    //     data = response?.data?.data?.result;
-    //     console.log(data);
-    //     setQuestionsPerDay(response?.data?.data?.result);
 
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }, []);
 
-//       })
-//       .catch((err) => {
-//         throw err;
-//       });
-//   }, []);
-
-const [questionsData, setQuestionsData] = useState({
-    labels: QuestionsData.map((res) => res.date),
-    datasets: [
-      {
-        label: "Questions per day",
-        data: QuestionsData.map((res) => res.count),
-        backgroundColor: ["rgb(130, 130, 37)"],
-        borderColor: "black",
-        borderWidth: 2,
-      },
-    ],
-  });
+// const [questionsData, setQuestionsData] = useState({
+//     labels: QuestionsData.map((res) => res.date),
+//     datasets: [
+//       {
+//         label: "Questions per day",
+//         data: QuestionsData.map((res) => res.count),
+//         backgroundColor: ["rgb(130, 130, 37)"],
+//         borderColor: "black",
+//         borderWidth: 2,
+//       },
+//     ],
+//   });
 
   return (
     <>
-        <div className="containers">
+    <div className="containers">
        <AdminSidebar />
       
-        <div className="newline" style={{ width: "500px" }}>
-
+      {questionsData && (
+        <div className="newline" style={{ width: "700px" }}>
           <LineChart chartData={questionsData}></LineChart>
         </div>
-        </div>
-
+        
+      )}
+      </div>
     </>
   );
 }
 
 export default QuestionAnalytics;
+{/* <>
+<div className="containers">
+<AdminSidebar />
+
+<div className="newline" style={{ width: "500px" }}>
+
+  <LineChart chartData={questionsData}></LineChart>
+</div>
+</div>
+
+</> */}
