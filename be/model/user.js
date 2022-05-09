@@ -30,7 +30,8 @@ const UserSchema = new mongoose.Schema({
     type:String
   },
   about:{
-    type:String
+    type:String,
+    default:""
   },
   memberFrom:{
     type:Date,
@@ -48,7 +49,7 @@ const UserSchema = new mongoose.Schema({
   }],
   answerIds:[{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"answers"
+    ref:"Answers"
   }],
   comments:[{
     type:mongoose.Schema.Types.ObjectId,
