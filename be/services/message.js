@@ -29,7 +29,9 @@ static getAllUserConversations = async (data) => {
     try {
         const conversations = await ConversationModel.find({
             members: { $in: [data] },
-          });
+          }).populate('members', 'username')
+          .populate('lastMessage', 'message createdAt')
+          .sort({ lastMessageDate: -1 });
 
            if(conversations)
            {
@@ -57,7 +59,10 @@ static addMessageToConversation = async (data) => {
 
            if(saveMessage)
            {
-               return saveMessage;
+                const updateConversation = await ConversationModel.findByIdAndUpdate(data.conversationId, 
+                    { lastMessage: saveMessage._id, lastMessageDate: saveMessage.createdAt })
+            
+                return saveMessage;
            }
            else return []
 
