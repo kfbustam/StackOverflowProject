@@ -7,8 +7,12 @@ const CommentsModel = require("../model/comments.js")
 //const TagModel = require("../model/tag.js")
 const { DateTime } = require("luxon");
 const CountModel = require("../model/count.js");
-const AnswerModel = require('../model/answers');
+const AnswerModel = require('../model/answers.js');
+const ActivityModel = require('../model/activity.js');
+var moment = require('moment');
+
 const { string } = require('prop-types');
+const { AddTaskRounded } = require('@mui/icons-material');
 
 class Question {
 
@@ -146,6 +150,17 @@ class Question {
                                 const addCount = new CountModel(addCountQuery);
                                 const result = await addCount.save();
                         }
+                        //creating question activity
+                        const activityQuery = {
+                                date: new Date(),
+                                what: "asked",
+                                user: data.user,
+                                comment: "Question created"
+                        }
+                        const addActivity = new ActivityModel(activityQuery)
+                        const activity = await addActivity.save()
+                        const updateQuestion = await QuestionModel.findOneAndUpdate({"_id":result._id},{$push: {activity: activity._id}})
+
 
                         //sending the add question results
                          if(result)
@@ -347,6 +362,8 @@ class Question {
         static deleteBookmark = async (data) => {
                 let result = {}
                 let bookmark = await UserModel.updateOne({"_id":data.user}, {$pull: {"bookmarks": data.question}})
+                
+                let a =new Date()
                 
                 if(bookmark)
                 {
@@ -580,10 +597,19 @@ class Question {
                          const updateQuestionConditionForComment = {
                                  $push: {"comment_id": newComment._id}
                          }
-                         console.log("PUSHing value",newComment._id);
- 
+
                          const updateQuestionComment = await QuestionModel.updateOne(findQuestionConditionForComment,updateQuestionConditionForComment)
                 
+                         const activityQuery = {
+                                date: new Date(),
+                                what: "comment added",
+                                user: data.user_id,
+                                comment: data.comment
+                        }
+                        const addActivity = new ActivityModel(activityQuery)
+                        const activity = await addActivity.save()
+                        const updateQuestion = await QuestionModel.findOneAndUpdate({"_id":data.question_id},{$push: {activity: activity._id}})
+
                          return newComment;
                  }
                  catch(err){
