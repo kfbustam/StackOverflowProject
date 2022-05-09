@@ -99,7 +99,7 @@ const Search = () => {
                                 ))}
                                 <p className='search-author'>{post.type === 'question' ? 'Asked' : 'Answered'} 
                                     {' ' + new Date(post.createdAt).toLocaleDateString('en-us', { year: "numeric", day: 'numeric', month: "short" })} by 
-                                    <Link to='/users' className='search-name-link'> {post.type === 'question' ? post.user.username : post.user_id.username}</Link>
+                                    <Link to='/users' className='search-name-link'> {post.type === 'question' ? post.user?.username : post.user_id?.username}</Link>
                                 </p>
                             </Col>
                         </Row>

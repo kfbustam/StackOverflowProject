@@ -447,6 +447,7 @@ class Question {
                 return scoreval
         }
 
+
         static questionAnalysis = async() =>{
                 let result={}
                 let data = await CountModel.find()
@@ -457,6 +458,7 @@ class Question {
                 }
                 else return [];
                 }
+
 
         static getQuestionById = async (data) => {
                 try {
@@ -484,6 +486,7 @@ class Question {
                         throw new Error("Some unexpected error occurred while getting the questions");
                 }
         }
+
 
         static search = async(data) => {
                 const searchCriteria = data.match(/"[^"]*"|[^\s"]+/g)
@@ -597,7 +600,6 @@ class Question {
                          const updateQuestionConditionForComment = {
                                  $push: {"comment_id": newComment._id}
                          }
-
                          const updateQuestionComment = await QuestionModel.updateOne(findQuestionConditionForComment,updateQuestionConditionForComment)
                 
                          const activityQuery = {
@@ -619,48 +621,78 @@ class Question {
  
         }
 
-        // static getQuestionsByFilter = async (data) => {
+        static getQuestionsByFilter = async (data) => {
 
-        //         try {
-        //                  let result={}
-
-        //                  let filter = data;
-        //                   let questions;
+                try {
+                         let result={}
+                         let filter = data;
+                         let questions;
                         
-        //                 if(filter === "Interesting")
-        //                 {       
-        //                         questions = await QuestionModel.find({}).sort({"updatedAt":1});
-             
-        //                         console.log("FILTER", questions);
-        //                 }
-        //                 else if(filter === "Hot")
-        //                 {
-        //                         questions = await QuestionModel.find({}).sort({"todayview":-1})
-        //                 }
-        //                 else if(filter === "Score")
-        //                 {
-        //                         questions = await QuestionModel.find({}).sort({"score":-1})
-        //                 }
-        //                 else if (filter === "Unanswered")
-        //                 {
-        //                         //questions.find where answer_id.length=0 
-        //                         questions = await (await QuestionModel.find({}).where({'answer_id.0' : { $exists : true } } ));
-        //                 }
+                        if(filter === "Interesting")
+                        {       
+                                questions = await QuestionModel.find({}).sort({"updatedAt":1});             
+                        }
+                        else if(filter === "Hot")
+                        {
+                                questions = await QuestionModel.find({}).sort({"todayview":-1})
+                        }
+                        else if(filter === "Score")
+                        {
+                                questions = await QuestionModel.find({}).sort({"score":-1})
+                        }
+                        else if (filter === "Unanswered")
+                        {
+                                questions = await QuestionModel.find({'answer_id.0':{ $exists:false  }});
+                                console.log("UNANSWERED", questions)
+                        }
                      
-        //                  else{
-        //                          result.errorMessage="There is no filter with the entered text "+ data                                 
-        //                  }
-        //                  result.questions = questions;
-                         
-        //                  return result;
+                         else
+                         {
+                                result.errorMessage="There is no filter with the entered text "+ data                                 
+                         }
 
-        //          }
-        //          catch (err) {
-        //                  console.log(err);
-        //                  console.log("Some unexpected error while fethching the questions by tag")
-        //          }
+                         result.questions = questions;                         
+                         return result;
+                 }
+                 catch (err) {
+                         console.log(err);
+                         console.log("Some unexpected error while fethching the questions by filter")
+                 }
 
-        //  }
+         }
+
+
+
+         static updateQuestion = async (_id, data) => {
+                try {
+                        let query = { 
+                                title : data.title,
+                                body : data.body,
+                                user : data.user,
+                                isApproved : true
+                        }
+
+                        if(data.body.includes("<img")) {
+                             query.isApproved = false
+                        }
+
+                        const result = await QuestionModel.findByIdAndUpdate(_id, query);
+                        
+                         if(result)
+                         {
+                                 return result;
+                         }
+                         else{
+                                 return {};
+                         }
+                 }
+                 catch(err){
+                         console.log(err);
+                         console.log("Some unexpected error occured while updating question")
+                 }
+ 
+
+        }
 
 }
 

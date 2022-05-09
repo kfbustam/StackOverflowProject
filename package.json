@@ -36,6 +36,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "react-tag-input-component": "^1.0.7",
+    "react-time-ago": "^7.1.9",
     "recharts": "^2.1.9",
     "web-vitals": "^2.1.4"
   },

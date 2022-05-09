@@ -396,4 +396,62 @@ router.post("/downvoteQuestion",  async (req, res) => {
 
 })   
 
+router.put("/updateQuestion/:id",  async (req, res) => {
+    
+    const _id = req.params.id;
+    let data = req.body;
+
+    const response={}
+    try{
+        const result = await Question.updateQuestion(_id, data);
+        if(result){
+            response.success = true;
+            response.question = result;
+            response.status = "200";
+            response.todayCountUpdated = result.todayCountUpdated;
+            response.weekCountUpdated = result.weekCountUpdated;
+            response.userUpdated=result.userUpdated;
+            res.status(200).send(response);
+        }else{
+            response.success = false;
+            response.error = "Cannot update the question";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+});
+
+
+router.post("/addComment", async (req, res) => {
+    const data = req.body;
+    const response={}
+    try{
+        const result = await Question.addComment(data);
+        if(result){
+            response.success = true;
+            response.data = result;
+            response.status = "200";       
+            res.status(200).send(response);
+        }else{
+            response.success = false;
+            response.error = "Cannot add the Comment";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+    });
+
+
 module.exports = router;
