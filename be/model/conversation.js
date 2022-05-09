@@ -11,7 +11,7 @@ const ConversationSchema = new mongoose.Schema(
       type:mongoose.Schema.Types.ObjectId,
       ref:"Message"
   },
-  lastMessageDate: Date
+  lastMessageDate: { type: Date, default: Date.now }
   },
   { timestamps: true }
 );

@@ -89,3 +89,9 @@
     border-color: #F1F2F3 !important;
 }
 
+.my-messages-dropdown-image {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+}
+

@@ -29,6 +29,14 @@ const MyMessages = () => {
     const messageInput = useRef(null)
 
     const userID = JSON.parse(localStorage.getItem('user'))._id.toString()
+    
+    let users = []
+    for (let i = 0; i < 10; i++) {
+        users[i] = {
+            _id: `${i}`,
+            username: `First last ${i}`
+        }
+    }
 
     useEffect(() => {
         getConversations()
@@ -92,10 +100,13 @@ const MyMessages = () => {
         <div className='my-messages-container'>
             <div className='my-messages-list me-3'>
                 <div className='my-messages-header text-center pt-2 pb-2'>
-                    <DropdownButton title="Start a new conversation" size='sm' variant='dark'>
-                        <Dropdown.Item >Action</Dropdown.Item>
-                        <Dropdown.Item >Another action</Dropdown.Item>
-                        <Dropdown.Item >Something else</Dropdown.Item>
+                    <DropdownButton title="Start a conversation" size='sm' variant='dark'>
+                        {users.map(user => (
+                            <Dropdown.Item >
+                                <Image src='http://placekitten.com/200/300' roundedCircle className='my-messages-dropdown-image me-2'/>
+                                {user.username}
+                            </Dropdown.Item>
+                        ))}
                     </DropdownButton>
                 </div>
                 <div className='my-messages-header text-center pt-2 pb-2'>
