@@ -305,20 +305,21 @@ router.post("/downvoteQuestion",  async (req, res) => {
 
 })   
 
-router.post("/updateQuestion",  async (req, res) => {
+router.put("/updateQuestion/:id",  async (req, res) => {
     
-    const data = req.body;
+    const _id = req.params.id;
+    let data = req.body;
+
     const response={}
     try{
-        const result = await Question.updateQuestion(data);
+        const result = await Question.updateQuestion(_id, data);
         if(result){
             response.success = true;
-            response.updatedQuestion = result;
+            response.question = result;
             response.status = "200";
             response.todayCountUpdated = result.todayCountUpdated;
             response.weekCountUpdated = result.weekCountUpdated;
             response.userUpdated=result.userUpdated;
-
             res.status(200).send(response);
         }else{
             response.success = false;
@@ -335,8 +336,8 @@ router.post("/updateQuestion",  async (req, res) => {
     }
 });
 
-router.post("/addComment", async (req, res) => {
 
+router.post("/addComment", async (req, res) => {
     const data = req.body;
     const response={}
     try{
