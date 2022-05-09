@@ -7,6 +7,9 @@ const { array } = require("../common.js");
 const QuestionModel = require("../model/questions.js")
 const AnswerModel = require("../model/answers.js")
 const UserModel = require("../model/user");
+const TagModel = require("../model/tag");
+
+const res = require("express/lib/response");
 
 class User {
        
@@ -85,6 +88,36 @@ class User {
                 }
         }
 
+        static top10Results = async () => {
+                try {    
+                        let result = {}
+                        let top10Questions = await QuestionModel.find({}).sort({"views":-1}).limit(10);
+                        let top10Tags = await TagModel.find({}).sort({"count":-1}).limit(10);
+                        let top10Users_high_reputation = await UserModel.find({},{username:1,reputation:1,_id:0}).sort({"reputation":-1}).limit(10);
+                        let top10Users_low_reputation = await UserModel.find({},{username:1,reputation:1,_id:0}).sort({"reputation":1}).limit(10);
+
+                        result = {
+                                // "top10Questions" : top10Questions,
+                                "top10Tags" : top10Tags,
+                                "top10Users_high_reputation": top10Users_high_reputation,
+                                "top10Users_low_reputation": top10Users_low_reputation
+                        }                        
+                        if(result)
+                        {
+                                return result;
+                        }
+                        else{
+                                return {};
+                        }
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while  searching users")
+                }
+        }
+
+
+
         static getAllBadges = async(data) => {
                 try{
                         let result = {}
@@ -93,12 +126,18 @@ class User {
                         let tagData=[]
                         let score=[]
                         let badges=[]
+                        let views=0;
+                        //checking conditions if tags can become the badges or not.
                         userDetails.questionIds.forEach(question => {
                                 let tags=question.tags;
+                                if(question.views>views)
+                                {
+                                        views = question.views;
+                                }
                                 tags.forEach(tag => {
                                         if(tagData.includes(tag.name))
                                         {
-                                              ind=tagData.indexOf(tag.name);
+                                              let ind=tagData.indexOf(tag.name);
                                               score[ind]=score[ind]+question.score;
                                         }
                                         else
@@ -112,7 +151,7 @@ class User {
 
                         for(let i=0;i<tagData.length;i++)
                         {
-                                let badge;
+                                let badge
                                 if(score[i]<=10)
                                 {
                                         badge={
@@ -141,6 +180,181 @@ class User {
                                 badges.push(badge)
 
                         }
+                        //Badges based on views of the question.
+                        if(views>5)
+                        {
+                                badge={
+                                        'badgeName': 'Notable Question',
+                                        'type': 'Gold',
+                                }
+                                badges.push(badge)
+                        }
+                        else if(views > 15)
+                        {
+                                badge={
+                                        'badgeName': 'Notable Question',
+                                        'type': 'Gold',
+                                }
+                                badges.push(badge)
+
+                                badge={
+                                        'badgeName': 'Famous Question',
+                                        'type': 'Gold',
+                                }
+                                badges.push(badge)
+                        }
+
+
+                        //Badges based on no of questions asked. "Curious"
+                        let badge;
+                        if(userDetails.questionIds.length <= 2)
+                        {
+                                badge={
+                                        'badgeName': 'Curious',
+                                        'type': 'Bronze',
+                                        'score': userDetails.questionIds.length
+                                }
+                        }
+                        else if(userDetails.questionIds.length > 2 && userDetails.questionIds.length <5)
+                        {
+                                badge={
+                                        'badgeName': 'Curious',
+                                        'type': 'Silver',
+                                        'score': userDetails.questionIds.length
+                                }
+                        }
+                        else if(userDetails.questionIds.length>=5)
+                        {
+                                badge={
+                                        'badgeName': 'Curious',
+                                        'type': 'Gold',
+                                        'score': userDetails.questionIds.length
+                                }  
+                        }
+
+                        badges.push(badge)
+
+
+                        //Badges based on no of answers asked. ("Helpfulness")
+                        if(userDetails.answerIds.length <= 2)
+                        {
+                                badge={
+                                        'badgeName': 'Helpfulness',
+                                        'type': 'Bronze',
+                                        'score': userDetails.answerIds.length
+                                }
+                        }
+                        else if(userDetails.answerIds.length > 2 && userDetails.answerIds.length <5)
+                        {
+                                badge={
+                                        'badgeName': 'Helpfulness',
+                                        'type': 'Silver',
+                                        'score': userDetails.answerIds.length
+                                }
+                        }
+                        else if(userDetails.answerIds.length>=5)
+                        {
+                                badge={
+                                        'badgeName': 'Helpfulness',
+                                        'type': 'Gold',
+                                        'score': userDetails.answerIds.length
+                                }  
+                        }
+
+                        badges.push(badge)
+
+
+                        //Badges based on popularity
+                        if(userDetails.reputation<=10)
+                        {
+                                badge={
+                                        'badgeName': 'Popular',
+                                        'type': 'Bronze',
+                                        'score': userDetails.reputation
+                                } 
+                        }
+                        else if(userDetails.reputation>10 && userDetails.reputation<15)
+                        {
+                                badge={
+                                        'badgeName': 'Popular',
+                                        'type': 'Silver',
+                                        'score': userDetails.reputation
+                                } 
+                        }
+                        else if(userDetails.reputation>=15)
+                        {
+                                badge={
+                                        'badgeName': 'Popular',
+                                        'type': 'Gold',
+                                        'score': userDetails.reputation
+                                } 
+                        }
+                        badges.push(badge)
+
+                        //badges based on upvotes 'sportsmanship'
+                        if(userDetails.upvote_given <= 2)
+                        {
+                                badge={
+                                        'badgeName': 'Sportsmanship',
+                                        'type': 'Bronze',
+                                        'score': userDetails.upvote_given
+                                } 
+                        }
+                        else if(userDetails.upvote_given > 2 && userDetails.upvote_given <5)
+                        {
+                                badge={
+                                        'badgeName': 'Sportsmanship',
+                                        'type': 'Silver',
+                                        'score': userDetails.upvote_given
+                                } 
+                        }
+                        else if(userDetails.upvote_given>=5)
+                        {
+                                badge={
+                                        'badgeName': 'Sportsmanship',
+                                        'type': 'Gold',
+                                        'score': userDetails.upvote_given
+                                } 
+                        }
+                        badges.push(badge)
+
+
+                        //based on down votes 'critic'
+                        if(userDetails.downvote_given <= 2)
+                        {
+                                badge={
+                                        'badgeName': 'Critic',
+                                        'type': 'Bronze',
+                                        'score': userDetails.downvote_given
+                                } 
+                        }
+                        else if(userDetails.downvote_given > 2 && userDetails.downvote_given <5)
+                        {
+                                badge={
+                                        'badgeName': 'Critic',
+                                        'type': 'Silver',
+                                        'score': userDetails.downvote_given
+                                } 
+                        }
+                        else if(userDetails.downvote_given>=5)
+                        {
+                                badge={
+                                        'badgeName': 'Critic',
+                                        'type': 'Gold',
+                                        'score': userDetails.downvote_given
+                                } 
+                        }
+                        badges.push(badge)
+
+                        //adding badges based on comments 'Pundit'
+                        if(userDetails.comments.length>=3)
+                        {
+                                badge={
+                                        'badgeName': 'Pundit',
+                                        'type': 'Silver',
+                                } 
+                        }
+
                         
                         return result=badges;
                 }

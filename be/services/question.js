@@ -378,6 +378,7 @@ class Question {
                 return scoreval
         }
 
+
         static questionAnalysis = async() =>{
                 let result={}
                 let data = await CountModel.find()
@@ -390,6 +391,7 @@ class Question {
                 }
                 else return [];
                 }
+
 
         static getQuestionById = async (data) => {
                 try {
@@ -417,6 +419,7 @@ class Question {
                         throw new Error("Some unexpected error occurred while getting the questions");
                 }
         }
+
 
         static search = async(data) => {
                 const searchCriteria = data.match(/"[^"]*"|[^\s"]+/g)
@@ -530,7 +533,6 @@ class Question {
                          const updateQuestionConditionForComment = {
                                  $push: {"comment_id": newComment._id}
                          }
-                         console.log("PUSHing value",newComment._id);
  
                          const updateQuestionComment = await QuestionModel.updateOne(findQuestionConditionForComment,updateQuestionConditionForComment)
                 
@@ -543,48 +545,205 @@ class Question {
  
         }
 
-        // static getQuestionsByFilter = async (data) => {
+        static getQuestionsByFilter = async (data) => {
 
-        //         try {
-        //                  let result={}
-
-        //                  let filter = data;
-        //                   let questions;
+                try {
+                         let result={}
+                         let filter = data;
+                         let questions;
                         
-        //                 if(filter === "Interesting")
-        //                 {       
-        //                         questions = await QuestionModel.find({}).sort({"updatedAt":1});
-             
-        //                         console.log("FILTER", questions);
-        //                 }
-        //                 else if(filter === "Hot")
-        //                 {
-        //                         questions = await QuestionModel.find({}).sort({"todayview":-1})
-        //                 }
-        //                 else if(filter === "Score")
-        //                 {
-        //                         questions = await QuestionModel.find({}).sort({"score":-1})
-        //                 }
-        //                 else if (filter === "Unanswered")
-        //                 {
-        //                         //questions.find where answer_id.length=0 
-        //                         questions = await (await QuestionModel.find({}).where({'answer_id.0' : { $exists : true } } ));
-        //                 }
+                        if(filter === "Interesting")
+                        {       
+                                questions = await QuestionModel.find({}).sort({"updatedAt":1});             
+                        }
+                        else if(filter === "Hot")
+                        {
+                                questions = await QuestionModel.find({}).sort({"todayview":-1})
+                        }
+                        else if(filter === "Score")
+                        {
+                                questions = await QuestionModel.find({}).sort({"score":-1})
+                        }
+                        else if (filter === "Unanswered")
+                        {
+                                questions = await QuestionModel.find({'answer_id.0':{ $exists:false  }});
+                                console.log("UNANSWERED", questions)
+                        }
                      
-        //                  else{
-        //                          result.errorMessage="There is no filter with the entered text "+ data                                 
+                         else
+                         {
+                                result.errorMessage="There is no filter with the entered text "+ data                                 
+                         }
+
+                         result.questions = questions;                         
+                         return result;
+                 }
+                 catch (err) {
+                         console.log(err);
+                         console.log("Some unexpected error while fethching the questions by filter")
+                 }
+
+         }
+
+
+
+        //  static updateQuestion = async (data) => {
+        //         try {
+
+        //                 let query;
+        //                  if(data.body.includes("<img"))
+        //                  {
+                                 
+        //                         query= { "$set":
+        //                         {
+        //                                title : data.title,
+        //                                tags : data.tags,
+        //                                body : data.body,
+        //                                isApproved : false
+        //                         }
+        //                    }
         //                  }
-        //                  result.questions = questions;
+        //                  else
+        //                  {
+        //                          query= { "$set":
+        //                           {
+        //                                  title : data.title,
+        //                                  tags : data.tags,
+        //                                  body : data.body,
+        //                           }
+        //                       }
+        //                 }
+        //                       const result = new QuestionModel.updateOne({'user' : data.user}, query);
+ 
                          
-        //                  return result;
+        //                 // const result = new QuestionModel.updateOne({'user' : data.user}, query);
 
+                         
+        //                  const findQuestionCondition = {
+        //                          "_id":mongoose.Types.ObjectId(data.user)
+        //                  }
+ 
+        //                  const updateQuestionCondition = {
+        //                          $push: {questionIds: result._id}
+        //                  }
+ 
+        //                  const updateUser = await UserModel.updateOne(findQuestionCondition,updateQuestionCondition)
+                
+        //                  if(updateUser)
+        //                  {
+        //                          result.userUpdated = true;
+        //                  }
+
+        //                  let countResult;
+        //                  for(const tag of data.tags)
+        //                  {
+        //                          const tagData= await tagModel.findById(tag)
+        //                          const findCondition = {
+        //                                  "_id":mongoose.Types.ObjectId(tag)
+        //                          }
+        //                          if(tagData.todaydate == new Date().getDate() && tagData.currentWeek == DateTime.now().weekNumber)
+        //                          {
+        //                                  const updateCondition = {
+        //                                          $inc: {
+        //                                                  count:1,
+        //                                                  todaycount:1,
+        //                                                  weekcount:1
+        //                                          }
+        //                                  }
+        //                                 countResult = await tagModel.updateOne(findCondition,updateCondition);
+        //                          }
+        //                          else if(tagData.todaydate == new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
+        //                          {
+        //                                  const updateCondition = {
+        //                                          currentWeek:DateTime.now().weekNumber,
+        //                                          weekcount:1,
+        //                                          $inc: {
+        //                                                  count:1,
+        //                                                  todaycount:1,
+        //                                          }
+        //                                  }
+        //                                 countResult = await tagModel.updateOne(findCondition,updateCondition);
+        //                          }
+        //                          else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek ==  DateTime.now().weekNumber)
+        //                          { 
+        //                                  const updateCondition = {
+        //                                          todaydate:new Date().getDate(),
+        //                                          todaycount:1,
+        //                                          $inc: {
+        //                                                  count:1,
+        //                                                  weekcount:1
+        //                                          }
+        //                                  }
+        //                                 countResult = await tagModel.updateOne(findCondition,updateCondition);
+        //                          }
+        //                          else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
+        //                          {
+        //                                  const updateCondition = {
+        //                                          todaydate:new Date().getDate(),
+        //                                          currentWeek:DateTime.now().weekNumber,
+        //                                          todaycount:1,
+        //                                          weekcount:1,
+        //                                          $inc: {
+        //                                                  count:1
+        //                                          }
+        //                                  }
+        //                                 countResult = await tagModel.updateOne(findCondition,updateCondition);
+        //                          }
+        //                  }
+
+        //                  if(countResult)
+        //                  {
+        //                          result.todayCountUpdated = true
+        //                          result.weekCountUpdated = true
+        //                  }
+                        
+        //                  const countData = await CountModel.find({"date":new Date().toDateString()})
+        //                 if(countData?.length)
+        //                 {
+
+        //                         if(countData[0].date === new Date().toDateString())
+        //                         {
+        //                                 const updateCount = await CountModel.updateOne({"_id":countData[0]._id},{$inc:{"count":1}})
+
+        //                         }
+        //                         else
+        //                         {
+        //                                 const addCountCondition = {
+        //                                         date: new Date().toDateString(),
+        //                                          count:1
+        //                                         }        
+                                        
+        //                                 const addCount = new CountModel(addCountCondition)
+        //                                 const result = await addCount.save()
+        //                         }
+                                
+        //                 }
+        //                 else
+        //                 {
+        //                         const addCountQuery = {
+        //                                 date: new Date().toDateString(),
+        //                                 count: 1
+        //                         }
+        //                         const addCount = new CountModel(addCountQuery);
+        //                         const result = await addCount.save();
+        //                 }
+
+                        
+        //                  if(result)
+        //                  {
+        //                          return result;
+        //                  }
+        //                  else{
+        //                          return {};
+        //                  }
         //          }
-        //          catch (err) {
+        //          catch(err){
         //                  console.log(err);
-        //                  console.log("Some unexpected error while fethching the questions by tag")
+        //                  console.log("Some unexpected error occured while updating question")
         //          }
+ 
 
-        //  }
+        // }
 
 }
 
