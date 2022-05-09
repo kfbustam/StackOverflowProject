@@ -5,7 +5,7 @@ const { type } = require("express/lib/response");
 const QuestionModel = require("../model/questions.js")
 const UserModel = require("../model/user");
 const TagModel = require("../model/tag");
-const QuestionModel = require("../model/questions");
+//const QuestionModel = require("../model/questions");
 const res = require("express/lib/response");
 
 class User {
