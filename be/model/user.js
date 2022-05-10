@@ -58,7 +58,8 @@ const UserSchema = new mongoose.Schema({
   bookmarks:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Questions"
-  }]
+  }],
+  history: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity"}]
 }, { timestamps: true });
 
 UserSchema.pre('save', async function(){
