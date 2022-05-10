@@ -11,18 +11,27 @@ router.post("/createConversation", async (req, res) => {
     try {
         const result = await Message.createConversation(data)
 
-        if (result) {
+        if (result.isExists == false) {
                 response.success = true;
                 response.status = "200";
-                response.data= result;
+                response.data= result.savedConversation;
                 res.status(200).send(response);
         }
-        else {
+        else if(result.isExists == true) {
                 response.success = false;
-                response.error = "Cannot create the new conversation";
+                response.isExists=result.isExists;
+                response.error = result.error;
+                response.conversation = result.conversation;
                 response.status = "400";
                 res.status(400).send(response);
         }
+        else{
+            response.success = false;
+            response.error = "Cannot create the new conversation";
+            response.status = "400";
+            res.status(400).send(response)
+        }
+                
     } catch(e) {
         console.log(e);
         response.success = false;
