@@ -10,6 +10,7 @@ const navbar = require("./controllers/navbar");
 const answer = require("./controllers/answer");
 const user = require("./controllers/user")
 const tag = require("./controllers/tag.js")
+const message = require("./controllers/message.js")
 const authenticatectrl = require('./controllers/authctrl')
 const imgctrl = require("./controllers/image-controller")
 const questionController = require("./controllers/question")
@@ -59,6 +60,7 @@ app.use('/api/question',question);
 app.use('/api/navbar',navbar);
 app.use('/api/answer',answer);
 app.use('/api/user',user)
+app.use('/api/message',message)
 
 // server listening 
 app.listen(process.env.PORT || 3001, function(){

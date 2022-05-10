@@ -244,8 +244,129 @@ router.get('/search/:query', async (req, res) => {
         }
 
     })
+
+
+    router.post('/addBookmark', async (req, res) => {
+        let response = {}
+
+        let data=req.body;
+
+        try {
+            const result = await Question.addBookmark(data)
+
+            if (result) {
+                    response.success = true;
+                    response.status = "200";
+                    response.data= result.data;
+                    res.status(200).send(response);
+            }
+            else {
+                    response.success = false;
+                    response.error = "Cannot add the question to bookmarks";
+                    response.status = "400";
+                    res.status(400).send(response);
+            }
+        } catch(e) {
+            console.log(e);
+            response.success = false;
+            response.error = "Some error occurred. Please try again later";
+            response.status = "500";
+            res.status(500).send(response);
+        }
+
+    })
+
+    router.post('/deleteBookmark', async (req, res) => {
+        let response = {}
+
+        let data=req.body;
+
+        try {
+            const result = await Question.deleteBookmark(data)
+
+            if (result) {
+                    response.success = true;
+                    response.status = "200";
+                    response.data= result.data;
+                    res.status(200).send(response);
+            }
+            else {
+                    response.success = false;
+                    response.error = "Cannot delete the question from bookmarks";
+                    response.status = "400";
+                    res.status(400).send(response);
+            }
+        } catch(e) {
+            console.log(e);
+            response.success = false;
+            response.error = "Some error occurred. Please try again later";
+            response.status = "500";
+            res.status(500).send(response);
+        }
+
+    })
+
+    router.post('/getAllBookmarkedQuestions', async (req, res) => {
+        let response = {}
+
+        let data=req.body;
+
+        try {
+            const result = await Question.getAllBookmarkedQuestions(data)
+
+            if (result) {
+                    response.success = true;
+                    response.status = "200";
+                    response.data= result.questions;
+                    res.status(200).send(response);
+            }
+            else {
+                    response.success = false;
+                    response.error = "No questions bookmarked";
+                    response.status = "400";
+                    res.status(400).send(response);
+            }
+        } catch(e) {
+            console.log(e);
+            response.success = false;
+            response.error = "Some error occurred. Please try again later";
+            response.status = "500";
+            res.status(500).send(response);
+        }
+
+    })
 // }
 // runRedis()
+
+router.get('/getAllQuestionActivities/:id', async (req, res) => {
+    let response = {}
+
+    let id=req.params.id;
+
+    try {
+        const result = await Question.getAllQuestionActivities(id)
+
+        if (result) {
+                response.success = true;
+                response.status = "200";
+                response.data= result;
+                res.status(200).send(response);
+        }
+        else {
+                response.success = false;
+                response.error = "Cannot add the question to bookmarks";
+                response.status = "400";
+                res.status(400).send(response);
+        }
+    } catch(e) {
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+
+})
 
 router.post("/upvoteQuestion",  async (req, res) => {
     let response={}
