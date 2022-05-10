@@ -540,7 +540,7 @@ class User {
                                 each_tag["name"] = tagname[index]
                                 each_tag["postCount"] = tagcount[index]
                                 each_tag["scoreCount"] = score[index]
-                                each_tag["percentage"] = percentage[index]
+                                each_tag["percentage"] = percentage[index]+"%"
                                 if(score[index]>20)
                                 {
                                         each_tag["isBronze"] = false
