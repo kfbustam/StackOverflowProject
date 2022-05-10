@@ -73,6 +73,9 @@ class Message {
             const saveMessage = await newMessage.save();
 
             if (saveMessage) {
+                const updateConversation = await ConversationModel.findByIdAndUpdate(data.conversationId, 
+                    { lastMessage: saveMessage._id, lastMessageDate: saveMessage.createdAt })
+            
                 return saveMessage;
             }
             else return []

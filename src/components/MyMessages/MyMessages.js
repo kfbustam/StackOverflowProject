@@ -109,13 +109,26 @@ const MyMessages = () => {
         })
     }
 
+    const handleCreate = (receiverID) => {
+        axios.post(`${API_URL}/api/message/createConversation`, {
+            sender: userID,
+            receiver: receiverID
+        })
+        .then(res => {
+            navigate(`/mymessages/${res.data.data._id}`)
+        })
+        .catch(err => {
+            navigate(`/mymessages/${err.response.data.conversation}`)
+        })
+    }
+
     return (
         <div className='my-messages-container'>
             <div className='my-messages-list me-3'>
                 <div className='my-messages-header text-center pt-2 pb-2'>
                     <DropdownButton title="Start a conversation" size='sm' variant='dark'>
                         {allUsers.map(user => (
-                            <Dropdown.Item >
+                            <Dropdown.Item onClick={() => handleCreate(user._id)}>
                                 <Image src='http://placekitten.com/200/300' roundedCircle className='my-messages-dropdown-image me-2'/>
                                 {user.username}
                             </Dropdown.Item>
