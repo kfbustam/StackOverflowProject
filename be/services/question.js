@@ -62,7 +62,7 @@ class Question {
                                  const findCondition = {
                                          "_id":mongoose.Types.ObjectId(tag)
                                  }
-                                 if(tagData.todaydate == new Date().getDate() && tagData.currentWeek == DateTime.now().weekNumber)
+                                 if(tagData.todaydate === new Date().getDate() && tagData.currentWeek === DateTime.now().weekNumber)
                                  {
                                          const updateCondition = {
                                                  $inc: {
@@ -73,7 +73,7 @@ class Question {
                                          }
                                         countResult = await tagModel.updateOne(findCondition,updateCondition);
                                  }
-                                 else if(tagData.todaydate == new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
+                                 else if(tagData.todaydate === new Date().getDate() && tagData.currentWeek !==  DateTime.now().weekNumber)
                                  {
                                          const updateCondition = {
                                                  currentWeek:DateTime.now().weekNumber,
@@ -85,7 +85,7 @@ class Question {
                                          }
                                         countResult = await tagModel.updateOne(findCondition,updateCondition);
                                  }
-                                 else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek ==  DateTime.now().weekNumber)
+                                 else if(tagData.todaydate !== new Date().getDate() && tagData.currentWeek ===  DateTime.now().weekNumber)
                                  { 
                                          const updateCondition = {
                                                  todaydate:new Date().getDate(),
@@ -97,7 +97,7 @@ class Question {
                                          }
                                         countResult = await tagModel.updateOne(findCondition,updateCondition);
                                  }
-                                 else if(tagData.todaydate != new Date().getDate() && tagData.currentWeek !=  DateTime.now().weekNumber)
+                                 else if(tagData.todaydate !== new Date().getDate() && tagData.currentWeek !==  DateTime.now().weekNumber)
                                  {
                                          const updateCondition = {
                                                  todaydate:new Date().getDate(),
@@ -186,12 +186,15 @@ class Question {
                                 name:data
                         }
                         const tag = await tagModel.find(tagQuery)
-                        if(tag.length != 0)
+                        if(tag.length !== 0)
                         {
                                 const query = {
-                                        "tags": {
+                                $and:[
+                                       { "tags": {
                                                 $in:tag[0]._id
-                                        }
+                                        }},
+                                        {"isApproved":true}
+                                ]
                                 }
                                 const questions = await QuestionModel.find(query).populate('tags', 'name')
                                         .populate('user', 'username reputation')
@@ -208,8 +211,7 @@ class Question {
                                 }
                         }
                         else{
-                                result.errorMessage="There is no Tag available with the entered text "+data
-                                //throw new Error("Some unexpected error occurred with the Tag")
+                                result.errorMessage="There is no Question available with the entered tag "+data
 
                                 return result;
                         }
@@ -270,7 +272,8 @@ class Question {
                         const query = {
                                 "title": searchRegex
                         }
-                        const questions = await QuestionModel.find(query);
+                        const questions = await QuestionModel.find({
+                                $and: [query, {isApproved:true}]});
                         if (questions?.length) {
                                 return questions;
                         }
@@ -295,7 +298,8 @@ class Question {
                         const query = {
                                 "user": data
                         }
-                        const questions = await QuestionModel.find(query);
+                        const questions = await QuestionModel.find({
+                                $and: [query, {isApproved:true}]});
                         if (questions?.length) {
                                 result.data = questions
                                 return result;
@@ -318,7 +322,7 @@ class Question {
         static getAllQuestions = async (data) => {
                 try {
                         let result = {}
-                        const questions = await QuestionModel.find({})
+                        const questions = await QuestionModel.find({"isApproved":true})
                                 .populate('tags', 'name')
                                 .populate('user', 'username reputation')   
                                 .sort({"createdAt":1});
@@ -491,7 +495,7 @@ class Question {
                 try {
                         let result = []
 
-                        let questions = await QuestionModel.find({}).select('title body tags user score createdAt updatedAt answer_id').lean()
+                        let questions = await QuestionModel.find({"isApproved": true}).select('title body tags user score isApproved createdAt updatedAt answer_id').lean()
                                 .populate('tags', '_id name')
                                 .populate('answer_id', '_id isBest')
                                 .populate('user', '_id username').limit(10)
@@ -627,19 +631,19 @@ class Question {
                         
                         if(filter === "Interesting")
                         {       
-                                questions = await QuestionModel.find({}).sort({"updatedAt":1});             
+                                questions = await QuestionModel.find({'isApproved':true}).sort({"updatedAt":1});             
                         }
                         else if(filter === "Hot")
                         {
-                                questions = await QuestionModel.find({}).sort({"todayview":-1})
+                                questions = await QuestionModel.find({'isApproved':true}).sort({"todayview":-1})
                         }
                         else if(filter === "Score")
                         {
-                                questions = await QuestionModel.find({}).sort({"score":-1})
+                                questions = await QuestionModel.find({'isApproved':true}).sort({"score":-1})
                         }
                         else if (filter === "Unanswered")
                         {
-                                questions = await QuestionModel.find({'answer_id.0':{ $exists:false  }});
+                                questions = await QuestionModel.find( {$and:[{'answer_id.0':{ $exists:false  }}, {'isApproved':true}]});
                                 console.log("UNANSWERED", questions)
                         }
                      
@@ -709,6 +713,26 @@ class Question {
                  }
  
 
+        }
+
+
+        static getAdminApprovalQuestions = async () => {
+                try {    
+                        let result = {}
+                        result = await QuestionModel.find({'isApproved':false})
+                                              
+                        if(result)
+                        {
+                                return result;
+                        }
+                        else{
+                                return {};
+                        }
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while searching for admin approval questions")
+                }
         }
 
 }

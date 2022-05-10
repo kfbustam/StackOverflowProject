@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/createConversation", async (req, res) => {
     let response = {}
-    data=req.body;
+    let data=req.body;
     try {
         const result = await Message.createConversation(data)
 
@@ -44,7 +44,7 @@ router.post("/createConversation", async (req, res) => {
 
 router.get("/getAllUserConversations/:id",async(req,res)=>{
     let response = {}
-    data=req.params.id;
+    let data=req.params.id;
     try {
         const result = await Message.getAllUserConversations(data)
 
@@ -73,7 +73,7 @@ router.get("/getAllUserConversations/:id",async(req,res)=>{
 
 router.post("/addMessageToConversation",async(req,res)=>{
     let response = {}
-    data=req.body;
+    let  data=req.body;
     try {
         const result = await Message.addMessageToConversation(data)
 
@@ -102,7 +102,7 @@ router.post("/addMessageToConversation",async(req,res)=>{
 
 router.get("/getAllMessagesOfConversation/:id",async(req,res)=>{
     let response = {}
-    data=req.params.id;
+    let data=req.params.id;
     try {
         const result = await Message.getAllMessagesOfConversation(data)
 
