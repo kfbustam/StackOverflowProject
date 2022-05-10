@@ -404,13 +404,24 @@ class Question {
                 const upvoteval = question_doc["upvote"]+1
                 const  scoreval = upvoteval -  question_doc["downvote"]
                 
+                //console.log(question_doc)
                 // Updating Owner Reputation Params
                 let owner_doc = await UserModel.findOne({"questionIds":data.questionId})
-                //console.log(owner_doc)
+                console.log(owner_doc)
                 let ownerid = owner_doc["_id"]
                 let reputationval = owner_doc["reputation"]+10
 
-
+                //Adding the activity to history array in user
+                const activityQuery = {
+                        date: new Date(),
+                        what: "upvote",
+                        comment: question_doc.title,
+                        reputationChanged: "+10"
+                }
+                const addActivity = new ActivityModel(activityQuery)
+                const activity = await addActivity.save()
+                const updateUserHistory = await UserModel.findOneAndUpdate({"_id":owner_doc._id},{$push: {history: activity._id}})
+        
                 //Updating User upvote count
                 let user_doc = await UserModel.findOne({"_id":data.userId})
                 let upvotegnval = user_doc["upvote_given"]+1
@@ -438,6 +449,19 @@ class Question {
                 //Updating User upvote count
                 let user_doc = await UserModel.findOne({"_id":data.userId})
                 let downvotegnval = user_doc["downvote_given"]+1
+
+
+                //Adding the activity to history array in user
+                const activityQuery = {
+                        date: new Date(),
+                        what: "downvote",
+                        comment: question_doc.title,
+                        reputationChanged: "-10"
+                }
+                const addActivity = new ActivityModel(activityQuery)
+                const activity = await addActivity.save()
+                const updateUserHistory = await UserModel.findOneAndUpdate({"_id":owner_doc._id},{$push: {history: activity._id}})
+        
 
 
                 let score_update = await QuestionModel.findOneAndUpdate({"_id":data.questionId}, {"downvote":downvoteval, "score":scoreval})

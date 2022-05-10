@@ -8,7 +8,7 @@ const activitySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    reputationIncreased: { type: Number },
+    reputationChanged: { type: String },
     comment: { type: String, required: true }
   }
 );

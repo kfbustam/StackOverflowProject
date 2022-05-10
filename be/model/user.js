@@ -59,7 +59,7 @@ const UserSchema = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:"Questions"
   }],
-  reputation: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity"}]
+  history: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity"}]
 }, { timestamps: true });
 
 UserSchema.pre('save', async function(){
