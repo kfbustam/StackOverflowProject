@@ -45,20 +45,22 @@ class Message {
         try {
             const conversations = await ConversationModel.find({
                 members: { $in: [data] },
-            });
-
-            if (conversations) {
-                return conversations;
-            }
-            else return []
-
-        }
-        catch (err) {
-            console.log(err);
-            console.log("Some unexpected error while creating a conversation")
-        }
+              }).populate('members', 'username')
+              .populate('lastMessage', 'message createdAt')
+              .sort({ lastMessageDate: -1 });
+    
+               if(conversations)
+               {
+                   return conversations;
+               }
+               else return []
+    
+         }
+         catch(err){
+                 console.log(err);
+                 console.log("Some unexpected error while creating a conversation")
+         }
     }
-
 
     static addMessageToConversation = async (data) => {
         try {
@@ -71,6 +73,9 @@ class Message {
             const saveMessage = await newMessage.save();
 
             if (saveMessage) {
+                const updateConversation = await ConversationModel.findByIdAndUpdate(data.conversationId, 
+                    { lastMessage: saveMessage._id, lastMessageDate: saveMessage.createdAt })
+            
                 return saveMessage;
             }
             else return []

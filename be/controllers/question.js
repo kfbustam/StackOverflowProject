@@ -75,6 +75,37 @@ router.get('/getById/:id', async (req, res) => {
     }
 })
 
+
+// Interesting, Hot, Score, Unanswered questions on Dashboard
+router.get('/getQuestionsByFilter/:filter', async (req, res) => {
+    const filter = req.params.filter
+
+    const response = {}
+    try {
+        const result = await Question.getQuestionsByFilter(filter)
+
+        if(result){
+            response.success = true;
+            response.question = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Failed to find question by id.";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    } catch (err) {
+        console.log(err);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+
 router.get('/search/:query', async (req, res) => {
     const query = req.params.query
 
@@ -193,6 +224,7 @@ router.get('/search/:query', async (req, res) => {
 
         try {
             const result = await Question.getQuestionByTag(req.params.tag)
+            console.log("RESULT",result)
 
             if (result) {
                     response.success = true;
@@ -354,7 +386,7 @@ router.get('/getAllQuestionActivities/:id', async (req, res) => {
         }
         else {
                 response.success = false;
-                response.error = "Cannot add the question to bookmarks";
+                response.error = "Cannot get question activity";
                 response.status = "400";
                 res.status(400).send(response);
         }
@@ -482,6 +514,32 @@ router.post("/addComment", async (req, res) => {
         res.status(500).send(response);
     }
     });
+
+    router.get("/getAdminApprovalQuestions", async (req, res) => {
+        const response={}
+        try{
+            const result = await Question.getAdminApprovalQuestions();          
+    
+            if(result){
+                response.success = true;
+                response.questions = result;
+                response.status = "200";
+                res.status(200).send(response);
+    
+            }else{
+                response.success = false;
+                response.error = "Admin approval question results not found";
+                response.status = "400";
+                res.status(400).send(response);
+            }
+        }catch(e){
+            console.log(e);
+            response.success = false;
+            response.error = "Some error occurred. Please try again later";
+            response.status = "500";
+            res.status(500).send(response);
+        }
+    })
 
 
 module.exports = router;

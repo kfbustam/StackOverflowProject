@@ -91,7 +91,7 @@ class User {
         static top10Results = async () => {
                 try {    
                         let result = {}
-                        let top10Questions = await QuestionModel.find({}).sort({"views":-1}).limit(10);
+                        //let top10Questions = await QuestionModel.find({}).sort({"views":-1}).limit(10);
                         let top10Tags = await TagModel.find({}).sort({"count":-1}).limit(10);
                         let top10Users_high_reputation = await UserModel.find({},{username:1,reputation:1,_id:0}).sort({"reputation":-1}).limit(10);
                         let top10Users_low_reputation = await UserModel.find({},{username:1,reputation:1,_id:0}).sort({"reputation":1}).limit(10);
@@ -117,6 +117,7 @@ class User {
         }
 
 
+        
 
         static getAllBadges = async(data) => {
                 try{
@@ -479,6 +480,116 @@ class User {
                                 every_ques["tags"] = tags
                                 result.push(every_ques)
                                 })
+
+                        return result
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting the question tab of the user")
+                }
+        }
+
+        static getTagsTab = async (data) => {
+                try {    
+                        let result = []
+                        let tags= []
+                        let tagname = []
+                        let percentage = []
+                        let badge = []
+                        let tagcount = []
+                        let total_qcount = await TagModel.aggregate([
+                                { $match: { } },
+                                { $group: { _id: null, count: { $sum: "$count" } } }
+                            ])
+                        let tags_doc = await UserModel.findOne({"_id":mongoose.Types.ObjectId(data)})
+                                                .populate([{ path: 'questionIds', populate: { path: 'tags',select:['_id','count', 'name'] }}])
+                        tags_doc["questionIds"].forEach(element=>{
+                                element["tags"].forEach(e=>{
+                                        tags.push(e["_id"])
+                                        tagname.push(e["name"])
+                                        tagcount.push(e["count"])
+                                        percentage.push(Number((e["count"]/total_qcount[0]["count"])*100).toFixed(2))
+                                })
+                        })
+                        let questions_doc = await QuestionModel.find({"tags":{$in : tags}})
+                        let score = Array(tags.length).fill(0)
+
+                        questions_doc.forEach(question=>{
+                                tags.forEach((tag,index)=>{
+                                        if(question["tags"].includes(tag))
+                                        {
+                                                score[index] = score[index]+question["score"]
+                                        }
+                                })
+                        })
+                        // score.forEach(eachscore=>{
+                        //         if(eachscore>20)
+                        //         {
+                        //         badge.push("Gold")
+                        //         }
+                        //         else if(eachscore>10 && eachscore<=15)
+                        //         {
+                        //         badge.push("Silver")
+                        //         } 
+                        //         else{
+                        //         badge.push("Bronze")
+                        //         }
+                        // })
+                        tags.forEach((tag,index)=>{
+                                let each_tag = {}
+                                each_tag["tagId"] = tag
+                                each_tag["name"] = tagname[index]
+                                each_tag["postCount"] = tagcount[index]
+                                each_tag["scoreCount"] = score[index]
+                                each_tag["percentage"] = percentage[index]
+                                if(score[index]>20)
+                                {
+                                        each_tag["isBronze"] = false
+                                        each_tag["isSilver"] = false 
+                                        each_tag["isGold"] = true
+                                }
+                                else if(score[index]>10 && score[index]<=15)
+                                {
+                                        each_tag["isBronze"] = false
+                                        each_tag["isSilver"] = true 
+                                        each_tag["isGold"] = false
+                                }
+                                else
+                                {
+                                        each_tag["isBronze"] = true
+                                        each_tag["isSilver"] = false 
+                                        each_tag["isGold"] = false
+                                }
+                                result.push(each_tag)
+                        })
+                        console.log(result)
+                        //console.log(total_qcount)
+
+
+                        // question_doc["questionIds"].forEach(element=>{
+                        //         let every_ques = {}
+                        //         let tags = []
+                        //         every_ques["askedDate"] = element["createdAt"]
+                        //         every_ques["admin_approval"] = element["isApproved"]
+                        //         if(element["best_ans"])
+                        //         {
+                        //                 every_ques["isAccepted"] = true
+                        //         }
+                        //         else{
+                        //                 every_ques["isAccepted"] = false
+                        //         }
+                        //         every_ques["numOfVotes"] = element["upvote"] + element["downvote"]
+                        //         every_ques["questionTitle"] = element["title"]
+                        //         every_ques["questionId"] = element["_id"]
+                        //         element["tags"].forEach(e=>{
+                        //                 tags.push({
+                        //                         "name":e["name"],
+                        //                         "tag_id":e["_id"]
+                        //                 })
+                        //         })
+                        //         every_ques["tags"] = tags
+                        //         result.push(every_ques)
+                        //         })
 
                         return result
                 }
