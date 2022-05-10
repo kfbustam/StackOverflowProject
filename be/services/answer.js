@@ -146,16 +146,13 @@ class Answer {
     static addComment = async (data) => {
         try {
                 let addQuery;
-                
                          addQuery= {
                                  "comment": data.comment,                                       
                                  "user" : data.user_id,
                                  "answer_id" : data.answer_id
-                         } 
-                 
+                         }      
                  const comment = new CommentsModel(addQuery);
                  const newComment = await comment.save();                    
-                 
                  const findAnswerConditionForComment = {
                          "_id":mongoose.Types.ObjectId(data.answer_id)
                          
