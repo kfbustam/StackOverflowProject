@@ -11,8 +11,6 @@ const AnswerModel = require('../model/answers.js');
 const ActivityModel = require('../model/activity.js');
 var moment = require('moment');
 
-const { string } = require('prop-types');
-const { AddTaskRounded } = require('@mui/icons-material');
 
 class Question {
 
