@@ -711,6 +711,26 @@ class Question {
 
         }
 
+
+        static getAdminApprovalQuestions = async () => {
+                try {    
+                        let result = {}
+                        result = await QuestionModel.find({'isApproved':false})
+                                              
+                        if(result)
+                        {
+                                return result;
+                        }
+                        else{
+                                return {};
+                        }
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while searching for admin approval questions")
+                }
+        }
+
 }
 
 

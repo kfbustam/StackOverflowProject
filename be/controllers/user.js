@@ -210,9 +210,6 @@ router.get("/top10Results", async (req, res) => {
 })
 
 
-
-
-
 router.get("/getProfileTab/:id", async (req, res) => {
     const userId = req.params.id;
     const response={} 
