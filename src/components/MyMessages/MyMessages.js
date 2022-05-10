@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './MyMessages.css'
 import Container from 'react-bootstrap/Container'
@@ -12,6 +12,10 @@ import en from 'javascript-time-ago/locale/en.json'
 import ru from 'javascript-time-ago/locale/ru.json'
 import ReactTimeAgo from 'react-time-ago'
 import { useParams, useNavigate } from 'react-router-dom'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
+import axios from 'axios'
+import API_URL from '../../apiConfig'
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -20,127 +24,136 @@ const MyMessages = () => {
     const date = new Date()
     const { roomID } = useParams()
     const navigate = useNavigate()
-
-    const rooms = [{
-        _id: 1,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    },
-    {
-        _id: 2,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    },
-    {
-        _id: 3,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    },
-    {
-        _id: 4,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    },
-    {
-        _id: 5,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    },
-    {
-        _id: 6,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    },
-    {
-        _id: 7,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    },
-    {
-        _id: 8,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    }, 
-    {
-        _id: 9,
-        picture: 'http://placekitten.com/200/300',
-        username: 'Username test'
-    }]
-
-    const messages = [{
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 1 from Phillip the quick brown fox jumps over the lazy dog'
-    },
-    {
-        sender: '627094d1b97b5ee983f39917',
-        receiver: '6270916b10d71bab3c5630fe',
-        body: 'Message 1 from Bobby the quick brown fox'
-    },
-    {
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 2 from Phillip'
-    },
-    {
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 2 from Phillip'
-    },
-    {
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 2 from Phillip'
-    },
-    {
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 2 from Phillip'
-    },
-    {
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 2 from Phillip'
-    },
-    {
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 2 from Phillip'
-    },
-    {
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 2 from Phillip'
-    },
-    {
-        sender: '6270916b10d71bab3c5630fe',
-        receiver: '627094d1b97b5ee983f39917',
-        body: 'Message 2 from Phillip'
-    }]
+    const [conversations, setConversations] = useState([{}])
+    const [messages, setMessages] = useState([{}])
+    const messageInput = useRef(null)
+    const [allUsers, setAllUsers] = useState([{}])
 
     const userID = JSON.parse(localStorage.getItem('user'))._id.toString()
+    
+    let users = []
+    for (let i = 0; i < 10; i++) {
+        users[i] = {
+            _id: `${i}`,
+            username: `First last ${i}`
+        }
+    }
+
+    useEffect(() => {
+        getConversations()
+
+        getMessages()
+
+        getAllUsers()
+    }, [userID, roomID])
+
+    const getAllUsers = () => {
+        axios.get(`${API_URL}/api/user/getNewUsers`)
+        .then(res => {
+            setAllUsers(res.data.user)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    const getConversations = () => {
+        axios.get(`${API_URL}/api/message/getAllUserConversations/${userID}`)
+            .then(res => {
+                let convoData = res.data.data
+                for (let i = 0; i < convoData.length; i++) {
+                    const receiver = convoData[i].members.find(user => user._id != userID)
+
+                    convoData[i].receiver = receiver
+                }
+                setConversations(convoData)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    const getMessages = () => {
+        if (roomID) {
+            axios.get(`${API_URL}/api/message/getAllMessagesOfConversation/${roomID}`)
+                .then(res => {
+                    let messagesData = res.data.data
+                    
+                    for (let i = 0; i < messagesData.length; i++) {
+                        messagesData[i].date = new Date(messagesData[i].createdAt)
+
+                        console.log(messagesData[i].date)
+                    }
+
+                    setMessages(messagesData)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }
+
+    const handleSubmit = () => {
+        axios.post(`${API_URL}/api/message/addMessageToConversation`, {
+            conversationId: roomID,
+            sender: userID,
+            message: messageInput.current.value
+        })
+        .then(res => {
+            messageInput.current.value = ''
+            getMessages()
+            getConversations()
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    const handleCreate = (receiverID) => {
+        axios.post(`${API_URL}/api/message/createConversation`, {
+            sender: userID,
+            receiver: receiverID
+        })
+        .then(res => {
+            navigate(`/mymessages/${res.data.data._id}`)
+        })
+        .catch(err => {
+            navigate(`/mymessages/${err.response.data.conversation}`)
+        })
+    }
 
     return (
         <div className='my-messages-container'>
             <div className='my-messages-list me-3'>
                 <div className='my-messages-header text-center pt-2 pb-2'>
+                    <DropdownButton title="Start a conversation" size='sm' variant='dark'>
+                        {allUsers.map(user => (
+                            <Dropdown.Item onClick={() => handleCreate(user._id)}>
+                                <Image src='http://placekitten.com/200/300' roundedCircle className='my-messages-dropdown-image me-2'/>
+                                {user.username}
+                            </Dropdown.Item>
+                        ))}
+                    </DropdownButton>
+                </div>
+                <div className='my-messages-header text-center pt-2 pb-2'>
                     <strong>My messages</strong>
                 </div>
-                <div style={{ overflow: 'auto', height: '75vh' }}>
+                <div style={{ overflow: 'auto', height: '70vh' }}>
                     <ListGroup variant='flush'>
-                        {rooms.map(room => (
-                            <ListGroup.Item 
-                            onClick={() => navigate(`/mymessages/${room._id}`)} 
-                            active={roomID === room._id.toString()}
-                            action
-                            className={roomID === room._id.toString() && 'my-messages-active'}>
+                        {conversations && conversations.map(conversation => (
+                            <ListGroup.Item
+                                onClick={() => navigate(`/mymessages/${conversation._id}`)}
+                                active={roomID === conversation._id}
+                                action
+                                className={roomID === conversation._id && 'my-messages-active'}>
                                 <Row>
                                     <Col md={3}>
-                                        <Image src={room.picture} roundedCircle />
+                                        <Image src='http://placekitten.com/200/300' roundedCircle />
                                     </Col>
                                     <Col md={9}>
-                                        <p className='my-messages-name-list'>{room.username}</p>
-                                        <p className='my-messages-name-list'>Messages example</p>
+                                        <p className='my-messages-name-list'>{conversation.receiver && conversation.receiver.username}</p>
+                                        <p className='my-messages-preview'>{conversation.lastMessage && conversation.lastMessage.message}</p>
+                                        <ReactTimeAgo date={conversation.lastMessage ? new Date(conversation.lastMessage.createdAt) : date} locale="en-US" className='my-messages-preview-time' />
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
@@ -149,23 +162,26 @@ const MyMessages = () => {
                     </ListGroup>
                 </div>
             </div>
-            <Container className='my-messages-posts-container'>
-                <div style={{ overflow: 'auto', height: '65vh' }}>
-                    {messages.map(message => (
-                        <div className={message.sender === userID ? 'mb-3 my-messages-right' : 'mb-3 my-messages-left'}>
-                            <div className='my-messages-post' style={{ backgroundColor: message.sender === userID ? '#F48023' : '#242629' }}>
-                                {message.body}
-                                <br />
-                                <ReactTimeAgo date={date} locale="en-US" className='my-messages-time'/>
-                            </div>
+            {(roomID && messages) &&
+                <div>
+                    <Container className='my-messages-posts-container'>
+                        <div style={{ overflow: 'auto', height: '65vh' }}>
+                            {messages.map(message => (
+                                <div className={message.sender === userID ? 'mb-3 my-messages-right' : 'mb-3 my-messages-left'}>
+                                    <div className='my-messages-post' style={{ backgroundColor: message.sender === userID ? '#F48023' : '#242629' }}>
+                                        {message.message}
+                                        <br />
+                                        <ReactTimeAgo date={message.date ? message.date : date} locale="en-US" className='my-messages-time' />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </Container>
-            <Container>
-                <textarea type='text-area' className='my-messages-input me-3' rows={3} cols={70} />
-                <Button variant='dark' className='mt-3' size='lg'>Send message</Button>
-            </Container>
+                    </Container>
+                    <Container>
+                        <textarea type='text-area' className='my-messages-input me-3' rows={3} cols={70} ref={messageInput}/>
+                        <Button variant='dark' className='mt-3' size='lg' onClick={handleSubmit}>Send message</Button>
+                    </Container>
+                </div>}
         </div>
     )
 }

@@ -16,7 +16,7 @@ class User {
 
         static getPopularUsers = async (data) => {
                 try {                        
-                        const result = UserModel.find({}).sort({"reputation":-1});
+                        const result = await UserModel.find({}).sort({"reputation":-1});
                         if(result)
                         {
                                 return result;
@@ -33,7 +33,7 @@ class User {
 
         static getNewUsers = async (data) => {
                 try {                        
-                        const result = UserModel.find({}).sort({"createdAt":1});
+                        const result = await UserModel.find({}).sort({"createdAt":1});
                         if(result)
                         {
                                 return result;
@@ -52,7 +52,7 @@ class User {
                 try {    
                         let searchValue = data.searchValue;  
                         const regex = new RegExp(searchValue,'i')                  
-                        const result = UserModel.find({username:{$regex: regex}}).limit(5);
+                        const result = await UserModel.find({username:{$regex: regex}}).limit(5);
                         if(result)
                         {
                                 return result;
