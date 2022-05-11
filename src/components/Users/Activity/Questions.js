@@ -82,6 +82,7 @@ function Questions() {
     questionsCount,
   } = user
 
+<<<<<<< HEAD
   useEffect(() => {
     if (questions.length > 0) return
     async function fetchQuestions() {
@@ -94,15 +95,19 @@ function Questions() {
     fetchQuestions()
   }, [questions])
 
+=======
+>>>>>>> ff308d4 (fix: Fix datetime format display)
   useEffect(() => {
-    async function fetchAnswers() {
+    if (questions.length > 0) return
+    async function fetchQuestions() {
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get('http://localhost:3001/api/user/getQuestionsTab/' + user._id )
       const questionData = response.data.user
+      console.log(questionData);
       setQuestions(questionData)
     }
-  fetchAnswers()
-  }, [])
+    fetchQuestions()
+  }, [questions])
 
   return (
     <div style={rootStyle}>
