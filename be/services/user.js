@@ -565,12 +565,16 @@ class User {
                             ])
                         let tags_doc = await UserModel.findOne({"_id":mongoose.Types.ObjectId(data)})
                                                 .populate([{ path: 'questionIds', populate: { path: 'tags',select:['_id','count', 'name'] }}])
+                        //console.log(tags_doc)
                         tags_doc["questionIds"].forEach(element=>{
                                 element["tags"].forEach(e=>{
-                                        tags.push(e["_id"])
-                                        tagname.push(e["name"])
-                                        tagcount.push(e["count"])
-                                        percentage.push(Number((e["count"]/total_qcount[0]["count"])*100).toFixed(2))
+                                        if(!tags.includes(e["_id"]))
+                                        {
+                                                tags.push(e["_id"])
+                                                tagname.push(e["name"])
+                                                tagcount.push(e["count"])
+                                                percentage.push(Number((e["count"]/total_qcount[0]["count"])*100).toFixed(2))
+                                        }
                                 })
                         })
                         let questions_doc = await QuestionModel.find({"tags":{$in : tags}})
@@ -611,7 +615,7 @@ class User {
                                 }
                                 result.push(each_tag)
                         })
-                        console.log(result)
+                        //console.log(result)
                         return result
                 }
                 catch(err){
