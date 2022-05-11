@@ -2,10 +2,15 @@ import React, { useRef, useState, useEffect } from "react";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
+import parse from "html-react-parser";
+import { useParams } from "react-router-dom";
+import API_URL from '../../apiConfig'
 
 const QuestionOverview = () => {
+  const [ans, ansSet] = useState(null)
   const [data, dataSet] = useState(null)
   const editorRef = useRef(null);
+  const {id} = useParams();
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
@@ -13,13 +18,27 @@ const QuestionOverview = () => {
   };
   useEffect(() => {
     async function fetchMyAPI() {
-      let response = await axios.get('http://localhost:3001/api/question/getById/6275d5f3b319fc3904964e84')
+      let response = await axios.get(`${API_URL}/api/question/getById/${id}`)
       dataSet(response)
     }
 
+    async function increaseView() {
+      await axios.get(`${API_URL}/api/question/getById/${id}`)
+    }
+
     fetchMyAPI()
+    increaseView()
   }, [])
 
+  let user = JSON.parse(localStorage.getItem('user'))
+  function answer(){
+    axios.post(`http://localhost:3001/api/answer/addAnswer`, {
+      question_id: "6275d5f3b319fc3904964e84",
+      answer: editorRef.current.getContent(),
+      user_id: user._id 
+  })
+  window.location.reload()
+  }
   function getNumberOfDays(start) {
     const date1 = new Date(start);
     const date2 = new Date();
@@ -41,22 +60,22 @@ const QuestionOverview = () => {
     <>
       <LeftSideBar />
       <div className="flex flex-wrap ml-[20%] mr-[2%] overflow-hidden">
-        <div className="grid grid-cols-4 border-b border-gray-300 mt-[3%] gap-4">
-          <div className="text-4xl text-[#3B4045] col-span-3 ">
+        <div className="grid grid-cols-12 border-b border-gray-300 mt-[3%]">
+          <div className="text-4xl text-[#3B4045] col-span-9">
             {data?.data.question.title}
           </div>
-          <div className="mt-1">
+          <div className="mt-1 text-right gap-4 col-span-3">
             <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
               Ask Question
             </button>
           </div>
-          <div className="grid grid-cols-6">
+          <div className="flex">
             <div className="font-light text-[#3B4045]">Asked</div>
-            <div className="font-normal ml-1">{getNumberOfDays(data?.data.question.createdAt)}</div>
+            <div className="font-normal ml-2 flex-none">{getNumberOfDays(data?.data.question.createdAt)}</div>
             <div className="font-light ml-2 text-[#3B4045]">Modified</div>
-            <div className="font-normal ml-7">{getNumberOfDays(data?.data.question.updatedAt)}</div>
-            <div className="font-light ml-8 text-[#3B4045]">Viewed</div>
-            <div className="font-normal ml-11">{data?.data.question.totalviews} times</div>
+            <div className="font-normal ml-2">{getNumberOfDays(data?.data.question.updatedAt)}</div>
+            <div className="font-light ml-2 text-[#3B4045]">Viewed</div>
+            <div className="font-normal ml-2 flex-none">{data?.data.question.totalviews} times</div>
           </div>
         </div>
         <div className="grid grid-cols-12 mt-1 mr-[10%]">
@@ -110,7 +129,7 @@ const QuestionOverview = () => {
             </button>
           </div>
           <div className="text-left font-normal col-span-7 text-lg">
-            {data?.data.question.body}
+            {parse(String(data?.data.question.body))}
             <div className="flex mt-5 flex-wrap gap-2 overflow-auto">
             {data?.data.question.tags.map(tag => (
               <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded">
@@ -261,7 +280,10 @@ const QuestionOverview = () => {
             </ul>
           </div>
         </div>
-        <div className="grid grid-cols-12 mt-5">
+        <div className="">
+          <div className="font-semibold text-2xl">Answers</div>
+        {data?.data.question.answer_id.map(a => (
+        <div className="border-b border-gray-300 grid grid-cols-12 mb-5 mt-5">
           <div class="col-span-1">
             <button>
               <svg
@@ -274,7 +296,7 @@ const QuestionOverview = () => {
                 <path d="M2 25h32L18 9 2 25Z"></path>
               </svg>
             </button>
-            <div className="ml-[15%] mb-[10%]">{data?.data.question.answer_id[0].score}</div>
+            <div className="ml-[15%] mb-[10%]">{a.score}</div>
             <button>
               <svg
                 aria-hidden="true"
@@ -310,15 +332,16 @@ const QuestionOverview = () => {
               </svg>
             </button>
           </div>
-          <div className="font-bold col-span-11">Answers
-          <div className="font-normal mt-2 mr-[40%]">
-          {data?.data.question.answer_id[1].answer}
+          <div className="col-span-11 font-normal mt-2 mr-[40%]">
+              {parse(String(a.answer))}
     <br />
           </div>
           </div>
-        </div>
+              ))}
       </div>
-      <div className="ml-[20%] mr-[2%] mt-5 overflow-hidden border-t border-gray-300">
+      </div>
+
+      <div className="ml-[20%] mr-[2%] mt-5 overflow-hidden">
       <div className="font-bold mt-7">Your Answer</div>
         <br />
         <div className="mt-3">
@@ -337,7 +360,7 @@ const QuestionOverview = () => {
               />
             </div>
             <div className="my-2">
-              <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
+              <button onClick={answer} className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
                 Post Your Answer
               </button>
             </div>

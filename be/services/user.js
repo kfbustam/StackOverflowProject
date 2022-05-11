@@ -67,19 +67,19 @@ class User {
                 }
         }
 
-        static updateLocation = async (decoded, data) => {
+        static updateLocation = async ( data) => {
                 try {    
-                        var temp = await UserModel.findOneAndUpdate({"_id":decoded.sub}, {"location":data["location"]})
-                        return await UserModel.findOne({"_id":decoded.sub})
+                        var temp = await UserModel.findOneAndUpdate({"_id":data["userId"]}, {"location":data["location"]})
+                        return await UserModel.findOne({"_id":data["userId"]})
                 }
                 catch(err){
                         console.log(err);
                         console.log("Error occured while getting while updating location of the user")
                 }
         }
-        static getBasicDetails = async (decoded) => {
+        static getBasicDetails = async (data) => {
                 try {    
-                        var temp = await UserModel.findOne({"_id":decoded.sub})
+                        var temp = await UserModel.findOne({"_id":data})
                         return temp
                 }
                 catch(err){
@@ -91,13 +91,21 @@ class User {
         static top10Results = async () => {
                 try {    
                         let result = {}
+
+
+
+                        let top10Questions = await QuestionModel.find({}).sort({"views":-1}).limit(10).populate('tags', 'name')
+                        .populate('user', 'username reputation')  ;
+
+
                         //let top10Questions = await QuestionModel.find({}).sort({"views":-1}).limit(10);
+
                         let top10Tags = await TagModel.find({}).sort({"count":-1}).limit(10);
                         let top10Users_high_reputation = await UserModel.find({},{username:1,reputation:1,_id:0}).sort({"reputation":-1}).limit(10);
                         let top10Users_low_reputation = await UserModel.find({},{username:1,reputation:1,_id:0}).sort({"reputation":1}).limit(10);
 
                         result = {
-                                // "top10Questions" : top10Questions,
+                                 "top10Questions" : top10Questions,
                                 "top10Tags" : top10Tags,
                                 "top10Users_high_reputation": top10Users_high_reputation,
                                 "top10Users_low_reputation": top10Users_low_reputation
@@ -130,6 +138,7 @@ class User {
                         let views=0;
                         //checking conditions if tags can become the badges or not.
                         userDetails.questionIds.forEach(question => {
+
                                 let tags=question.tags;
                                 if(question.views>views)
                                 {
@@ -153,11 +162,11 @@ class User {
                         for(let i=0;i<tagData.length;i++)
                         {
                                 let badge
-                                if(score[i]<=10)
+                                if(score[i]>20)
                                 {
                                         badge={
                                                 'badgeName': tagData[i],
-                                                'type': 'Bronze',
+                                                'type': 'Gold',
                                                 'score': score[i]
                                         }
 
@@ -170,11 +179,11 @@ class User {
                                                 'score': score[i]
                                         }
                                 }
-                                else if(score[i]>20)
+                                else 
                                 {
                                         badge={
                                                 'badgeName': tagData[i],
-                                                'type': 'Gold',
+                                                'type': 'Bronze',
                                                 'score': score[i]
                                         }
                                 }
@@ -186,18 +195,27 @@ class User {
                         let viewBadge;
                         if(views>5)
                         {
-                                viewBadge={
+                                let badge
+                                badge={
                                         'badgeName': 'Notable Question',
                                         'type': 'Gold',
+                                        'views': views
                                 }
                                 badges.push(viewBadge)
                         }
                         else if(views > 15)
                         {
+                                badge={
+                                        'badgeName': 'Notable Question',
+                                        'type': 'Gold',
+                                        'views': views
+                                }
+                                badges.push(badge)
 
                                 viewBadge={
                                         'badgeName': 'Famous Question',
                                         'type': 'Gold',
+                                        'views': views
                                 }
                                 badges.push(badge)
                         }
@@ -364,12 +382,9 @@ class User {
 
         static getProfileTab =  async(data) =>{
                 try{
-
-                        const topGoldTags = [
-                                {name: 'Autobiographer', createDate: 'Nov 7'},
-                                {name: 'Legendary', createDate: 'Nov 7'},
-                                {name: 'Dataframe', createDate: 'Nov 7'}
-                              ]
+                        const topGoldTags = []
+                        const topBronzeTags = []
+                        const topSilverTags = []
                         let result = {}
                         let user_doc = await UserModel.findOne({"_id":mongoose.Types.ObjectId(data)}).populate("questionIds")
                         let qreached = 0
@@ -388,14 +403,32 @@ class User {
                                 "reachedCount": qreached
                         }
                         let about = user_doc["about"]
+                        let badges = await this.getAllBadges(data)
+                        badges.forEach(badge=>{
+                                if(badge["type"]=="Bronze")
+                                {
+                                        topBronzeTags.push({"name":badge["badgeName"]})
+                                }
+                                else if(badge["type"]=="Silver")
+                                {
+                                        topSilverTags.push({"name":badge["badgeName"]})
+                                }
+                                else
+                                {
+                                        topGoldTags.push({"name":badge["badgeName"]})
+                                }
+                        })
+                        let taguser = await this.getTagsTab(data)
+                        //console.log(taguser)
                         return {
                                 "stats":stats,
                                 "aboutMeText":about,
                                 "badges":{
                                         "topGoldTags":topGoldTags,
-                                        "topSilverTags":topGoldTags,
-                                        "topBronzeTags":topGoldTags
-                                }
+                                        "topSilverTags":topSilverTags,
+                                        "topBronzeTags":topBronzeTags
+                                },
+                                "tags":taguser
                         }
 
                 }
@@ -551,26 +584,13 @@ class User {
                                         }
                                 })
                         })
-                        // score.forEach(eachscore=>{
-                        //         if(eachscore>20)
-                        //         {
-                        //         badge.push("Gold")
-                        //         }
-                        //         else if(eachscore>10 && eachscore<=15)
-                        //         {
-                        //         badge.push("Silver")
-                        //         } 
-                        //         else{
-                        //         badge.push("Bronze")
-                        //         }
-                        // })
                         tags.forEach((tag,index)=>{
                                 let each_tag = {}
                                 each_tag["tagId"] = tag
                                 each_tag["name"] = tagname[index]
                                 each_tag["postCount"] = tagcount[index]
                                 each_tag["scoreCount"] = score[index]
-                                each_tag["percentage"] = percentage[index]
+                                each_tag["percentage"] = percentage[index]+"%"
                                 if(score[index]>20)
                                 {
                                         each_tag["isBronze"] = false
@@ -592,35 +612,19 @@ class User {
                                 result.push(each_tag)
                         })
                         console.log(result)
-                        //console.log(total_qcount)
-
-
-                        // question_doc["questionIds"].forEach(element=>{
-                        //         let every_ques = {}
-                        //         let tags = []
-                        //         every_ques["askedDate"] = element["createdAt"]
-                        //         every_ques["admin_approval"] = element["isApproved"]
-                        //         if(element["best_ans"])
-                        //         {
-                        //                 every_ques["isAccepted"] = true
-                        //         }
-                        //         else{
-                        //                 every_ques["isAccepted"] = false
-                        //         }
-                        //         every_ques["numOfVotes"] = element["upvote"] + element["downvote"]
-                        //         every_ques["questionTitle"] = element["title"]
-                        //         every_ques["questionId"] = element["_id"]
-                        //         element["tags"].forEach(e=>{
-                        //                 tags.push({
-                        //                         "name":e["name"],
-                        //                         "tag_id":e["_id"]
-                        //                 })
-                        //         })
-                        //         every_ques["tags"] = tags
-                        //         result.push(every_ques)
-                        //         })
-
                         return result
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting the tag tab of the user")
+                }
+        }
+
+        static getQuestionsbyTag = async (uid, tagid) => {
+                try {    
+                        // console.log(uid)
+                        let question_doc = await QuestionModel.find({"user":mongoose.Types.ObjectId(uid), "tags":mongoose.Types.ObjectId(tagid)})
+                        return question_doc
                 }
                 catch(err){
                         console.log(err);
@@ -629,6 +633,104 @@ class User {
         }
 
 
+        static getFilterPost = async (uid, filterval) => {
+                try {  
+                        let result;
+                        let all_ques = []
+                        let all_ans = []
+                        let question_ids = await QuestionModel.find({"user":mongoose.Types.ObjectId(uid)}).select({"_id":1})
+                        let answer_ids = await AnswerModel.find({"user_id":mongoose.Types.ObjectId(uid)}).select({"question_id":1, "_id":0})
+                        question_ids.forEach(question=>{
+                                all_ques.push(question["_id"])
+                        })
+                        answer_ids.forEach(answer=>{
+                                all_ans.push(answer["question_id"])
+                        })
+                        if(filterval=="All")
+                        {
+                                let allques = all_ques.concat(all_ans)
+                                //console.log(allques)
+                                result = await QuestionModel.find({"_id":allques})   
+                                console.log(result)     
+                        }
+                        else if(filterval=="Questions")
+                        {
+                                result = await QuestionModel.find({"_id":all_ques})        
+                        }
+                        else{
+                                result = await QuestionModel.find({"_id":all_ans})        
+                        }
+                        return result
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting the question tab of the user")
+                }
+        }
+
+        static getSortPost = async (uid, filterval, sortoption) => {
+                try {  
+                        let result;
+                        let all_ques = []
+                        let all_ans = []
+                        let question_ids = await QuestionModel.find({"user":mongoose.Types.ObjectId(uid)}).select({"_id":1})
+                        let answer_ids = await AnswerModel.find({"user_id":mongoose.Types.ObjectId(uid)}).select({"question_id":1, "_id":0})
+                        question_ids.forEach(question=>{
+                                all_ques.push(question["_id"])
+                        })
+                        answer_ids.forEach(answer=>{
+                                all_ans.push(answer["question_id"])
+                        })
+                        if(filterval=="All" && sortoption=="Score")
+                        {
+                                let allques = all_ques.concat(all_ans)
+                                //console.log(allques)
+                                result = await QuestionModel.find({"_id":allques}).sort({"score":-1})   
+                                console.log(result)     
+                        }
+                        else if(filterval=="All" && sortoption=="Newest")
+                        {
+                                let allques = all_ques.concat(all_ans)
+                                //console.log(allques)
+                                result = await QuestionModel.find({"_id":allques}).sort({"createdAt":-1})   
+                                console.log(result)     
+                        }
+                        else if(filterval=="Questions" && sortoption=="Score")
+                        {
+                                result = await QuestionModel.find({"_id":all_ques}).sort({"score":-1})        
+                        }
+                        else if(filterval=="Questions" && sortoption=="Newest")
+                        {
+                                result = await QuestionModel.find({"_id":all_ques}).sort({"createdAt":-1})        
+                        }
+                        
+                        else if (filterval=="Answers" && sortoption=="Score"){
+                                result = await QuestionModel.find({"_id":all_ans}).sort({"score":-1})        
+                        }
+                        else{
+                                result = await QuestionModel.find({"_id":all_ans}).sort({"createdAt":-1}) 
+                        }
+                        return result
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting the question tab of the user")
+                }
+        }
+
+        static updatePathDP = async ( userId, profileURL) => {
+                try {    
+                        var temp = await UserModel.findOneAndUpdate({"_id":mongoose.Types.ObjectId(userId)}, {"profileURL":profileURL})
+                        return await UserModel.findOne({"_id":mongoose.Types.ObjectId(userId)})
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while updating path of the user's profile picture")
+                }
+        }
+
+
+
 }
 
-module.exports.User = User;
+module.exports.User = User;     

@@ -23,9 +23,9 @@ export default function Toptags() {
         setTags(dataTags)
         setFilteredTags(dataTags)
   
-        const nameData = dataTags.map(tag => tag.name)
-        const distinctNames = [...new Set(nameData)]
-        setTagNames(distinctNames)
+        // const nameData = dataTags.map(tag => tag.name)
+        // const distinctNames = [...new Set(nameData)]
+        // setTagNames(distinctNames)
       })
       .catch(err => {
         console.log(err)

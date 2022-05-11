@@ -11,20 +11,26 @@ export default function NewTag() {
   const [tagsuccess, setTagsuccess] = useState(false)
 
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
         axios.post(`${API_URL}/api/tag/addTag`, {
           name: tag,
           description: desc
       })
       .then(res => {
-          //navigate('/questions/overview')
+           
           setTagsuccess(true);
+          console.log("tagsuccess",tagsuccess)
 
       })
       .catch(err => {
           console.log(err)
       })
+  }
+  const handleRefresh = (e) => {
+    window.location.reload();
+
   }
 
   return (
@@ -45,12 +51,15 @@ export default function NewTag() {
        
         <div className="addTagItem">
           <label>Description</label>
-          <textarea rows="5" onChange={(event) => { setDesc(event.target.value); }} ></textarea>
+          <textarea  className = "advancedSearchTextbox" rows="10" onChange={(event) => { setDesc(event.target.value); }} ></textarea>
         </div>
 
         <button className="addTagButton" onClick={handleSubmit}>Create</button>
+        <br>
+        </br>
+        <br></br>
 
-        {tagsuccess && (<div>Tag has been added successfully</div>)}
+        {tagsuccess && (<div><button className="addTagButton" onClick={handleRefresh}>Tag Added Successfully, Click to add new one</button></div>)}
       </form>
     </div>
     </div>

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
@@ -54,6 +55,37 @@ const silverCircleIconStyle = {
 }
 
 function Tags() {
+  const [tags, setTags] = useState([])
+  // [
+  //   {
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'javascript',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'python',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'pandas',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   }
+  // ]
+
   const navigate = useNavigate()
   const user = {
     aboutMeText: 'about',
@@ -73,35 +105,17 @@ function Tags() {
     answersCount,
   } = user
 
-  const tags = [
-    {
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'javascript',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
-    },
-    {
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'python',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
-    },
-    {
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'pandas',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
+  useEffect(() => {
+    if (tags.length > 0) return
+    async function fetchTags() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      const response = await axios.get('http://localhost:3001/api/user/getTagsTab/' + user._id )
+      const tagData = response.data.user
+      console.log(tagData);
+      setTags(tagData)
     }
-  ]
+    fetchTags()
+  }, [tags])
 
   return (
     <div style={rootStyle}>

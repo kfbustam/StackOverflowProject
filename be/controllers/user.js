@@ -69,7 +69,6 @@ router.get("/getPopularUsers", async (req, res) => {
 //}
 //runApp1()
 
-
 router.get("/getNewUsers", async (req, res) => {
     const data = req.body;
     const response={}
@@ -125,14 +124,14 @@ router.get("/searchUsers", async (req, res) => {
     }
 })
 
-router.post("/updateLocation",passport.authenticate('jwt',{session: false}), async (req, res) => {
+router.post("/updateLocation", async (req, res) => {
     const data = req.body;
     const response={}
-    var authorization = req.headers.authorization.split(' ')[1],
-    decoded;
-    decoded = jwt.verify(authorization, 'TOP_SECRET'); 
+    // var authorization = req.headers.authorization.split(' ')[1],
+    // decoded;
+    // decoded = jwt.verify(authorization, 'TOP_SECRET'); 
     try{
-        const result = await User.updateLocation(decoded, data);          
+        const result = await User.updateLocation( data);          
         if(result){
             response.success = true;
             response.user = result;
@@ -154,14 +153,14 @@ router.post("/updateLocation",passport.authenticate('jwt',{session: false}), asy
     }
 })
 
-router.get("/getBasicDetails",passport.authenticate('jwt',{session: false}), async (req, res) => {
+router.get("/getBasicDetails/:id", async (req, res) => {
     //const data = req.body;
     const response={}
-    var authorization = req.headers.authorization.split(' ')[1],
-    decoded;
-    decoded = jwt.verify(authorization, 'TOP_SECRET'); 
+    // var authorization = req.headers.authorization.split(' ')[1],
+    // decoded;
+    // decoded = jwt.verify(authorization, 'TOP_SECRET'); 
     try{
-        const result = await User.getBasicDetails(decoded);          
+        const result = await User.getBasicDetails(req.params.id);          
         if(result){
             response.success = true;
             response.user = result;
@@ -329,7 +328,107 @@ router.get("/getTagsTab/:id", async (req, res) => {
 
         }else{
             response.success = false;
-            response.error = "Cannot get the questions tab of the user";
+            response.error = "Cannot get the tag tab of the user";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.get("/getQuestionsbyTag/:uid/:tid", async (req, res) => {
+    const response={} 
+    try{
+        const result = await User.getQuestionsbyTag(req.params.uid, req.params.tid);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot get the questions of the tab and the user";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.get("/getFilterPost/:uid/:filter", async (req, res) => {
+    const response={} 
+    try{
+        const result = await User.getFilterPost(req.params.uid, req.params.filter);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot get the questions of the tab and the user";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.get("/getSortPost/:uid/:filter/:sort", async (req, res) => {
+    const response={} 
+    try{
+        const result = await User.getSortPost(req.params.uid, req.params.filter, req.params.sort);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot get the questions of the tab and the user";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.post("/updatePathDP", async (req, res) => {
+    const response={} 
+    try{
+        const result = await User.updatePathDP(req.body.userId, req.body.profileURL);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot update the URL of the user's profile picture";
             response.status = "400";
             res.status(400).send(response);
         }
