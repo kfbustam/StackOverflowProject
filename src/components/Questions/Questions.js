@@ -134,7 +134,7 @@ export default function Questions() {
         <div style={rootStyle}>
       <div style={titleHeaderStyle}>
         <h2>
-          Top Questions
+          Questions
         </h2>
       </div>
 
