@@ -24,8 +24,10 @@ router.post("/addQuestion",  async (req, res) => {
     try{
         const result = await Question.addQuestion(data);
         if(result){
+            //console.log(result)
             response.success = true;
             response.user = data.user;
+            response.question_id = result["_id"]
             response.status = "200";
             response.todayCountUpdated = result.todayCountUpdated;
             response.weekCountUpdated = result.weekCountUpdated;
