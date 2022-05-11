@@ -380,7 +380,6 @@ class User {
 
         static getProfileTab =  async(data) =>{
                 try{
-
                         const topGoldTags = []
                         const topBronzeTags = []
                         const topSilverTags = []
@@ -424,8 +423,8 @@ class User {
                                 "aboutMeText":about,
                                 "badges":{
                                         "topGoldTags":topGoldTags,
-                                        "topSilverTags":topGoldTags,
-                                        "topBronzeTags":topGoldTags
+                                        "topSilverTags":topSilverTags,
+                                        "topBronzeTags":topBronzeTags
                                 },
                                 "tags":taguser
                         }
