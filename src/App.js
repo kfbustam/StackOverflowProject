@@ -46,6 +46,7 @@ import EditQuestion from './components/QuestionsOverview/EditQuestion';
 import ReviewQuestionOverview from './components/Admin/ReviewQuestionOverview'
 import ReviewQuestion from './components/Admin/ReviewQuestion';
 import API_URL from './apiConfig';
+import EditProfile from './components/EditProfile/EditProfile'
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -258,6 +259,14 @@ function App() {
             <div >
               <LeftSideBar activeTab='questions'/>
               <TagsOverview/>
+            </div>    
+          </div>
+        }/>
+        <Route exact path="/editProfile" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='Users'/>
+              <EditProfile/>
             </div>    
           </div>
         }/>

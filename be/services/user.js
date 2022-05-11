@@ -729,7 +729,16 @@ class User {
                 }
         }
 
+        static editInfo = async (userID, info) => {
+                try {
+                        const updatedUser = await UserModel.findByIdAndUpdate(userID, info, { new: true })
 
+                        return updatedUser
+                } catch(err) {
+                        console.log(err)
+                        console.log('An error occurred while updating user info')
+                }
+        }
 
 }
 
