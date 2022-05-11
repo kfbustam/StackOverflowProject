@@ -15,7 +15,7 @@ export default function Sidebar() {
               Add Tag
             </li>
             </Link>
-            <Link to="/question" className="link">
+            <Link to="/reviewquestion" className="link">
             <li className="sidebarListItem">
             <WorkOutline className="sidebarIcon" />
               Review Question

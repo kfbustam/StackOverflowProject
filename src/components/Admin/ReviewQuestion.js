@@ -1,4 +1,4 @@
-import "./Questions.css";
+import "./Question.css";
 // import React from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
-import LeftSideBar from "../LeftSideBar/LeftSideBar";
+import AdminSidebar from './Sidebar';
 import React, { useState, useEffect } from 'react'
 
 import axios from 'axios'
@@ -16,8 +16,7 @@ import API_URL from '../../apiConfig'
 const rootStyle = {
   display: 'flex',
   flexDirection: 'column',
-  marginLeft: '20%',
-  width: '70%'
+  width: '60%'
 }
 
 const titleHeaderStyle = {
@@ -36,7 +35,7 @@ const filterButtonGroupStyle = {
 const questionListItem = {
   display: 'flex',
   flexDirection: 'row',
-  margin: '10px 0px 3px 20px'
+  margin: '5px 0px 10px 20px'
 }
 
 const questionListItemRightSideStyle = {
@@ -65,15 +64,15 @@ const reputationCountStyle = {
 }
 
 
-export default function Questions() {
+export default function ReviewQuestion() {
   const [data, setData] = useState([])
 
   const navigate = useNavigate()
   useEffect(() => {
     if(data.length >0){return}
-    axios.get(`${API_URL}/api/question/getAllQuestions`)
+    axios.get(`${API_URL}/api/question/getAdminApprovalQuestions`)
     .then(res => {
-      const dataQuestions = res.data.question
+      const dataQuestions = res.data.questions
       setData(dataQuestions)
       console.log("bleh",data);
     })
@@ -100,43 +99,18 @@ export default function Questions() {
 }
 
 
-  const questions = [{
-    answerCount: 1,
-    isAnswered: false,
-    lastModified: 'modified Apr 7 at 11:14',
-    questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
-    questionURL: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
-    // reputationCount: 50,
-    tags: [
-      {
-        name: 'javascript',
-        // url: 'https://stackoverflow.com/questions/tagged/javascript'
-      }
-    ],
-    user: {
-      reputationCount: 123,
-      username: 'kfbustam',
-      userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
-      profileIconSrc: 'http://placekitten.com/200/300' 
-    },
-    voteCount: 4,
-    viewCount: 124
-  }]
-
-  console.log("bleh",data)
   return (
     <>
     <div className="containers">
-       <LeftSideBar />
+       <AdminSidebar />
     
    
     <div className="newTag">
         <div style={rootStyle}>
-        <div style={titleHeaderStyle}>
+      <div style={titleHeaderStyle}>
         <h2>
-          Questions
+          Review Question
         </h2>
-        <Button key="askQuestion" onClick={() => navigate('/askQuestion')} variant="contained" style={{height: 40}}>Ask question</Button>
       </div>
 
       <Divider />
@@ -207,7 +181,7 @@ export default function Questions() {
                   <div style={questionListItemRightSideStyle}>
                     <div>
                       <h3>
-                        <a onClick={() => navigate(`/questions/${question._id}`)} style={{color: '#0074cc', fontSize: 17}}>{question.title}</a>
+                        <a onClick={() => navigate(`/reviewquestion/${question._id}`)} style={{color: '#0074cc', fontSize: 17}}>{question.title}</a>
                         {/* <a style={{color: '#0074cc', fontSize: 17}}>{question.title}</a> */}
                       </h3>
                       <div>

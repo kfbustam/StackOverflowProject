@@ -38,7 +38,10 @@ class Question {
  
                          }
                          const question = new QuestionModel(addQuery);
+                         //console.log(question)
                          const result = await question.save();
+                         const qid = question["_id"]
+                         //console.log(qid)
                          
                          const findQuestionCondition = {
                                  "_id":mongoose.Types.ObjectId(data.user)
@@ -163,6 +166,7 @@ class Question {
                         //sending the add question results
                          if(result)
                          {
+                                console.log(result);
                                  return result;
                          }
                          else{
@@ -759,7 +763,28 @@ class Question {
         static getAdminApprovalQuestions = async () => {
                 try {    
                         let result = {}
-                        result = await QuestionModel.find({'isApproved':false})
+                        result = await QuestionModel.find({'isApproved':false}).populate('tags', 'name')
+                        .populate('user', 'username reputation')   
+                                              
+                        if(result)
+                        {
+                                return result;
+                        }
+                        else{
+                                return {};
+                        }
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while searching for admin approval questions")
+                }
+        }
+
+
+        static adminUpdatedQuestion = async (_id) => {
+                try {    
+                        let result = {}
+                        result = await QuestionModel.findByIdAndUpdate(_id, [ { $set: { "isApproved":true } }]) 
                                               
                         if(result)
                         {

@@ -27,7 +27,8 @@ const UserSchema = new mongoose.Schema({
     default: 0
   },
   profileURL:{
-    type:String
+    type:String,
+    default:""
   },
   about:{
     type:String,
@@ -38,10 +39,12 @@ const UserSchema = new mongoose.Schema({
     default:Date.now,
   },
   lastSeen:{
-    type:Date
+    type:Date,
+    default:Date.now,
   },
   location:{  
-    type:String
+    type:String,
+    default:"San Jose"
   },
   questionIds:[{
     type:mongoose.Schema.Types.ObjectId,

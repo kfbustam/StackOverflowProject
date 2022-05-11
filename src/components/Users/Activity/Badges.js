@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -47,6 +48,7 @@ const silverCircleIconStyle = {
 
 function Badges() {
   const navigate = useNavigate()
+  const [badges, setBadges] = useState([])
   const user = {
     aboutMeText: 'about',
     answersCount: 12,
@@ -65,68 +67,79 @@ function Badges() {
     answersCount,
   } = user
 
-  const tags = [
-    {
-      isBadge: true,
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'javascript',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
-    },
-    {
-      isBadge: true,
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'python',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
-    },
-    {
-      isBadge: true,
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'pandas',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
-    },
-    {
-      isBadge: false,
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'pandas',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
-    },
-    {
-      isBadge: false,
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'pandas',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
-    },
-    {
-      isBadge: false,
-      isBronze: false,
-      isSilver: false,
-      isGold: true,
-      name: 'pandas',
-      postCount: 1250,
-      scoreCount: 2040,
-      url: 'https://stackoverflow.com/questions/tagged/javascript'
+  // const tags = [
+  //   {
+  //     isBadge: true,
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'javascript',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBadge: true,
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'python',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBadge: true,
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'pandas',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBadge: false,
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'pandas',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBadge: false,
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'pandas',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBadge: false,
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'pandas',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   }
+  // ]
+
+  useEffect(() => {
+    if (badges.length > 0) return
+    async function fetchAnswers() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      const response = await axios.get('http://localhost:3001/api/user/getAllBadges/' + user._id )
+      const badgeData = response.data.tags
+      setBadges(badgeData)
     }
-  ]
+  fetchAnswers()
+  }, [badges])
 
   return (
     <div style={rootStyle}>
@@ -141,23 +154,19 @@ function Badges() {
         </div>
       </div>
       <div style={badgeGridStyle}>
-        {
-          tags.map((tag) => {
+        {badges.length > 0 && 
+          badges.map((tag) => {
             const {
-              isBronze,
-              isGold,
-              isSilver,
-              name,
-              postCount,
-              scoreCount,
+              type,
+              badgeName,
               url
             } = tag
             return (
-              <div>
-                {isGold && <IconButton key="gold" onClick={() => navigate('/gold')} size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
-                {isSilver && <IconButton key="silver" onClick={() => navigate('/silver')} size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
-                {isBronze && <IconButton key="bronze" onClick={() => navigate('/bronze')} size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}
-                <a className='search-tag-block me-1' href={url}>{name}</a>
+              <div key={badgeName}>
+                {type === 'Gold' && <IconButton key="gold" onClick={() => navigate('/gold')} size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
+                {type === 'Silver' && <IconButton key="silver" onClick={() => navigate('/silver')} size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
+                {type === 'Bronze' && <IconButton key="bronze" onClick={() => navigate('/bronze')} size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}
+                <a className='search-tag-block me-1' href={url}>{badgeName}</a>
               </div>
             );
           })

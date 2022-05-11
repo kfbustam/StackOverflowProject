@@ -21,7 +21,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
 import PostQuestion from './components/PostQuestion/PostQuestion'
 import './components/Layout/Layout.css';
-
+import axios from 'axios';
 import Admin from './components/Admin/Admin';
 import AddTag from './components/Admin/AddTag';
 import QuestionList from './components/Admin/Question';
@@ -43,6 +43,10 @@ import en from 'javascript-time-ago/locale/en.json'
 import ru from 'javascript-time-ago/locale/ru.json'
 
 import EditQuestion from './components/QuestionsOverview/EditQuestion';
+import ReviewQuestionOverview from './components/Admin/ReviewQuestionOverview'
+import ReviewQuestion from './components/Admin/ReviewQuestion';
+import API_URL from './apiConfig';
+import EditProfile from './components/EditProfile/EditProfile'
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -126,7 +130,7 @@ const getRightOfTheSearchBarLinkComponents = (navigate, user, logout) => {
     <IconButton key="inbox" onClick={() => navigate('/inbox')} size="small" ><Badge badgeContent={messageCount} color="primary"><InboxIcon color="#525960" /></Badge></IconButton>,
     <IconButton key="achievements" onClick={() => navigate('/achievements')} size="small"><Badge badgeContent={achievementCount} color="success"><EmojiEventsIcon color="#525960" /></Badge></IconButton>,
     <IconButton key="help" onClick={() => navigate('/help')} size="small"><HelpIcon color="#525960" /></IconButton>,
-    <IconButton key="community" onClick={() => navigate('/community')} size="small"><CommentIcon color="#525960" /></IconButton>,
+    <IconButton key="community" onClick={() => navigate('/mymessages')} size="small"><CommentIcon color="#525960" /></IconButton>,
     <Button key="logout" onClick={logout} variant="outlined">Logout</Button>
   )
 
@@ -146,7 +150,7 @@ function App() {
   const logout = () => {
     navigate('/');
     localStorage.clear();
-    //setUser(null);
+    axios.post(`${API_URL}/api/auth/logout`);
     user = null
   }
 
@@ -225,12 +229,13 @@ function App() {
         <Route exact path="/questionlist" element={(user && user.email === 'admin@gmail.com') ? <QuestionList /> : <Navigate to='/' />} />
 
         <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') ? <AddTag /> : <Navigate to='/' />} />
-        <Route exact path="/question" element={(user && user.email === 'admin@gmail.com') ? <QuestionList /> : <Navigate to='/' />} />
 
         <Route exact path="/userlist" element={(user && user.email === 'admin@gmail.com') ? <UserList /> : <Navigate to='/' />} />
-        <Route exact path="/questionsgraph" element={(user && user.email === 'admin@gmail.com') ? <QuestionsGraph /> : <Navigate to='/' />} />
         <Route exact path="/quesgraph" element={(user && user.email === 'admin@gmail.com') ? <Quesgraph /> : <Navigate to='/' />} />
         <Route exact path="/toptags" element={(user && user.email === 'admin@gmail.com') ? <Toptags /> : <Navigate to='/' />} />
+        
+        <Route exact path="/reviewquestion" element={(user && user.email === 'admin@gmail.com') ? <ReviewQuestion /> : <Navigate to='/' />} />
+        <Route exact path="/reviewquestion/:id" element={(user && user.email === 'admin@gmail.com') ? <ReviewQuestionOverview /> : <Navigate to='/' />} />
 
 
         <Route path="/search/:search_query" element={   
@@ -254,6 +259,14 @@ function App() {
             <div >
               <LeftSideBar activeTab='questions'/>
               <TagsOverview/>
+            </div>    
+          </div>
+        }/>
+        <Route exact path="/editProfile" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='Users'/>
+              <EditProfile/>
             </div>    
           </div>
         }/>
