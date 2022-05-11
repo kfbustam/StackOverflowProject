@@ -92,7 +92,7 @@ const QuestionOverview = () => {
             {data?.data.question.title}
           </div>
           <div className="mt-1 text-right gap-4 col-span-3">
-            <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
+            <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded" onClick={() => navigate('/askQuestion')}>
               Ask Question
             </button>
           </div>
@@ -159,7 +159,7 @@ const QuestionOverview = () => {
             {parse(String(data?.data.question.body))}
             <div className="flex mt-5 flex-wrap gap-2 overflow-auto">
             {data?.data.question.tags.map(tag => (
-              <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded">
+              <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded" onClick={() => navigate(`/questions/tagged/${tag.name}`)}>
                 {tag.name}
               </button>
               ))}
