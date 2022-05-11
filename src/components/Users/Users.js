@@ -9,8 +9,10 @@ import Tab from '@mui/material/Tab';
 import Cake from '@mui/icons-material/Cake';
 import AccessTime from '@mui/icons-material/AccessTime';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Profile from './Profile';
 import Activity from './Activity';
+import defaultimg from '../../default/default.png';
 
 const rootStyle = {
   display: 'flex',
@@ -54,12 +56,13 @@ function Users() {
     async function fetchInfo() {
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get('http://localhost:3001/api/user/getBasicDetails/' + user._id )
-      const {
+      let {
         about,
         answerIds,
         bookmarks,
         comments,
         createdAt,
+        location,
         downvote_given,
         downvotenum,
         email,
@@ -71,17 +74,26 @@ function Users() {
         upvote_given,
         upvotenum,
         username,
+        lastSeen,
+        profileURL
       } = response.data.user;
+      //lengthOfTimeAsMember: new Date((new Date().getTime()) - (new Date(memberFrom).getTime())).toLocaleDateString("en-US", options),
+      if(profileURL=="")
+      {
+        profileURL = defaultimg
+      }
+      //console.log(profileURL)
       setUserData({
         aboutMeText: about,
         answersCount: answerIds.length,
-        lengthOfTimeAsMember: new Date((new Date().getTime()) - (new Date(memberFrom).getTime())).toLocaleDateString("en-US", options),
+        lengthOfTimeAsMember: new Date(createdAt).toLocaleDateString("en-US", options),
         questionsCount: questionIds.length,
         reputationCount: reputation,
         lastSeen: new Date(updatedAt).toLocaleDateString("en-US", options),
-        profileIconSrc: 'http://placekitten.com/200/300',
+        profileIconSrc: defaultimg,
         username,
-        visitedDateInterval: new Date(updatedAt).toLocaleDateString("en-US", options)
+        visitedDateInterval: new Date(updatedAt).toLocaleDateString("en-US", options),
+        location:location
       })
     }
     fetchInfo()
@@ -91,16 +103,16 @@ function Users() {
     <div style={rootStyle}>
       <div style={titleHeaderStyle}>    
         <IconButton key="profileIcon" onClick={() => navigate('/users')}>
-          <Avatar src={userData?.profileIconSrc} style={{width: 160, height: 160}}/>
+          <Avatar src={userData?.profileIconSrc} style={{width: 160, height: 160}} />
         </IconButton>
         <div style={{display: 'flex', flexDirection: 'column', margin: 'auto auto auto 0px'}}>
           <h2>
             {userData?.username}
           </h2>
           <div style={{display: 'flex', flexDirection: 'row'}}>
-            <><Cake />Member for {userData?.lengthOfTimeAsMember}</>
+            <><Cake />Member from {userData?.lengthOfTimeAsMember}</>
             <><AccessTime />Last seen {userData?.lastSeen}</>
-            <><CalendarMonth />Visited {userData?.visitedDateInterval}</>
+            <><LocationOnIcon /> {userData?.location}</>
           </div>
         </div>
         <div style={{display: 'flex', flexDirection: 'row'}}>
