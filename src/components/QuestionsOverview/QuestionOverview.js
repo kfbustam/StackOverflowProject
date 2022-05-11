@@ -3,13 +3,14 @@ import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import parse from "html-react-parser";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import API_URL from '../../apiConfig'
 
 const QuestionOverview = () => {
   const [ans, ansSet] = useState(null)
   const [data, dataSet] = useState(null)
   const editorRef = useRef(null);
+  const navigate = useNavigate();
   const {id} = useParams();
   const log = () => {
     if (editorRef.current) {
@@ -32,7 +33,7 @@ const QuestionOverview = () => {
 
   let user = JSON.parse(localStorage.getItem('user'))
   function answer(){
-    axios.post(`http://localhost:3001/api/answer/addAnswer`, {
+    axios.post(`${API_URL}/api/answer/addAnswer`, {
       question_id: "6275d5f3b319fc3904964e84",
       answer: editorRef.current.getContent(),
       user_id: user._id 
@@ -139,9 +140,9 @@ const QuestionOverview = () => {
             </div>
             <div className="grid mt-3 mr-[75%] grid-cols-3">
               <div className="font-light text-sm text-[#3B4045]">Share</div>
-              <div className="font-light text-sm ml-[20%] text-[#3B4045]">
+              <button className="font-light text-sm text-[#3B4045]" onClick={() => navigate(`/questions/edit/${data?.data.question._id}`)}>
                 Edit
-              </div>
+              </button>
               <div className="font-light text-sm text-[#3B4045]">Follow</div>
             </div>
           </div>

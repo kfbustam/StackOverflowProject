@@ -38,7 +38,10 @@ class Question {
  
                          }
                          const question = new QuestionModel(addQuery);
+                         //console.log(question)
                          const result = await question.save();
+                         const qid = question["_id"]
+                         //console.log(qid)
                          
                          const findQuestionCondition = {
                                  "_id":mongoose.Types.ObjectId(data.user)

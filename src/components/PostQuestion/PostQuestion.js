@@ -30,7 +30,7 @@ function PostQuestion() {
         }
     };
 
-    const handleSubmit = () => {
+    async function handleSubmit() {
         if (missingFields()) {
             setShowToast(true)
             setToastText('Please fill in all fields')
@@ -53,7 +53,6 @@ function PostQuestion() {
                         const idArray = allTags.filter(tag => tagsArray.includes(tag.name.toLowerCase())).map(tag => tag._id)
 
                         const userID = jwt_decode(localStorage.getItem('jwt')).sub
-
                         axios.post(`${API_URL}/api/question/addQuestion`, {
                             title: titleInput.current.value,
                             body: editorRef.current.getContent(),
@@ -61,7 +60,8 @@ function PostQuestion() {
                             user: userID
                         })
                         .then(res => {
-                            navigate('/questions/overview')
+                            console.log(res)
+                            navigate(`/questions/${res.data.question_id}`)
                         })
                         .catch(err => {
                             console.log(err)
