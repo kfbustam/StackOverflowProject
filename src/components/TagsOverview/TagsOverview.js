@@ -9,12 +9,6 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ReactTimeAgo from 'react-time-ago'
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en.json'
-import ru from 'javascript-time-ago/locale/ru.json'
-
-TimeAgo.addDefaultLocale(en)
-TimeAgo.addLocale(ru)
 
 const TagsOverview = () => {
     const { tagName } = useParams()
@@ -22,6 +16,7 @@ const TagsOverview = () => {
     const [tagDesc, setTagDesc] = useState('')
     const [questions, setQuestions] = useState([{}])
     const [filteredQuestions, setFilteredQuestions] = useState([{}])
+    const date = new Date()
 
     useEffect(() => {
         axios.get(`${API_URL}/api/question/getByTag/${tagName}`)
@@ -155,8 +150,8 @@ const TagsOverview = () => {
                                     <Link to='/users' className='search-name-link'> {question.user && question.user.username}</Link>
                                     <strong> {question.user && question.user.reputation} </strong>
                                     {question.modifiedAt ? 'modifed at ' : 'asked '}
-                                    {question.modifiedAt ? <ReactTimeAgo date={new Date(question.modifiedAt)} locale="en-US" />
-                                    : <ReactTimeAgo date={new Date(question.createdAt)} locale="en-US" />}
+                                    {question.modifiedAt ? <ReactTimeAgo date={question.modifiedAt ? question.modifiedAt : date} locale="en-US" />
+                                    : <ReactTimeAgo date={question.createdAt ? question.createdAt : date} locale="en-US" />}
                                 </p>
                             </Col>
                         </Row>
