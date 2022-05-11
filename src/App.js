@@ -43,6 +43,7 @@ import en from 'javascript-time-ago/locale/en.json'
 import ru from 'javascript-time-ago/locale/ru.json'
 
 import EditQuestion from './components/QuestionsOverview/EditQuestion';
+import ReviewQuestionOverview from './components/Admin/ReviewQuestionOverview'
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -231,6 +232,7 @@ function App() {
         <Route exact path="/questionsgraph" element={(user && user.email === 'admin@gmail.com') ? <QuestionsGraph /> : <Navigate to='/' />} />
         <Route exact path="/quesgraph" element={(user && user.email === 'admin@gmail.com') ? <Quesgraph /> : <Navigate to='/' />} />
         <Route exact path="/toptags" element={(user && user.email === 'admin@gmail.com') ? <Toptags /> : <Navigate to='/' />} />
+        <Route exact path="/reviewquestion" element={(user && user.email === 'admin@gmail.com') ? <ReviewQuestionOverview /> : <Navigate to='/' />} />
 
 
         <Route path="/search/:search_query" element={   
