@@ -42,11 +42,10 @@ class Answer {
 
     }
 
-    static getAllAnswers = async (data) => {
+    static getAllAnswers = async(data) => {
         try {
             let result = {}
-
-            const answers = await AnswerModel.find({});
+            const answers = await AnswerModel.find({question_id: data});
             if (answers?.length) {
                 result.data = answers
                 return result;

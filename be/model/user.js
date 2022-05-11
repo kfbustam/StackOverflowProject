@@ -59,7 +59,7 @@ const UserSchema = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:"Questions"
   }],
-  history: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity"}]
+  history: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity",default:[]}]
 }, { timestamps: true });
 
 UserSchema.pre('save', async function(){

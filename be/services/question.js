@@ -409,7 +409,6 @@ class Question {
                 //console.log(question_doc)
                 // Updating Owner Reputation Params
                 let owner_doc = await UserModel.findOne({"questionIds":data.questionId})
-                console.log(owner_doc)
                 let ownerid = owner_doc["_id"]
                 let reputationval = owner_doc["reputation"]+10
 
@@ -496,7 +495,22 @@ class Question {
                                                 .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } })
                                                 .populate({ path: 'answer_id', populate: { path: 'comment_id', select:'comment'}})
 
-                        const viewUpdate = await QuestionModel.updateOne({"_id":mongoose.Types.ObjectId(data)}, {$inc:{views:1}})
+                        const viewUpdate = await QuestionModel.updateOne({"_id":mongoose.Types.ObjectId(data)}, {$inc:{totalviews:1}});
+
+                        if(question.viewdate == new Date().getDate())
+                        {
+                                const todayViewUpdate = await QuestionModel.updateOne({"_id":mongoose.Types.ObjectId(data)},{$inc:{todayview:1}});
+                        }
+                        else
+                        {
+                                const todayViewUpdate = await QuestionModel.updateOne({"_id":mongoose.Types.ObjectId(data)},
+                                {viewdate: new Date().getDate(),
+                                 $inc:{todayview:1}
+                                })
+                        }
+
+
+
                         if (question) {
                                 result = question
                                 return result
