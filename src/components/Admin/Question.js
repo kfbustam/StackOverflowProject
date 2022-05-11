@@ -205,7 +205,7 @@ export default function Question() {
                   <div style={questionListItemRightSideStyle}>
                     <div>
                       <h3>
-                        <a onClick={() => navigate('/questions/overview',{questionID: question._id})} style={{color: '#0074cc', fontSize: 17}}>{question.title}</a>
+                        <a onClick={() => navigate(`/questions/${question._id}`)} style={{color: '#0074cc', fontSize: 17}}>{question.title}</a>
                         {/* <a style={{color: '#0074cc', fontSize: 17}}>{question.title}</a> */}
                       </h3>
                       <div>
