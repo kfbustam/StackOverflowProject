@@ -23,22 +23,48 @@ const QuestionOverview = () => {
       dataSet(response)
     }
 
-    async function increaseView() {
-      await axios.get(`${API_URL}/api/question/getById/${id}`)
-    }
-
     fetchMyAPI()
-    increaseView()
   }, [])
 
   let user = JSON.parse(localStorage.getItem('user'))
   function answer(){
     axios.post(`${API_URL}/api/answer/addAnswer`, {
-      question_id: "6275d5f3b319fc3904964e84",
+      question_id: id,
       answer: editorRef.current.getContent(),
       user_id: user._id 
   })
   window.location.reload()
+  }
+
+  function vote(v, type , id){
+    if(v === "up" && type === "question"){
+      axios.post(`${API_URL}/api/question/upvoteQuestion`, {
+        questionId: id,
+        userId: user._id
+      })
+      window.location.reload();
+    }
+    if(v === "down" && type === "question"){
+      axios.post(`${API_URL}/api/question/downvoteQuestion`, {
+        questionId: id,
+        userId: user._id
+      })
+      window.location.reload();
+    }
+    if(v === "up" && type === "answer"){
+      axios.post(`${API_URL}/api/answer/upvoteAnswer`, {
+        answerId: id,
+        userId: user._id
+      })
+      window.location.reload();
+    }
+    if(v === "down" && type === "answer"){
+      axios.post(`${API_URL}/api/answer/downvoteAnswer`, {
+        answerId: id,
+        userId: user._id
+      })
+      window.location.reload();
+    }
   }
   function getNumberOfDays(start) {
     const date1 = new Date(start);
@@ -81,7 +107,7 @@ const QuestionOverview = () => {
         </div>
         <div className="grid grid-cols-12 mt-1 mr-[10%]">
           <div class="col-span-1">
-            <button>
+            <button onClick={(e) => vote("up","question", data?.data.question._id)}>
               <svg
                 aria-hidden="true"
                 class="svg-icon iconArrowUpLg"
@@ -93,7 +119,7 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <div className="ml-[15%] mb-[10%]">{data?.data.question.score}</div>
-            <button>
+            <button onClick={(e) => vote("down","question", data?.data.question._id)}>
               <svg
                 aria-hidden="true"
                 class="svg-icon iconArrowDownLg"
@@ -286,7 +312,7 @@ const QuestionOverview = () => {
         {data?.data.question.answer_id.map(a => (
         <div className="border-b border-gray-300 grid grid-cols-12 mb-5 mt-5">
           <div class="col-span-1">
-            <button>
+            <button onClick={(e) => vote("up","answer", a._id)}>
               <svg
                 aria-hidden="true"
                 class="svg-icon iconArrowUpLg"
@@ -298,7 +324,7 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <div className="ml-[15%] mb-[10%]">{a.score}</div>
-            <button>
+            <button onClick={(e) => vote("down", "answer", a._id)}>
               <svg
                 aria-hidden="true"
                 class="svg-icon iconArrowDownLg"
