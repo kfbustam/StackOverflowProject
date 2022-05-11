@@ -30,7 +30,8 @@ const UserSchema = new mongoose.Schema({
     type:String
   },
   about:{
-    type:String
+    type:String,
+    default:""
   },
   memberFrom:{
     type:Date,
@@ -48,7 +49,7 @@ const UserSchema = new mongoose.Schema({
   }],
   answerIds:[{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"answers"
+    ref:"Answers"
   }],
   comments:[{
     type:mongoose.Schema.Types.ObjectId,
@@ -57,7 +58,8 @@ const UserSchema = new mongoose.Schema({
   bookmarks:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Questions"
-  }]
+  }],
+  history: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity"}]
 }, { timestamps: true });
 
 UserSchema.pre('save', async function(){

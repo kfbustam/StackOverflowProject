@@ -1,35 +1,78 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import { Editor } from "@tinymce/tinymce-react";
+import axios from "axios";
+import parse from "html-react-parser";
 
 const QuestionOverview = () => {
+  const [ans, ansSet] = useState(null)
+  const [data, dataSet] = useState(null)
   const editorRef = useRef(null);
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
     }
   };
+  useEffect(() => {
+    async function fetchMyAPI() {
+      let response = await axios.get('http://localhost:3001/api/question/getById/6275d5f3b319fc3904964e84')
+      dataSet(response)
+    }
+
+    async function increaseView() {
+      await axios.get('http://localhost:3001/api/question/getById/6275d5f3b319fc3904964e84')
+    }
+
+    fetchMyAPI()
+    increaseView()
+  }, [])
+
+  let user = JSON.parse(localStorage.getItem('user'))
+  function answer(){
+    axios.post(`http://localhost:3001/api/answer/addAnswer`, {
+      question_id: "6275d5f3b319fc3904964e84",
+      answer: editorRef.current.getContent(),
+      user_id: user._id 
+  })
+  window.location.reload()
+  }
+  function getNumberOfDays(start) {
+    const date1 = new Date(start);
+    const date2 = new Date();
+    const oneDay = 1000 * 60 * 60 * 24;
+    const diffInTime = date2.getTime() - date1.getTime();
+    const diffInDays = Math.round(diffInTime / oneDay);
+
+    if(diffInDays < 1){
+      return "today";
+    }
+    if(diffInDays < 2){
+      return "yesterday";
+    }
+
+    return diffInDays + " days ago";
+}
+
   return (
     <>
       <LeftSideBar />
       <div className="flex flex-wrap ml-[20%] mr-[2%] overflow-hidden">
-        <div className="grid grid-cols-4 border-b border-gray-300 mt-[3%] gap-4">
-          <div className="text-4xl text-[#3B4045] col-span-3 ">
-            How can I make a card type layout for a pinterest type masonry
-            layout that has a card that looks like this
+        <div className="grid grid-cols-12 border-b border-gray-300 mt-[3%]">
+          <div className="text-4xl text-[#3B4045] col-span-9">
+            {data?.data.question.title}
           </div>
-          <div className="mt-1">
+          <div className="mt-1 text-right gap-4 col-span-3">
             <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
               Ask Question
             </button>
           </div>
-          <div className="grid grid-cols-6">
+          <div className="flex">
             <div className="font-light text-[#3B4045]">Asked</div>
-            <div className="font-normal ml-1">today</div>
+            <div className="font-normal ml-2 flex-none">{getNumberOfDays(data?.data.question.createdAt)}</div>
             <div className="font-light ml-2 text-[#3B4045]">Modified</div>
-            <div className="font-normal ml-7">today</div>
-            <div className="font-light ml-8 text-[#3B4045]">Viewed</div>
-            <div className="font-normal ml-11">5</div>
+            <div className="font-normal ml-2">{getNumberOfDays(data?.data.question.updatedAt)}</div>
+            <div className="font-light ml-2 text-[#3B4045]">Viewed</div>
+            <div className="font-normal ml-2 flex-none">{data?.data.question.totalviews} times</div>
           </div>
         </div>
         <div className="grid grid-cols-12 mt-1 mr-[10%]">
@@ -45,7 +88,7 @@ const QuestionOverview = () => {
                 <path d="M2 25h32L18 9 2 25Z"></path>
               </svg>
             </button>
-            <div className="ml-[15%] mb-[10%]">0</div>
+            <div className="ml-[15%] mb-[10%]">{data?.data.question.score}</div>
             <button>
               <svg
                 aria-hidden="true"
@@ -83,35 +126,13 @@ const QuestionOverview = () => {
             </button>
           </div>
           <div className="text-left font-normal col-span-7 text-lg">
-            I am working on a flutter/dart rescue cat adoption app and I have a
-            Pintrest style masonry grid layout of the cats available. I have a
-            rough draft of a card which shows a photo of the cat and below that
-            basic info like name and breed and characteristics and location. I
-            would like to have a card layout that looks like the following but
-            not sure how to round off the top and bottom of the card and have a
-            variable height image. For the image I want it to have a set width
-            but a variable height which will be high enough to not cut off
-            either the sides or top or bottom of the image. The images come in a
-            wide variety of widths and heights. The white text part should be
-            fixed both in height and width. The card should look like this:
-            <div className="mt-3">
-              <img src="https://i.stack.imgur.com/MfWBo.png" alt="cat" />
-            </div>
-            <div className="mt-3">
-              I am pretty new to Flutter so would really like it if someone
-              could please tell me how something like this card layout can be
-              done. Thanks
-            </div>
+            {data?.data.question.body}
             <div className="flex mt-5 flex-wrap gap-2 overflow-auto">
+            {data?.data.question.tags.map(tag => (
               <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded">
-                flutter
+                {tag.name}
               </button>
-              <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded">
-                mobile
-              </button>
-              <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded">
-                flutter-layout
-              </button>
+              ))}
             </div>
             <div className="grid mt-3 mr-[75%] grid-cols-3">
               <div className="font-light text-sm text-[#3B4045]">Share</div>
@@ -256,7 +277,10 @@ const QuestionOverview = () => {
             </ul>
           </div>
         </div>
-        <div className="grid grid-cols-12 mt-5">
+        <div className="">
+          <div className="font-semibold text-2xl">Answers</div>
+        {data?.data.question.answer_id.map(a => (
+        <div className="border-b border-gray-300 grid grid-cols-12 mb-5 mt-5">
           <div class="col-span-1">
             <button>
               <svg
@@ -269,7 +293,7 @@ const QuestionOverview = () => {
                 <path d="M2 25h32L18 9 2 25Z"></path>
               </svg>
             </button>
-            <div className="ml-[15%] mb-[10%]">0</div>
+            <div className="ml-[15%] mb-[10%]">{a.score}</div>
             <button>
               <svg
                 aria-hidden="true"
@@ -305,23 +329,16 @@ const QuestionOverview = () => {
               </svg>
             </button>
           </div>
-          <div className="font-bold col-span-11">One Answer
-          <div className="font-normal mt-2 mr-[40%]">
-          For years parents have espoused the health benefits of eating garlic bread with cheese to their
-    children, with the food earning such an iconic status in our culture that kids will often dress
-    up as warm, cheesy loaf for Halloween.
+          <div className="col-span-11 font-normal mt-2 mr-[40%]">
+              {parse(String(a.answer))}
     <br />
-    <pre>
-            <code class="bg-gray-100">&lt;article class="prose"&gt;
-  &lt;h1&gt;Garlic bread &lt;/h1&gt;
-&lt;/article&gt;</code>
-            </pre>   
-            Sometimes you have headings directly underneath each other. In those cases you often have to undo the top margin on the second heading because it usually looks better for the headings to be closer together than a paragraph followed by a heading should be.
           </div>
           </div>
-        </div>
+              ))}
       </div>
-      <div className="ml-[20%] mr-[2%] mt-5 overflow-hidden border-t border-gray-300">
+      </div>
+
+      <div className="ml-[20%] mr-[2%] mt-5 overflow-hidden">
       <div className="font-bold mt-7">Your Answer</div>
         <br />
         <div className="mt-3">
@@ -340,7 +357,7 @@ const QuestionOverview = () => {
               />
             </div>
             <div className="my-2">
-              <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
+              <button onClick={answer} className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
                 Post Your Answer
               </button>
             </div>

@@ -2,15 +2,14 @@ const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema(
   {
-    date: {type: String, required: true} ,
-    what: { type: Number, required: true },
+    date: { type: String, required: true },
+    what: { type: String, required: true },
     user: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-    Comment: {type: String, required: true}
+    reputationChanged: { type: String },
+    comment: { type: String, required: true }
   }
 );
-
-module.exports = mongoose.model('activity',activitySchema)
+module.exports = mongoose.model('activity', activitySchema);

@@ -37,7 +37,7 @@ import Toptags from './components/Admin/Toptags';
 
 import TagsOverview from './components/TagsOverview/TagsOverview';
 import MyMessages from './components/MyMessages/MyMessages';
-
+import EditQuestion from './components/QuestionsOverview/EditQuestion';
 
 const messageCountStyle = {
   color: '#525960',
@@ -204,6 +204,7 @@ function App() {
           </div>
         }/>
         <Route exact path="/questions/overview" element={<QuestionOverview />} />
+        <Route exact path="/questions/edit" element={<EditQuestion />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/askQuestion" element={<PostQuestion />} />

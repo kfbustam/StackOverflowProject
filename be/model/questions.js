@@ -60,11 +60,7 @@ const questionsSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
-       
-    history:{
-        // If needed, create a history model
-        type: String
-    }
+    activity: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity"}],
 }, { timestamps: true });
 
 module.exports = mongoose.model('questions',questionsSchema)

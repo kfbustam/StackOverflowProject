@@ -44,11 +44,13 @@ export default function Sidebar() {
               <BarChart className="sidebarIcon" />
               Top 10 Tags
             </li>
-            </Link>
+            </Link> 
+            <Link to="/questionlist" className="link">
             <li className="sidebarListItem">
             <DynamicFeed className="sidebarIcon" />
               Top 10 Questions
             </li>
+            </Link>
           </ul>
         </div>
       </div>

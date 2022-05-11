@@ -1,5 +1,6 @@
 .my-messages-header {
     background-color: #242629;
+    color: white;
 }
 
 .my-messages-list {
@@ -7,6 +8,10 @@
     color: white;
     float: left;
     height: 85vh;
+}
+
+.my-messages-start:hover {
+    background-color: none !important;
 }
 
 .my-messages-container {
@@ -23,6 +28,17 @@
     font-size: 13px;
     color: black;
     margin-bottom: 2px;
+}
+
+.my-messages-preview {
+    font-size: 13px;
+    color: black;
+    margin-bottom: 2px;
+    display: -webkit-box;
+    max-width: 200px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .my-messages-posts-container {
@@ -60,8 +76,22 @@
     font-style: italic;
 }
 
+.my-messages-preview-time {
+    float: right;
+    font-size: 12px;
+    font-style: italic;
+    color: black;
+}
+
+
 .my-messages-active {
     background-color: #F1F2F3 !important;
     border-color: #F1F2F3 !important;
+}
+
+.my-messages-dropdown-image {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
 }
 
