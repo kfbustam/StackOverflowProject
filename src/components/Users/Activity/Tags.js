@@ -56,6 +56,36 @@ const silverCircleIconStyle = {
 
 function Tags() {
   const [tags, setTags] = useState([])
+  // [
+  //   {
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'javascript',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'python',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   },
+  //   {
+  //     isBronze: false,
+  //     isSilver: false,
+  //     isGold: true,
+  //     name: 'pandas',
+  //     postCount: 1250,
+  //     scoreCount: 2040,
+  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //   }
+  // ]
+
   const navigate = useNavigate()
   const user = {
     aboutMeText: 'about',

@@ -30,6 +30,40 @@ const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` :
 function Questions() {
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
   const [questions, setQuestions] = useState([])
+  // [
+  //   {
+  //     answerCount: 1,
+  //     askedDate: 'Oct 14, 2021 at 14:30',
+  //     lastModified: 'modified Apr 7 at 11:14',
+  //     isAccepted: true,
+  //     numOfVotes: 10,
+  //     questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
+  //     url: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
+  //     reputationCount: 50,
+  //     tags: [
+  //       {
+  //         name: 'javascript',
+  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //       },
+  //       {
+  //         name: 'python',
+  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //       },
+  //       {
+  //         name: 'pandas',
+  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //       }
+  //     ],
+  //     user: {
+  //       reputationCount: 123,
+  //       username: 'kfbustam',
+  //       userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
+  //       profileIconSrc: 'http://placekitten.com/200/300' 
+  //     },
+  //     voteCount: 4,
+  //     viewCount: 124
+  //   }
+  // ]
   const user = {
     aboutMeText: 'about',
     questionsCount: 12,
@@ -58,7 +92,7 @@ function Questions() {
       setQuestions(questionData)
     }
     fetchQuestions()
-  })
+  }, [questions])
 
   return (
     <div style={rootStyle}>
