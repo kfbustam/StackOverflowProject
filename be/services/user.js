@@ -541,7 +541,7 @@ class User {
                                 each_tag["name"] = tagname[index]
                                 each_tag["postCount"] = tagcount[index]
                                 each_tag["scoreCount"] = score[index]
-                                each_tag["percentage"] = percentage[index]
+                                each_tag["percentage"] = percentage[index]+"%"
                                 if(score[index]>20)
                                 {
                                         each_tag["isBronze"] = false
@@ -563,34 +563,104 @@ class User {
                                 result.push(each_tag)
                         })
                         console.log(result)
-                        //console.log(total_qcount)
+                        return result
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting the tag tab of the user")
+                }
+        }
+
+        static getQuestionsbyTag = async (uid, tagid) => {
+                try {    
+                        // console.log(uid)
+                        let question_doc = await QuestionModel.find({"user":mongoose.Types.ObjectId(uid), "tags":mongoose.Types.ObjectId(tagid)})
+                        return question_doc
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting the question tab of the user")
+                }
+        }
 
 
-                        // question_doc["questionIds"].forEach(element=>{
-                        //         let every_ques = {}
-                        //         let tags = []
-                        //         every_ques["askedDate"] = element["createdAt"]
-                        //         every_ques["admin_approval"] = element["isApproved"]
-                        //         if(element["best_ans"])
-                        //         {
-                        //                 every_ques["isAccepted"] = true
-                        //         }
-                        //         else{
-                        //                 every_ques["isAccepted"] = false
-                        //         }
-                        //         every_ques["numOfVotes"] = element["upvote"] + element["downvote"]
-                        //         every_ques["questionTitle"] = element["title"]
-                        //         every_ques["questionId"] = element["_id"]
-                        //         element["tags"].forEach(e=>{
-                        //                 tags.push({
-                        //                         "name":e["name"],
-                        //                         "tag_id":e["_id"]
-                        //                 })
-                        //         })
-                        //         every_ques["tags"] = tags
-                        //         result.push(every_ques)
-                        //         })
+        static getFilterPost = async (uid, filterval) => {
+                try {  
+                        let result;
+                        let all_ques = []
+                        let all_ans = []
+                        let question_ids = await QuestionModel.find({"user":mongoose.Types.ObjectId(uid)}).select({"_id":1})
+                        let answer_ids = await AnswerModel.find({"user_id":mongoose.Types.ObjectId(uid)}).select({"question_id":1, "_id":0})
+                        question_ids.forEach(question=>{
+                                all_ques.push(question["_id"])
+                        })
+                        answer_ids.forEach(answer=>{
+                                all_ans.push(answer["question_id"])
+                        })
+                        if(filterval=="All")
+                        {
+                                let allques = all_ques.concat(all_ans)
+                                //console.log(allques)
+                                result = await QuestionModel.find({"_id":allques})   
+                                console.log(result)     
+                        }
+                        else if(filterval=="Questions")
+                        {
+                                result = await QuestionModel.find({"_id":all_ques})        
+                        }
+                        else{
+                                result = await QuestionModel.find({"_id":all_ans})        
+                        }
+                        return result
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting the question tab of the user")
+                }
+        }
 
+        static getSortPost = async (uid, filterval, sortoption) => {
+                try {  
+                        let result;
+                        let all_ques = []
+                        let all_ans = []
+                        let question_ids = await QuestionModel.find({"user":mongoose.Types.ObjectId(uid)}).select({"_id":1})
+                        let answer_ids = await AnswerModel.find({"user_id":mongoose.Types.ObjectId(uid)}).select({"question_id":1, "_id":0})
+                        question_ids.forEach(question=>{
+                                all_ques.push(question["_id"])
+                        })
+                        answer_ids.forEach(answer=>{
+                                all_ans.push(answer["question_id"])
+                        })
+                        if(filterval=="All" && sortoption=="Score")
+                        {
+                                let allques = all_ques.concat(all_ans)
+                                //console.log(allques)
+                                result = await QuestionModel.find({"_id":allques}).sort({"score":-1})   
+                                console.log(result)     
+                        }
+                        else if(filterval=="All" && sortoption=="Newest")
+                        {
+                                let allques = all_ques.concat(all_ans)
+                                //console.log(allques)
+                                result = await QuestionModel.find({"_id":allques}).sort({"createdAt":-1})   
+                                console.log(result)     
+                        }
+                        else if(filterval=="Questions" && sortoption=="Score")
+                        {
+                                result = await QuestionModel.find({"_id":all_ques}).sort({"score":-1})        
+                        }
+                        else if(filterval=="Questions" && sortoption=="Newest")
+                        {
+                                result = await QuestionModel.find({"_id":all_ques}).sort({"createdAt":-1})        
+                        }
+                        
+                        else if (filterval=="Answers" && sortoption=="Score"){
+                                result = await QuestionModel.find({"_id":all_ans}).sort({"score":-1})        
+                        }
+                        else{
+                                result = await QuestionModel.find({"_id":all_ans}).sort({"createdAt":-1}) 
+                        }
                         return result
                 }
                 catch(err){
@@ -600,6 +670,7 @@ class User {
         }
 
 
+
 }
 
-module.exports.User = User;
+module.exports.User = User;     
