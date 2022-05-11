@@ -38,6 +38,14 @@ import Toptags from './components/Admin/Toptags';
 import TagsOverview from './components/TagsOverview/TagsOverview';
 import MyMessages from './components/MyMessages/MyMessages';
 
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en.json'
+import ru from 'javascript-time-ago/locale/ru.json'
+
+import EditQuestion from './components/QuestionsOverview/EditQuestion';
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(ru)
 
 const messageCountStyle = {
   color: '#525960',
@@ -203,7 +211,8 @@ function App() {
             </div>    
           </div>
         }/>
-        <Route exact path="/questions/overview" element={<QuestionOverview />} />
+        <Route exact path="/questions/:id" element={<QuestionOverview />} />
+        <Route exact path="/questions/edit/:id" element={<EditQuestion />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/askQuestion" element={<PostQuestion />} />

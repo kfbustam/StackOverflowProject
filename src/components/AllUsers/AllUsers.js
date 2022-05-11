@@ -16,25 +16,7 @@ function AllUsers() {
   const [searchText, setSearchText] = useState('')
 
   useEffect(() => {
-    /*const data = []
 
-    const fakeUsernames = ['ryeopera', 'figsalt', 'catneo', 'flyran', 'lobster',
-      'sunrise', 'singrye', 'floodfly', 'algolcat', 'earthbat']
-
-    for (let i = 0; i < 10; i++) {
-      data.push({
-        username: fakeUsernames[i],
-        location: 'Location',
-        reputation: 1000,
-        picture: 'http://placekitten.com/200/300'
-      })
-    }
-
-    const usernameData = data.map(user => user.username)
-
-    setUsers(data)
-    setFilteredUsers(data)
-    setUsernames(usernameData)*/
 
     axios.get(`${API_URL}/api/user/getPopularUsers`)
     .then(res => {

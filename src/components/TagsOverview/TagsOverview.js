@@ -8,6 +8,7 @@ import API_URL from '../../apiConfig'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import ReactTimeAgo from 'react-time-ago'
 
 const TagsOverview = () => {
     const { tagName } = useParams()
@@ -15,6 +16,7 @@ const TagsOverview = () => {
     const [tagDesc, setTagDesc] = useState('')
     const [questions, setQuestions] = useState([{}])
     const [filteredQuestions, setFilteredQuestions] = useState([{}])
+    const date = new Date()
 
     useEffect(() => {
         axios.get(`${API_URL}/api/question/getByTag/${tagName}`)
@@ -32,8 +34,15 @@ const TagsOverview = () => {
                     data[i].body = plainDesc
                 }
 
-                setQuestions(data)
-                setFilteredQuestions(data)
+                const sortedData = [].concat(data).sort((a, b) => {
+                    if (a.modifiedAt && b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
+                    else if (a.modifiedAt) return new Date(b.createdAt).getTime() - new Date(a.modifiedAt).getTime()
+                    else if (b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.createdAt).getTime()
+                    else return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                })
+
+                setQuestions(sortedData)
+                setFilteredQuestions(sortedData)
 
                 setTagDesc(res.data.description)
             })
@@ -65,7 +74,14 @@ const TagsOverview = () => {
     const handleInteresting = () => {
         let temp = questions
 
-        setFilteredQuestions([].concat(temp).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
+        //new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+
+        setFilteredQuestions([].concat(temp).sort((a, b) => {
+            if (a.modifiedAt && b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
+            else if (a.modifiedAt) return new Date(b.createdAt).getTime() - new Date(a.modifiedAt).getTime()
+            else if (b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.createdAt).getTime()
+            else return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        }))
     }
 
     const handleHot = () => {
@@ -133,8 +149,9 @@ const TagsOverview = () => {
                                 <p className='search-author'>
                                     <Link to='/users' className='search-name-link'> {question.user && question.user.username}</Link>
                                     <strong> {question.user && question.user.reputation} </strong>
-                                    asked
-                                    {' ' + new Date(question.createdAt).toLocaleDateString('en-us', { year: "numeric", day: 'numeric', month: "short" })}
+                                    {question.modifiedAt ? 'modifed at ' : 'asked '}
+                                    {question.modifiedAt ? <ReactTimeAgo date={question.modifiedAt ? question.modifiedAt : date} locale="en-US" />
+                                    : <ReactTimeAgo date={question.createdAt ? question.createdAt : date} locale="en-US" />}
                                 </p>
                             </Col>
                         </Row>

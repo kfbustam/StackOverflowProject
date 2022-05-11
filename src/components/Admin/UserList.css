@@ -33,3 +33,37 @@ margin-right: 10px;
     color: red;
     cursor: pointer;
 }
+.all-users-containers {
+    margin-left: 15px;
+}
+
+.all-users-header {
+    font-size: 27px;
+    margin-bottom: 24px;
+}
+
+.all-users-image {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    float: left
+}
+
+.all-users-link {
+    font-size: 15px;
+    color: #0874CC;
+}
+
+.all-users-link:hover {
+    color:#0D96FF;
+}
+
+.all-users-location {
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.all-users-reputation {
+    font-size: 12px;
+    font-weight: bold;
+}
