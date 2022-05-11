@@ -1,10 +1,12 @@
-const  mongoose = require('mongoose')
+const  mongoose = require('mongoose');
+const { DateTime } = require("luxon");
+
 
 const questionsSchema = new mongoose.Schema({
     title:  { type: String, required: true },
     body: { type: String, required: true },
     score: { type: Number, default: 0 },
-    views: { type: Number, default: 0 },
+    //views: { type: Number, default: 0 },
 
     body_image: {
         type:String,
@@ -16,6 +18,7 @@ const questionsSchema = new mongoose.Schema({
     },
     viewdate:{
         type:String,
+        default: new Date().getDate()
     },
     todayview:{
         type:Number,

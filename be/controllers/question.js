@@ -338,7 +338,7 @@ router.get('/search/:query', async (req, res) => {
 
     })
 
-    router.post('/getAllBookmarkedQuestions', async (req, res) => {
+    router.post('/getAllBookmarkedQuestions/:id', async (req, res) => {
         let response = {}
 
         let data=req.body;

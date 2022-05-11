@@ -149,7 +149,7 @@ class User {
                                         
                                 });                                
                         });
-
+                        console.log(tagData,score)
                         for(let i=0;i<tagData.length;i++)
                         {
                                 let badge
@@ -162,7 +162,7 @@ class User {
                                         }
 
                                 }
-                                else if(score[i]>10 && score[i]<=15)
+                                else if(score[i]>10 && score[i]<=20)
                                 {
                                         badge={
                                                 'badgeName': tagData[i],
@@ -178,27 +178,24 @@ class User {
                                                 'score': score[i]
                                         }
                                 }
+                                console.log(badge)
                                 badges.push(badge)
 
                         }
                         //Badges based on views of the question.
+                        let viewBadge;
                         if(views>5)
                         {
-                                badge={
+                                viewBadge={
                                         'badgeName': 'Notable Question',
                                         'type': 'Gold',
                                 }
-                                badges.push(badge)
+                                badges.push(viewBadge)
                         }
                         else if(views > 15)
                         {
-                                badge={
-                                        'badgeName': 'Notable Question',
-                                        'type': 'Gold',
-                                }
-                                badges.push(badge)
 
-                                badge={
+                                viewBadge={
                                         'badgeName': 'Famous Question',
                                         'type': 'Gold',
                                 }
@@ -412,6 +409,38 @@ class User {
                 try {    
                         var user_doc = await UserModel.findOneAndUpdate({"_id":data.userId}, {"about":data.about})
                         return await UserModel.findOne({"_id":data.userId})
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while updating about of the user")
+                }
+        }
+
+        static getReputationHistory = async (data) => {
+                try {    
+                        var user_doc = await UserModel.findById(data).populate('history')
+                        let date = []
+                        let history = user_doc.history;
+                        let result={}
+
+                        let groupByDate={}
+                        history.forEach(element => {
+                                if(date.includes(element.date.substring(0,15)))
+                                {
+                                        groupByDate[element.date.substring(0,15)].push(element)
+                                }
+                                else
+                                {
+                                        date.push(element.date.substring(0,15))
+                                        groupByDate[element.date.substring(0,15)]=[element]
+                                }
+                                
+                        }); 
+
+                        result.groupByDate=groupByDate;
+                        result.groupByDateIndexes=date
+
+                        return result;
                 }
                 catch(err){
                         console.log(err);
