@@ -9,17 +9,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import API_URL from '../../apiConfig'
 import ReactTimeAgo from 'react-time-ago'
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en.json'
-import ru from 'javascript-time-ago/locale/ru.json'
-
-TimeAgo.addDefaultLocale(en)
-TimeAgo.addLocale(ru)
 
 const Search = () => {
     const navigate = useNavigate()
     const [posts, setPosts] = useState([])
     const { search_query } = useParams()
+    const date = new Date()
 
     useEffect(() => {
         axios.get(`${API_URL}/api/question/search/${search_query}`)
@@ -117,8 +112,8 @@ const Search = () => {
                                     <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>
                                 ))}
                                 <p className='search-author'>{post.type === 'question' ? (post.modifiedAt ? 'Modifed ' : 'Asked ') : 'Answered '} 
-                                {post.modifiedAt ? <ReactTimeAgo date={new Date(post.modifiedAt)} locale="en-US" />
-                                    : <ReactTimeAgo date={new Date(post.createdAt)} locale="en-US" />} by
+                                {post.modifiedAt ? <ReactTimeAgo date={post.modifiedAt ? post.modifiedAt : date} locale="en-US" />
+                                    : <ReactTimeAgo date={post.createdAt ? post.createdAt : date} locale="en-US" />} by
                                     <Link to='/users' className='search-name-link'> {post.type === 'question' ? post.user?.username : post.user_id?.username}</Link>
                                 </p>
                             </Col>
