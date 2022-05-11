@@ -141,7 +141,7 @@ const TagsOverview = () => {
                                 </div>
                             </Col>
                             <Col md={10} style={{ width: '700px' }}>
-                                <Link to='/' className='search-question-title mb-2'>{question.title}</Link>
+                                <Link to={`/questions/${question._id}`} className='search-question-title mb-2'>{question.title}</Link>
                                 <p className='search-question-desc mb-1'>{question.body}</p>
                                 {question.tags && question.tags.map(tag => (
                                     <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>
