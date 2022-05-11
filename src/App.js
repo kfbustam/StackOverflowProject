@@ -21,7 +21,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Badge from '@mui/material/Badge';
 import PostQuestion from './components/PostQuestion/PostQuestion'
 import './components/Layout/Layout.css';
-
+import axios from 'axios';
 import Admin from './components/Admin/Admin';
 import AddTag from './components/Admin/AddTag';
 import QuestionList from './components/Admin/Question';
@@ -45,6 +45,7 @@ import ru from 'javascript-time-ago/locale/ru.json'
 import EditQuestion from './components/QuestionsOverview/EditQuestion';
 import ReviewQuestionOverview from './components/Admin/ReviewQuestionOverview'
 import ReviewQuestion from './components/Admin/ReviewQuestion';
+import API_URL from './apiConfig';
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -148,7 +149,7 @@ function App() {
   const logout = () => {
     navigate('/');
     localStorage.clear();
-    //setUser(null);
+    axios.post(`${API_URL}/api/auth/logout`);
     user = null
   }
 
