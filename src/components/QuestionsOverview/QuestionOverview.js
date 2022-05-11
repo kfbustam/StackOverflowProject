@@ -35,6 +35,12 @@ const QuestionOverview = () => {
   })
   window.location.reload()
   }
+  function bestAns(ans_id){
+    axios.post(`${API_URL}/api/answer/bestAnswer`, {
+      answerId: ans_id
+    })
+    window.location.reload()
+  }
 
   function vote(v, type , id){
     if(v === "up" && type === "question"){
@@ -336,6 +342,7 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <br />
+            {a._id === data?.data.question.best_ans &&
             <button className="">
               <svg
                 aria-hidden="true"
@@ -347,6 +354,7 @@ const QuestionOverview = () => {
                 <path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path>
               </svg>
             </button>
+          }
             <br />
             <button className="ml-1.5 mt-1">
               <svg
@@ -358,6 +366,12 @@ const QuestionOverview = () => {
                 <path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9Zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5Z"></path>
               </svg>
             </button>
+            <br />
+            {user._id === data?.data.question.user._id &&
+            <button onClick={(e)=> bestAns(a._id)}className="mt-1">
+              Best?
+            </button>
+}
           </div>
           <div className="col-span-11 font-normal mt-2 mr-[40%]">
               {parse(String(a.answer))}
