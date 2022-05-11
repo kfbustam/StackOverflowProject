@@ -38,7 +38,9 @@ router.post("/addQuestion",  async (req, res) => {
             response.success = false;
             response.error = "Cannot add the question";
             response.status = "400";
+            console.log(response);
             res.status(400).send(response);
+           
         }
     }catch(e){
         console.log(e);

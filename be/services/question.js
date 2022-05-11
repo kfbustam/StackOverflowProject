@@ -166,6 +166,7 @@ class Question {
                         //sending the add question results
                          if(result)
                          {
+                                console.log(result);
                                  return result;
                          }
                          else{
