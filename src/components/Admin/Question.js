@@ -65,10 +65,11 @@ const reputationCountStyle = {
 
 
 export default function Question() {
-  const [data, setData] = useState([{}])
+  const [data, setData] = useState([])
 
   const navigate = useNavigate()
   useEffect(() => {
+    if(data.length >0){return}
     axios.get(`${API_URL}/api/user/top10Results`)
     .then(res => {
       const dataQuestions = res.data.top10Results.top10Questions
@@ -79,6 +80,23 @@ export default function Question() {
       console.log(err)
     })
   }, [data])
+
+  function getNumberOfDays(start) {
+    const date1 = new Date(start);
+    const date2 = new Date();
+    const oneDay = 1000 * 60 * 60 * 24;
+    const diffInTime = date2.getTime() - date1.getTime();
+    const diffInDays = Math.round(diffInTime / oneDay);
+
+    if(diffInDays < 1){
+      return "today";
+    }
+    if(diffInDays < 2){
+      return "yesterday";
+    }
+
+    return diffInDays + " days ago";
+}
 
 
   const questions = [{
@@ -104,7 +122,7 @@ export default function Question() {
     viewCount: 124
   }]
 
-
+  console.log("bleh",data)
   return (
     <>
     <div className="containers">
@@ -121,8 +139,10 @@ export default function Question() {
 
       <Divider />
       <List>
-        {
+        
+        { data.length > 0 &&
           data.map((question) => {
+            console.log("b",question)
             // const {
             //   answerCount,
             //   isAnswered,
@@ -167,15 +187,15 @@ export default function Question() {
                 <div style={questionListItem}>
                   <div style={{display: 'flex', flexDirection: 'column'}}>
                     <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
-                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.vote_id.count}</strong>
+                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.vote_id.length}</strong>
                       <span style={{fontSize: 11}}>votes</span>
                     </div>
                     <div style={ {...answeredStyle, ...{display: 'flex', flexDirection: 'column', textAlign: 'center'}} }>
-                      <strong style={answerCountStyle}>{question.answer_id.count}</strong>
-                      <span style={answeredTextStyle}>{question.answer_id.count === 1 ? 'answer': 'answers'}</span>
+                      <strong style={answerCountStyle}>{question.answer_id.length}</strong>
+                      <span style={answeredTextStyle}>{question.answer_id.length=== 1 ? 'answer': 'answers'}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
-                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.vote_id.count}</strong>
+                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.vote_id.length}</strong>
                       <span style={{fontSize: 11}}>votes</span>
                     </div>
                     {/* <div style={reputationCountStyle}>
@@ -185,8 +205,8 @@ export default function Question() {
                   <div style={questionListItemRightSideStyle}>
                     <div>
                       <h3>
-                        {/* <a href={questionURL} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a> */}
-                        <a style={{color: '#0074cc', fontSize: 17}}>{question.title}</a>
+                        <a onClick={() => navigate('/questions/overview',{questionID: question._id})} style={{color: '#0074cc', fontSize: 17}}>{question.title}</a>
+                        {/* <a style={{color: '#0074cc', fontSize: 17}}>{question.title}</a> */}
                       </h3>
                       <div>
                         {
@@ -202,10 +222,12 @@ export default function Question() {
                       <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small" />
                       {/* <Avatar src={profileIconSrc}/>
                       <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
-                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{question.user.username}</a>
-                      <span style={{ margin: 'auto 0px auto 0px'}}>{question.user.reputation}</span>
+                      <a onClick={() => navigate('/profile')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{question.user.username}</p>  : <p></p>}</a>
+
+                      <span style={{ margin: 'auto 0px auto 0px'}}>{ question.user ? <p>{question.user.reputation}</p>  : <p></p>}</span>
                       {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
-                      <a  style={{ margin: 'auto 5px auto 5px'}}>{question.updatedAt}</a>
+                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{getNumberOfDays(question.updatedAt)}</p>  : <p></p>}</a>
+                      
                     </div>
                   </div>
                 </div>

@@ -213,7 +213,7 @@ function App() {
         <Route exact path="/admin" element={(user && user.email === 'admin@gmail.com') ? <Admin /> : <Navigate to='/' />} />
 
         <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') ? <AddTag /> : <Navigate to='/' />} />
-        {/* <Route exact path="/questionlist" element={(user && user.email === 'admin@gmail.com') ? <QuestionList /> : <Navigate to='/' />} /> */}
+        <Route exact path="/questionlist" element={(user && user.email === 'admin@gmail.com') ? <QuestionList /> : <Navigate to='/' />} />
 
         <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') ? <AddTag /> : <Navigate to='/' />} />
         <Route exact path="/question" element={(user && user.email === 'admin@gmail.com') ? <QuestionList /> : <Navigate to='/' />} />
