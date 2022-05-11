@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import LeftSideBar from "../LeftSideBar/LeftSideBar";
-
+import "./Toptags.css";
+import AdminSidebar from './Sidebar';
 import axios from "axios";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
@@ -13,7 +13,7 @@ const ReviewQuesitonOverview = () => {
 
     useEffect(() => {
         async function fetchMyAPI() {
-            let response = await axios.get(`http://localhost:3001/api/question/getById/6275d5f3b319fc3904964e84`)
+            let response = await axios.get(`http://localhost:3001/api/question/getById/${id}`)
             dataSet(response)
         }
 
@@ -41,8 +41,12 @@ const ReviewQuesitonOverview = () => {
 
     return (
         <>
-            <LeftSideBar />
-            <div className="flex flex-wrap ml-[20%] mr-[2%] overflow-hidden">
+               <div className="containers">
+       <AdminSidebar />
+    
+   
+    <div className="containerside">
+            <div className="flex flex-wrap ml mr-[2%] overflow-hidden">
                 <div className="grid grid-cols-12 border-b border-gray-300 mt-[3%]">
                     <div className="text-4xl text-[#3B4045] col-span-9">
                         {data?.data.question.title}
@@ -70,7 +74,8 @@ const ReviewQuesitonOverview = () => {
 
             <br></br>
             <br></br>
-
+            </div>
+    </div>
 
         </>
     );

@@ -759,7 +759,8 @@ class Question {
         static getAdminApprovalQuestions = async () => {
                 try {    
                         let result = {}
-                        result = await QuestionModel.find({'isApproved':false})
+                        result = await QuestionModel.find({'isApproved':false}).populate('tags', 'name')
+                        .populate('user', 'username reputation')   
                                               
                         if(result)
                         {
