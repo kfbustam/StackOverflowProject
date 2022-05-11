@@ -1,21 +1,26 @@
 import React, { useRef, useState, useEffect } from "react";
+import {useNavigate, useParams } from "react-router-dom";
 import "./Toptags.css";
 import AdminSidebar from './Sidebar';
-import axios from "axios";
 import parse from "html-react-parser";
-import { useParams } from "react-router-dom";
+
+
 import API_URL from '../../apiConfig'
+
+
+import axios from 'axios'
 
 
 const ReviewQuesitonOverview = () => {
     const [ans, ansSet] = useState(null)
     const [data, dataSet] = useState(null)
+    const navigate = useNavigate();
     const editorRef = useRef(null);
     const { id } = useParams();
 
     useEffect(() => {
         async function fetchMyAPI() {
-            let response = await axios.get(`http://localhost:3001/api/question/getById/${id}`)
+            let response = await axios.get(`${API_URL}/api/question/getById/${id}`)
             dataSet(response)
         }
 
@@ -23,24 +28,18 @@ const ReviewQuesitonOverview = () => {
 
     }, [])
 
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-        axios.post(`${API_URL}/api/tag/addTag`, {
-          name: tag,
-          description: desc
-      })
-      .then(res => {
-           
-          setTagsuccess(true);
-          console.log("tagsuccess",tagsuccess)
-
-      })
-      .catch(err => {
-          console.log(err)
-      })
-  }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    
+        axios.put(`${API_URL}/api/question/adminUpdatedQuestion/${id}`, {
+        }).then(res => {
+            console.log(res)
+            navigate(`/reviewquestion`)
+        }).catch(err => {
+            console.log(err)
+        })
+          
+    }
 
 
     function getNumberOfDays(start) {
@@ -95,8 +94,9 @@ const ReviewQuesitonOverview = () => {
 
             <br></br>
 
-            <button className="addTagButton" onClick={handleSubmit}>Approve Quesiton</button>
-            
+            <button className="addTagButton" onClick={handleSubmit}>Approve Question</button>
+
+
             <br></br>
             </div>
     </div>
