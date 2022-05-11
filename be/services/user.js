@@ -67,19 +67,19 @@ class User {
                 }
         }
 
-        static updateLocation = async (decoded, data) => {
+        static updateLocation = async ( data) => {
                 try {    
-                        var temp = await UserModel.findOneAndUpdate({"_id":decoded.sub}, {"location":data["location"]})
-                        return await UserModel.findOne({"_id":decoded.sub})
+                        var temp = await UserModel.findOneAndUpdate({"_id":data["userId"]}, {"location":data["location"]})
+                        return await UserModel.findOne({"_id":data["userId"]})
                 }
                 catch(err){
                         console.log(err);
                         console.log("Error occured while getting while updating location of the user")
                 }
         }
-        static getBasicDetails = async (decoded) => {
+        static getBasicDetails = async (data) => {
                 try {    
-                        var temp = await UserModel.findOne({"_id":decoded.sub})
+                        var temp = await UserModel.findOne({"_id":data})
                         return temp
                 }
                 catch(err){
