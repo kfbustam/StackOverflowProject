@@ -133,7 +133,7 @@ export default function Question() {
         <div style={rootStyle}>
       <div style={titleHeaderStyle}>
         <h2>
-          Top Questions
+          Questions
         </h2>
       </div>
 
