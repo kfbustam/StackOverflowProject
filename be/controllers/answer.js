@@ -31,14 +31,13 @@ router.post("/addAnswer", async (req, res) => {
 });
 
 
-router.post("/getAllAnswers", async (req, res) => {
-    const data = req.body;
+router.get("/getAllAnswers/:id", async (req, res) => {
     const response={}
     try{
-        const result = await Answer.getAllAnswers(data);
+        const result = await Answer.getAllAnswers(req.params.id);
         if(result){
             response.success = true;
-            response.user = data.user;
+            response.data = result.data;
             response.status = "200";
             res.status(200).send(response);
         }else{
