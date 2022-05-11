@@ -60,7 +60,6 @@ function PostQuestion() {
                             user: userID
                         })
                         .then(res => {
-                            console.log(res)
                             navigate(`/questions/${res.data.question_id}`)
                         })
                         .catch(err => {

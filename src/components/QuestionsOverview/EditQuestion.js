@@ -18,8 +18,15 @@ const EditQuestion = (qid) => {
     }, [])
 
     function change(){
-        axios.post(`${API_URL}/api/question/updateQuestion/${id}`)
-        navigate(`questions/${data?.data.question._id}`)
+        axios.put(`${API_URL}/api/question/updateQuestion/${id}`, {
+            title: data?.data.question.title,
+            body: editorRef.current.getContent(),
+            user: data?.data.question.user._id
+        }).then(res => {
+            console.log(res)
+            navigate(`/questions/${data?.data.question._id}`)
+        })
+        
     }
   return (
     <div className="ml-[20%]">
