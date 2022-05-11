@@ -4,6 +4,8 @@ import AdminSidebar from './Sidebar';
 import axios from "axios";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
+import API_URL from '../../apiConfig'
+
 
 const ReviewQuesitonOverview = () => {
     const [ans, ansSet] = useState(null)
@@ -20,6 +22,25 @@ const ReviewQuesitonOverview = () => {
         fetchMyAPI()
 
     }, [])
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+        axios.post(`${API_URL}/api/tag/addTag`, {
+          name: tag,
+          description: desc
+      })
+      .then(res => {
+           
+          setTagsuccess(true);
+          console.log("tagsuccess",tagsuccess)
+
+      })
+      .catch(err => {
+          console.log(err)
+      })
+  }
 
 
     function getNumberOfDays(start) {
@@ -73,6 +94,9 @@ const ReviewQuesitonOverview = () => {
                         </div> </div> </div> </div>
 
             <br></br>
+
+            <button className="addTagButton" onClick={handleSubmit}>Approve Quesiton</button>
+            
             <br></br>
             </div>
     </div>
