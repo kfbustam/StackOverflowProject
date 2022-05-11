@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
@@ -25,6 +26,7 @@ const filterButtonGroupStyle = {
 }
 
 function Questions() {
+  const [questions, setQuestions] = useState(null)
   const user = {
     aboutMeText: 'about',
     answersCount: 12,
@@ -43,7 +45,7 @@ function Questions() {
     answersCount,
   } = user
 
-  const posts = [
+  const posts = questions != null ? questions : [
     {
       answerCount: 1,
       askedDate: 'Oct 14, 2021 at 14:30',
@@ -77,6 +79,16 @@ function Questions() {
       viewCount: 124
     }
   ]
+
+  useEffect(() => {
+    async function fetchAnswers() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      const response = await axios.get('http://localhost:3001/api/user/getQuestionsTab/' + user._id )
+      const questionData = response.data.user
+      setQuestions(questionData)
+    }
+  fetchAnswers()
+  }, [])
 
   return (
     <div style={rootStyle}>

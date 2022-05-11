@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
@@ -54,26 +55,7 @@ const silverCircleIconStyle = {
 }
 
 function Tags() {
-  const navigate = useNavigate()
-  const user = {
-    aboutMeText: 'about',
-    answersCount: 12,
-    bronzeCount: 123,
-    goldCount: 54,
-    lastSeen: 'this week',
-    lengthOfTimeAsMember: '3 days',
-    profileIconSrc: 'http://placekitten.com/200/300',
-    reachedCount: 42,
-    reputationCount: 123,
-    questionsCount: 64,
-    silverCount: 12,
-    username: 'kfbustam',
-  }
-  const {
-    answersCount,
-  } = user
-
-  const tags = [
+  const [tags, setTags] = useState([
     {
       isBronze: false,
       isSilver: false,
@@ -101,7 +83,36 @@ function Tags() {
       scoreCount: 2040,
       url: 'https://stackoverflow.com/questions/tagged/javascript'
     }
-  ]
+  ])
+
+  const navigate = useNavigate()
+  const user = {
+    aboutMeText: 'about',
+    answersCount: 12,
+    bronzeCount: 123,
+    goldCount: 54,
+    lastSeen: 'this week',
+    lengthOfTimeAsMember: '3 days',
+    profileIconSrc: 'http://placekitten.com/200/300',
+    reachedCount: 42,
+    reputationCount: 123,
+    questionsCount: 64,
+    silverCount: 12,
+    username: 'kfbustam',
+  }
+  const {
+    answersCount,
+  } = user
+
+  useEffect(() => {
+    async function fetchAnswers() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      const response = await axios.get('http://localhost:3001/api/user/getTagsTab/' + user._id )
+      const tagData = response.data.user
+      setTags(tagData)
+    }
+  fetchAnswers()
+  }, [])
 
   return (
     <div style={rootStyle}>
