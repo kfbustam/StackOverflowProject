@@ -116,7 +116,7 @@ function Users() {
           </div>
         </div>
         <div style={{display: 'flex', flexDirection: 'row'}}>
-          <Button key="askQuestion" onClick={() => navigate('/askQuestion')} variant="contained" style={{height: 40}}>Edit profile</Button>
+          <Button key="askQuestion" onClick={() => navigate('/editProfile')} variant="contained" style={{height: 40}}>Edit profile</Button>
         </div>
       </div>
       <Tabs
