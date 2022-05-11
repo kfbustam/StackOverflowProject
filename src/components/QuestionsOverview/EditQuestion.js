@@ -2,21 +2,22 @@ import React, { useRef, useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import axios from "axios";
-import {useNavigate } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 const EditQuestion = (qid) => {
+    const {id} = useParams();
     const navigate = useNavigate();
     const editorRef = useRef(null);
-    const [data, dataSet] = useState(null)
+    const [data, dataSet] = useState(null);
     useEffect(() => {
         async function fetchMyAPI() {
-          let response = await axios.get('http://localhost:3001/api/question/getById/6275d5f3b319fc3904964e84')
+          let response = await axios.get(`http://localhost:3001/api/question/getById/${id}`)
           dataSet(response)
         }
         fetchMyAPI()
     }, [])
 
     function change(){
-        navigate('/questions/overview')
+        navigate('questions/overview')
     }
   return (
     <div className="ml-[20%]">

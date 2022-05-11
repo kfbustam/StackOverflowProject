@@ -203,8 +203,8 @@ function App() {
             </div>    
           </div>
         }/>
-        <Route exact path="/questions/overview" element={<QuestionOverview />} />
-        <Route exact path="/questions/edit" element={<EditQuestion />} />
+        <Route exact path="/questions/:id" element={<QuestionOverview />} />
+        <Route exact path="/questions/edit/:id" element={<EditQuestion />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/askQuestion" element={<PostQuestion />} />
