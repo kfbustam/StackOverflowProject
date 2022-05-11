@@ -69,7 +69,6 @@ router.get("/getPopularUsers", async (req, res) => {
 //}
 //runApp1()
 
-
 router.get("/getNewUsers", async (req, res) => {
     const data = req.body;
     const response={}
@@ -405,6 +404,31 @@ router.get("/getSortPost/:uid/:filter/:sort", async (req, res) => {
         }else{
             response.success = false;
             response.error = "Cannot get the questions of the tab and the user";
+            response.status = "400";
+            res.status(400).send(response);
+        }
+    }catch(e){
+        console.log(e);
+        response.success = false;
+        response.error = "Some error occurred. Please try again later";
+        response.status = "500";
+        res.status(500).send(response);
+    }
+})
+
+router.post("/updatePathDP", async (req, res) => {
+    const response={} 
+    try{
+        const result = await User.updatePathDP(req.body.userId, req.body.profileURL);          
+        if(result){
+            response.success = true;
+            response.user = result;
+            response.status = "200";
+            res.status(200).send(response);
+
+        }else{
+            response.success = false;
+            response.error = "Cannot update the URL of the user's profile picture";
             response.status = "400";
             res.status(400).send(response);
         }

@@ -684,6 +684,17 @@ class User {
                 }
         }
 
+        static updatePathDP = async ( userId, profileURL) => {
+                try {    
+                        var temp = await UserModel.findOneAndUpdate({"_id":mongoose.Types.ObjectId(userId)}, {"profileURL":profileURL})
+                        return await UserModel.findOne({"_id":mongoose.Types.ObjectId(userId)})
+                }
+                catch(err){
+                        console.log(err);
+                        console.log("Error occured while getting while updating path of the user's profile picture")
+                }
+        }
+
 
 
 }
