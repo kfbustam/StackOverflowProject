@@ -8,6 +8,13 @@ import './Search.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import API_URL from '../../apiConfig'
+import ReactTimeAgo from 'react-time-ago'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en.json'
+import ru from 'javascript-time-ago/locale/ru.json'
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(ru)
 
 const Search = () => {
     const navigate = useNavigate()
@@ -37,8 +44,15 @@ const Search = () => {
                     data[i].answer = plainDesc
                 }           
             }
+
+            const sortedData = [].concat(data).sort((a, b) => {
+                if (a.modifiedAt && b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
+                else if (a.modifiedAt) return new Date(b.createdAt).getTime() - new Date(a.modifiedAt).getTime()
+                else if (b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.createdAt).getTime()
+                else return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            })
        
-            setPosts(data)
+            setPosts(sortedData)
         })
         .catch(err => {
             console.log(err)
@@ -46,7 +60,12 @@ const Search = () => {
     }, [search_query])
 
     const handleNewest = () => {
-        setPosts([].concat(posts).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
+        setPosts([].concat(posts).sort((a, b) => {
+            if (a.modifiedAt && b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
+            else if (a.modifiedAt) return new Date(b.createdAt).getTime() - new Date(a.modifiedAt).getTime()
+            else if (b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.createdAt).getTime()
+            else return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        }))
     }
 
     const handleRelevance = () => {
@@ -97,8 +116,9 @@ const Search = () => {
                                 post.question_id.tags.map(tag => (
                                     <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>
                                 ))}
-                                <p className='search-author'>{post.type === 'question' ? 'Asked' : 'Answered'} 
-                                    {' ' + new Date(post.createdAt).toLocaleDateString('en-us', { year: "numeric", day: 'numeric', month: "short" })} by 
+                                <p className='search-author'>{post.type === 'question' ? (post.modifiedAt ? 'Modifed ' : 'Asked ') : 'Answered '} 
+                                {post.modifiedAt ? <ReactTimeAgo date={new Date(post.modifiedAt)} locale="en-US" />
+                                    : <ReactTimeAgo date={new Date(post.createdAt)} locale="en-US" />} by
                                     <Link to='/users' className='search-name-link'> {post.type === 'question' ? post.user?.username : post.user_id?.username}</Link>
                                 </p>
                             </Col>

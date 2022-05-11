@@ -519,7 +519,7 @@ class Question {
                 try {
                         let result = []
 
-                        let questions = await QuestionModel.find({"isApproved": true}).select('title body tags user score isApproved createdAt updatedAt answer_id').lean()
+                        let questions = await QuestionModel.find({"isApproved": true}).select('title body tags user score isApproved createdAt updatedAt answer_id modifiedAt').lean()
                                 .populate('tags', '_id name')
                                 .populate('answer_id', '_id isBest')
                                 .populate('user', '_id username').limit(10)
@@ -698,6 +698,8 @@ class Question {
                         if(data.body.includes("<img")) {
                              query.isApproved = false
                         }
+
+                        query.modifiedAt = new Date()
 
                         const result = await QuestionModel.findByIdAndUpdate(_id, query);
                         

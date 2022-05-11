@@ -60,6 +60,7 @@ const questionsSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
+    modifiedAt: { type: Date },
     activity: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity"}],
 }, { timestamps: true });
 
