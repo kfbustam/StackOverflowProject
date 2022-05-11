@@ -44,6 +44,7 @@ import ru from 'javascript-time-ago/locale/ru.json'
 
 import EditQuestion from './components/QuestionsOverview/EditQuestion';
 import ReviewQuestionOverview from './components/Admin/ReviewQuestionOverview'
+import ReviewQuestion from './components/Admin/ReviewQuestion';
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -226,13 +227,13 @@ function App() {
         <Route exact path="/questionlist" element={(user && user.email === 'admin@gmail.com') ? <QuestionList /> : <Navigate to='/' />} />
 
         <Route exact path="/addtag" element={(user && user.email === 'admin@gmail.com') ? <AddTag /> : <Navigate to='/' />} />
-        <Route exact path="/question" element={(user && user.email === 'admin@gmail.com') ? <QuestionList /> : <Navigate to='/' />} />
 
         <Route exact path="/userlist" element={(user && user.email === 'admin@gmail.com') ? <UserList /> : <Navigate to='/' />} />
-        <Route exact path="/questionsgraph" element={(user && user.email === 'admin@gmail.com') ? <QuestionsGraph /> : <Navigate to='/' />} />
         <Route exact path="/quesgraph" element={(user && user.email === 'admin@gmail.com') ? <Quesgraph /> : <Navigate to='/' />} />
         <Route exact path="/toptags" element={(user && user.email === 'admin@gmail.com') ? <Toptags /> : <Navigate to='/' />} />
-        <Route exact path="/reviewquestion" element={(user && user.email === 'admin@gmail.com') ? <ReviewQuestionOverview /> : <Navigate to='/' />} />
+        
+        <Route exact path="/reviewquestion" element={(user && user.email === 'admin@gmail.com') ? <ReviewQuestion /> : <Navigate to='/' />} />
+        <Route exact path="/reviewquestion/:id" element={(user && user.email === 'admin@gmail.com') ? <ReviewQuestionOverview /> : <Navigate to='/' />} />
 
 
         <Route path="/search/:search_query" element={   
