@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import axios from "axios";
+import API_URL from '../../apiConfig'
 import {useNavigate, useParams } from "react-router-dom";
 const EditQuestion = (qid) => {
     const {id} = useParams();
@@ -10,7 +11,7 @@ const EditQuestion = (qid) => {
     const [data, dataSet] = useState(null);
     useEffect(() => {
         async function fetchMyAPI() {
-          let response = await axios.get(`http://localhost:3001/api/question/getById/${id}`)
+          let response = await axios.get(`${API_URL}/api/question/getById/${id}`)
           dataSet(response)
         }
         fetchMyAPI()
