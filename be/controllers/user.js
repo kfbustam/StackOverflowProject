@@ -125,14 +125,14 @@ router.get("/searchUsers", async (req, res) => {
     }
 })
 
-router.post("/updateLocation",passport.authenticate('jwt',{session: false}), async (req, res) => {
+router.post("/updateLocation", async (req, res) => {
     const data = req.body;
     const response={}
-    var authorization = req.headers.authorization.split(' ')[1],
-    decoded;
-    decoded = jwt.verify(authorization, 'TOP_SECRET'); 
+    // var authorization = req.headers.authorization.split(' ')[1],
+    // decoded;
+    // decoded = jwt.verify(authorization, 'TOP_SECRET'); 
     try{
-        const result = await User.updateLocation(decoded, data);          
+        const result = await User.updateLocation( data);          
         if(result){
             response.success = true;
             response.user = result;
@@ -154,14 +154,14 @@ router.post("/updateLocation",passport.authenticate('jwt',{session: false}), asy
     }
 })
 
-router.get("/getBasicDetails",passport.authenticate('jwt',{session: false}), async (req, res) => {
+router.get("/getBasicDetails/:id", async (req, res) => {
     //const data = req.body;
     const response={}
-    var authorization = req.headers.authorization.split(' ')[1],
-    decoded;
-    decoded = jwt.verify(authorization, 'TOP_SECRET'); 
+    // var authorization = req.headers.authorization.split(' ')[1],
+    // decoded;
+    // decoded = jwt.verify(authorization, 'TOP_SECRET'); 
     try{
-        const result = await User.getBasicDetails(decoded);          
+        const result = await User.getBasicDetails(req.params.id);          
         if(result){
             response.success = true;
             response.user = result;

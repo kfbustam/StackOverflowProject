@@ -37,8 +37,16 @@ import Toptags from './components/Admin/Toptags';
 
 import TagsOverview from './components/TagsOverview/TagsOverview';
 import MyMessages from './components/MyMessages/MyMessages';
+
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en.json'
+import ru from 'javascript-time-ago/locale/ru.json'
+
 import EditQuestion from './components/QuestionsOverview/EditQuestion';
 import ReviewQuestionOverview from './components/Admin/ReviewQuestionOverview'
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(ru)
 
 const messageCountStyle = {
   color: '#525960',

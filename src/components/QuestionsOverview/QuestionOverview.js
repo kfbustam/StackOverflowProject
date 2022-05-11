@@ -4,6 +4,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
+import API_URL from '../../apiConfig'
 
 const QuestionOverview = () => {
   const [ans, ansSet] = useState(null)
@@ -17,12 +18,12 @@ const QuestionOverview = () => {
   };
   useEffect(() => {
     async function fetchMyAPI() {
-      let response = await axios.get(`http://localhost:3001/api/question/getById/${id}`)
+      let response = await axios.get(`${API_URL}/api/question/getById/${id}`)
       dataSet(response)
     }
 
     async function increaseView() {
-      await axios.get(`http://localhost:3001/api/question/getById/${id}`)
+      await axios.get(`${API_URL}/api/question/getById/${id}`)
     }
 
     fetchMyAPI()

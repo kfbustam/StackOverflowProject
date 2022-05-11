@@ -67,19 +67,19 @@ class User {
                 }
         }
 
-        static updateLocation = async (decoded, data) => {
+        static updateLocation = async ( data) => {
                 try {    
-                        var temp = await UserModel.findOneAndUpdate({"_id":decoded.sub}, {"location":data["location"]})
-                        return await UserModel.findOne({"_id":decoded.sub})
+                        var temp = await UserModel.findOneAndUpdate({"_id":data["userId"]}, {"location":data["location"]})
+                        return await UserModel.findOne({"_id":data["userId"]})
                 }
                 catch(err){
                         console.log(err);
                         console.log("Error occured while getting while updating location of the user")
                 }
         }
-        static getBasicDetails = async (decoded) => {
+        static getBasicDetails = async (data) => {
                 try {    
-                        var temp = await UserModel.findOne({"_id":decoded.sub})
+                        var temp = await UserModel.findOne({"_id":data})
                         return temp
                 }
                 catch(err){
@@ -138,6 +138,7 @@ class User {
                         let views=0;
                         //checking conditions if tags can become the badges or not.
                         userDetails.questionIds.forEach(question => {
+
                                 let tags=question.tags;
                                 if(question.views>views)
                                 {
@@ -161,16 +162,16 @@ class User {
                         for(let i=0;i<tagData.length;i++)
                         {
                                 let badge
-                                if(score[i]<=10)
+                                if(score[i]>20)
                                 {
                                         badge={
                                                 'badgeName': tagData[i],
-                                                'type': 'Bronze',
+                                                'type': 'Gold',
                                                 'score': score[i]
                                         }
 
                                 }
-                                else if(score[i]>10 && score[i]<=15)
+                                else if(score[i]>10 && score[i]<=20)
                                 {
                                         badge={
                                                 'badgeName': tagData[i],
@@ -178,11 +179,11 @@ class User {
                                                 'score': score[i]
                                         }
                                 }
-                                else if(score[i]>20)
+                                else 
                                 {
                                         badge={
                                                 'badgeName': tagData[i],
-                                                'type': 'Gold',
+                                                'type': 'Bronze',
                                                 'score': score[i]
                                         }
                                 }
@@ -192,9 +193,11 @@ class User {
                         //Badges based on views of the question.
                         if(views>5)
                         {
+                                let badge
                                 badge={
                                         'badgeName': 'Notable Question',
                                         'type': 'Gold',
+                                        'views': views
                                 }
                                 badges.push(badge)
                         }
@@ -203,12 +206,14 @@ class User {
                                 badge={
                                         'badgeName': 'Notable Question',
                                         'type': 'Gold',
+                                        'views': views
                                 }
                                 badges.push(badge)
 
                                 badge={
                                         'badgeName': 'Famous Question',
                                         'type': 'Gold',
+                                        'views': views
                                 }
                                 badges.push(badge)
                         }
@@ -375,12 +380,9 @@ class User {
 
         static getProfileTab =  async(data) =>{
                 try{
-
-                        const topGoldTags = [
-                                {name: 'Autobiographer', createDate: 'Nov 7'},
-                                {name: 'Legendary', createDate: 'Nov 7'},
-                                {name: 'Dataframe', createDate: 'Nov 7'}
-                              ]
+                        const topGoldTags = []
+                        const topBronzeTags = []
+                        const topSilverTags = []
                         let result = {}
                         let user_doc = await UserModel.findOne({"_id":mongoose.Types.ObjectId(data)}).populate("questionIds")
                         let qreached = 0
@@ -399,14 +401,32 @@ class User {
                                 "reachedCount": qreached
                         }
                         let about = user_doc["about"]
+                        let badges = await this.getAllBadges(data)
+                        badges.forEach(badge=>{
+                                if(badge["type"]=="Bronze")
+                                {
+                                        topBronzeTags.push({"name":badge["badgeName"]})
+                                }
+                                else if(badge["type"]=="Silver")
+                                {
+                                        topSilverTags.push({"name":badge["badgeName"]})
+                                }
+                                else
+                                {
+                                        topGoldTags.push({"name":badge["badgeName"]})
+                                }
+                        })
+                        let taguser = await this.getTagsTab(data)
+                        //console.log(taguser)
                         return {
                                 "stats":stats,
                                 "aboutMeText":about,
                                 "badges":{
                                         "topGoldTags":topGoldTags,
-                                        "topSilverTags":topGoldTags,
-                                        "topBronzeTags":topGoldTags
-                                }
+                                        "topSilverTags":topSilverTags,
+                                        "topBronzeTags":topBronzeTags
+                                },
+                                "tags":taguser
                         }
 
                 }
@@ -530,19 +550,6 @@ class User {
                                         }
                                 })
                         })
-                        // score.forEach(eachscore=>{
-                        //         if(eachscore>20)
-                        //         {
-                        //         badge.push("Gold")
-                        //         }
-                        //         else if(eachscore>10 && eachscore<=15)
-                        //         {
-                        //         badge.push("Silver")
-                        //         } 
-                        //         else{
-                        //         badge.push("Bronze")
-                        //         }
-                        // })
                         tags.forEach((tag,index)=>{
                                 let each_tag = {}
                                 each_tag["tagId"] = tag

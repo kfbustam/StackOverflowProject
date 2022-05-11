@@ -7,9 +7,6 @@ import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Button from 'react-bootstrap/Button'
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en.json'
-import ru from 'javascript-time-ago/locale/ru.json'
 import ReactTimeAgo from 'react-time-ago'
 import { useParams, useNavigate } from 'react-router-dom'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -17,8 +14,6 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import axios from 'axios'
 import API_URL from '../../apiConfig'
 
-TimeAgo.addDefaultLocale(en)
-TimeAgo.addLocale(ru)
 
 const MyMessages = () => {
     const date = new Date()
