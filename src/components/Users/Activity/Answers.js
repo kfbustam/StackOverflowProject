@@ -25,6 +25,8 @@ const filterButtonGroupStyle = {
   justifyContent: 'end'
 }
 
+const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` : input;
+
 function Answers() {
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
   const [answers, setAnswers] = useState([])
@@ -125,7 +127,7 @@ function Answers() {
                   </div>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                     <h3>
-                      <a href={url} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a>
+                      <a href={url} style={{color: '#0074cc', fontSize: 17}}>{truncate(questionTitle)}</a>
                     </h3>
                   </div>
                   <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
