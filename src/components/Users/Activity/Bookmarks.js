@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
@@ -25,6 +26,7 @@ const filterButtonGroupStyle = {
 }
 
 function Bookmarks() {
+  const [bookmarks, setBookmarks] = useState([])
   const user = {
     aboutMeText: 'about',
     answersCount: 12,
@@ -83,6 +85,23 @@ function Bookmarks() {
     Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + 'm' : 
     (Math.abs(num) > 999 ? 
     Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num))
+
+  useEffect(() => {
+    if (bookmarks.length > 0) return
+    async function fetchBookmarks() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      axios.post("http://localhost:3001/api/question/getAllBookmarkedQuestions/", {
+        user: user._id
+      })
+      .then(res => {
+        setBookmarks(res.data.data)
+      })
+      .catch(err => {
+          console.log(err)
+      })
+    }
+  fetchBookmarks()
+  }, [bookmarks])
 
   return (
     <div style={rootStyle}>
