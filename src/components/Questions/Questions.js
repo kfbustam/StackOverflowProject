@@ -132,10 +132,11 @@ export default function Questions() {
    
     <div className="newTag">
         <div style={rootStyle}>
-      <div style={titleHeaderStyle}>
+        <div style={titleHeaderStyle}>
         <h2>
           Questions
         </h2>
+        <Button key="askQuestion" onClick={() => navigate('/askQuestion')} variant="contained" style={{height: 40}}>Ask question</Button>
       </div>
 
       <Divider />
