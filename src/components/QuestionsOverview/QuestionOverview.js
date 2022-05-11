@@ -3,11 +3,13 @@ import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import parse from "html-react-parser";
+import { useParams } from "react-router-dom";
 
 const QuestionOverview = () => {
   const [ans, ansSet] = useState(null)
   const [data, dataSet] = useState(null)
   const editorRef = useRef(null);
+  const {id} = useParams();
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
@@ -15,11 +17,16 @@ const QuestionOverview = () => {
   };
   useEffect(() => {
     async function fetchMyAPI() {
-      let response = await axios.get('http://localhost:3001/api/question/getById/6275d5f3b319fc3904964e84')
+      let response = await axios.get(`http://localhost:3001/api/question/getById/${id}`)
       dataSet(response)
     }
 
+    async function increaseView() {
+      await axios.get(`http://localhost:3001/api/question/getById/${id}`)
+    }
+
     fetchMyAPI()
+    increaseView()
   }, [])
 
   let user = JSON.parse(localStorage.getItem('user'))
@@ -121,7 +128,7 @@ const QuestionOverview = () => {
             </button>
           </div>
           <div className="text-left font-normal col-span-7 text-lg">
-            {data?.data.question.body}
+            {parse(String(data?.data.question.body))}
             <div className="flex mt-5 flex-wrap gap-2 overflow-auto">
             {data?.data.question.tags.map(tag => (
               <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded">
