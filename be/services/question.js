@@ -699,6 +699,8 @@ class Question {
                              query.isApproved = false
                         }
 
+                        query.modifiedAt = new Date()
+
                         const result = await QuestionModel.findByIdAndUpdate(_id, query);
                         
                          if(result)
