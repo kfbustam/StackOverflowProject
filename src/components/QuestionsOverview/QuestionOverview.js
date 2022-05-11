@@ -19,7 +19,12 @@ const QuestionOverview = () => {
       dataSet(response)
     }
 
+    async function increaseView() {
+      await axios.get('http://localhost:3001/api/question/getById/6275d5f3b319fc3904964e84')
+    }
+
     fetchMyAPI()
+    increaseView()
   }, [])
 
   let user = JSON.parse(localStorage.getItem('user'))
