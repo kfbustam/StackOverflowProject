@@ -46,6 +46,7 @@ import EditQuestion from './components/QuestionsOverview/EditQuestion';
 import ReviewQuestionOverview from './components/Admin/ReviewQuestionOverview'
 import ReviewQuestion from './components/Admin/ReviewQuestion';
 import API_URL from './apiConfig';
+import EditProfile from './components/EditProfile/EditProfile'
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
@@ -129,7 +130,7 @@ const getRightOfTheSearchBarLinkComponents = (navigate, user, logout) => {
     <IconButton key="inbox" onClick={() => navigate('/inbox')} size="small" ><Badge badgeContent={messageCount} color="primary"><InboxIcon color="#525960" /></Badge></IconButton>,
     <IconButton key="achievements" onClick={() => navigate('/achievements')} size="small"><Badge badgeContent={achievementCount} color="success"><EmojiEventsIcon color="#525960" /></Badge></IconButton>,
     <IconButton key="help" onClick={() => navigate('/help')} size="small"><HelpIcon color="#525960" /></IconButton>,
-    <IconButton key="community" onClick={() => navigate('/community')} size="small"><CommentIcon color="#525960" /></IconButton>,
+    <IconButton key="community" onClick={() => navigate('/mymessages')} size="small"><CommentIcon color="#525960" /></IconButton>,
     <Button key="logout" onClick={logout} variant="outlined">Logout</Button>
   )
 
@@ -258,6 +259,14 @@ function App() {
             <div >
               <LeftSideBar activeTab='questions'/>
               <TagsOverview/>
+            </div>    
+          </div>
+        }/>
+        <Route exact path="/editProfile" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='Users'/>
+              <EditProfile/>
             </div>    
           </div>
         }/>
