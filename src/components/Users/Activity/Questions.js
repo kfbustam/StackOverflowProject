@@ -94,6 +94,16 @@ function Questions() {
     fetchQuestions()
   }, [questions])
 
+  useEffect(() => {
+    async function fetchAnswers() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      const response = await axios.get('http://localhost:3001/api/user/getQuestionsTab/' + user._id )
+      const questionData = response.data.user
+      setQuestions(questionData)
+    }
+  fetchAnswers()
+  }, [])
+
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>

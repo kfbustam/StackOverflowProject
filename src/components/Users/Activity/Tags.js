@@ -56,35 +56,6 @@ const silverCircleIconStyle = {
 
 function Tags() {
   const [tags, setTags] = useState([])
-  // [
-  //   {
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'javascript',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'python',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'pandas',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   }
-  // ]
 
   const navigate = useNavigate()
   const user = {
@@ -107,14 +78,13 @@ function Tags() {
 
   useEffect(() => {
     if (tags.length > 0) return
-    async function fetchTags() {
+    async function fetchAnswers() {
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get('http://localhost:3001/api/user/getTagsTab/' + user._id )
       const tagData = response.data.user
-      console.log(tagData);
       setTags(tagData)
     }
-    fetchTags()
+  fetchAnswers()
   }, [tags])
 
   return (
