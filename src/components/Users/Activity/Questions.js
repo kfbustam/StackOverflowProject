@@ -7,6 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import Check from '@mui/icons-material/Check';
+import API_URL from '../../../apiConfig';
 
 const rootStyle = {
   display: 'flex',
@@ -86,7 +87,7 @@ function Questions() {
     if (questions.length > 0) return
     async function fetchQuestions() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getQuestionsTab/' + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getQuestionsTab/` + user._id )
       const questionData = response.data.user
       console.log(questionData);
       setQuestions(questionData)

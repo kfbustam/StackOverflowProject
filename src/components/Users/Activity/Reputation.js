@@ -3,6 +3,7 @@ import axios from "axios";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Accordion from 'react-bootstrap/Accordion'
+import API_URL from '../../../apiConfig';
 
 const rootStyle = {
   display: 'flex',
@@ -104,7 +105,7 @@ function Reputation() {
     if (Object.values(reputations).length > 0) return
     async function fetchReputations() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getReputationHistory/' + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getReputationHistory/` + user._id )
       const reputationData = response.data.groupByDate
       setReputations(reputationData)
     }
