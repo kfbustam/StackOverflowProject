@@ -10,6 +10,8 @@ import { AddComment, CommentsDisabled } from "@mui/icons-material";
 const QuestionOverview = () => {
   const [ans, ansSet] = useState(null);
   const [data, dataSet] = useState(null);
+  const [comm, setComment] = useState("");
+  const[qComm, setQComment] = useState("");
   const editorRef = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -50,7 +52,7 @@ const QuestionOverview = () => {
     if (type === "question") {
       axios.post(`${API_URL}/api/question/addComment`, {
         question_id: qa_id,
-        comment: editorRef.current.getContent(),
+        comment: qComm,
         user_id: u_id,
       });
       
@@ -59,7 +61,7 @@ const QuestionOverview = () => {
     } else {
       axios.post(`${API_URL}/api/answer/addComment`, {
         answer_id: qa_id,
-        comment: editorRef.current.getContent(),
+        comment: comm,
         user_id: u_id,
       });
       window.location.reload();
@@ -229,20 +231,9 @@ const QuestionOverview = () => {
                   {c.comment}
                   </div>
                 ))}
-                <Editor
-                  onInit={(evt, editor) => (editorRef.current = editor)}
-                  init={{
-                    height: 200,
-                    width: 550,
-                    menubar: false,
-                    plugins: "lists link codesample image",
-                    toolbar:
-                      "bold italic | link codesample image | bullist numlist ",
-                    content_style:
-                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                  }}
-                />
-
+                <form>
+                  <input className="w-full" type="text" onChange={e => setQComment(e.target.value)}></input>
+                </form>
                 <button
                   onClick={(e) => addComment("question", id, user._id)}
                   className="bg-[#0A95FF] mt-2 text-white font-light py-2 px-2 rounded"
@@ -456,19 +447,9 @@ const QuestionOverview = () => {
                     {c.comment}
                 </div>
                 ))}
-                <Editor
-                  onInit={(evt, editor) => (editorRef.current = editor)}
-                  init={{
-                    height: 200,
-                    width: 800,
-                    menubar: false,
-                    plugins: "lists link codesample image",
-                    toolbar:
-                      "bold italic | link codesample image | bullist numlist ",
-                    content_style:
-                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                  }}
-                />
+                <form>
+                  <input className="w-full" type="text" onChange={e => setComment(e.target.value)}></input>
+                </form>
 
                 <button
                   onClick={(e) => addComment("answer", a._id, user._id)}
