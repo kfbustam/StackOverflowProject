@@ -129,7 +129,12 @@ export default function Questions() {
     viewCount: 124
   }]
 
-  console.log("bleh",data)
+  const handleInteresting = () => {}
+  const handleBountied = () => {}
+  const handleHot = () => {}
+  const handleWeek = () => {}
+  const handleMonth = () => {}
+  
   return (
     <>
     <div className="containers">
@@ -144,7 +149,13 @@ export default function Questions() {
         </h2>
         <Button key="askQuestion" onClick={() => navigate('/askQuestion')} variant="contained" style={{height: 40}}>Ask question</Button>
       </div>
-
+      <ButtonGroup style={{ marginLeft: '52%' }}>
+        <Button variant='outline-secondary' onClick={handleInteresting}>Interesting</Button>
+        <Button variant='outline-secondary' onClick={handleBountied}>Bountied</Button>
+        <Button variant='outline-secondary' onClick={handleHot}>Hot</Button>
+        <Button variant='outline-secondary' onClick={handleWeek}>Week</Button>
+        <Button variant='outline-secondary' onClick={handleMonth}>Month</Button>
+      </ButtonGroup>
       <Divider />
       <List>
         
