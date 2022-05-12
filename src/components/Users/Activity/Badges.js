@@ -5,6 +5,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@mui/icons-material/Circle';
+import API_URL from '../../../apiConfig';
 
 const rootStyle = {
   display: 'flex',
@@ -134,7 +135,7 @@ function Badges() {
     if (badges.length > 0) return
     async function fetchAnswers() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getAllBadges/' + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getAllBadges/` + user._id )
       const badgeData = response.data.tags
       setBadges(badgeData)
     }

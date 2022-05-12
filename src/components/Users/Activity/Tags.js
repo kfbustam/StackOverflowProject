@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@mui/icons-material/Circle';
+import API_URL from '../../../apiConfig';
 
 const rootStyle = {
   display: 'flex',
@@ -109,7 +110,7 @@ function Tags() {
     if (tags.length > 0) return
     async function fetchTags() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getTagsTab/' + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getTagsTab/` + user._id )
       const tagData = response.data.user
       console.log(tagData);
       setTags(tagData)

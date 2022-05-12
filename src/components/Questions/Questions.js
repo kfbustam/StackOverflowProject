@@ -64,6 +64,12 @@ const reputationCountStyle = {
   width: 50,
 }
 
+const numFormatter = (num) => Math.abs(num) > 9999 ? 
+  Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + 'm' : 
+  (Math.abs(num) > 999 ? 
+  Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num))
+
+const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` : input;
 
 export default function Questions() {
   const [data, setData] = useState([])
@@ -197,8 +203,8 @@ export default function Questions() {
                       <span style={answeredTextStyle}>{question.answer_id.length=== 1 ? 'answer': 'answers'}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
-                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.vote_id.length}</strong>
-                      <span style={{fontSize: 11}}>votes</span>
+                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.totalviews}</strong>
+                      <span style={{fontSize: 11}}>views</span>
                     </div>
                     {/* <div style={reputationCountStyle}>
                       <span style={{fontSize: 11, color: 'white'}}>+{questionReputationCount}</span>
@@ -208,8 +214,8 @@ export default function Questions() {
                     <div>
                       <h3>
                         <a onClick={() => navigate(`/questions/${question._id}`)} style={{color: '#0074cc', fontSize: 17}}>{question.title}</a>
-                        {/* <a style={{color: '#0074cc', fontSize: 17}}>{question.title}</a> */}
                       </h3>
+                      <div dangerouslySetInnerHTML={{ __html: question.body }} />
                       <div>
                         {
                           question.tags.map(tag => {
@@ -221,14 +227,16 @@ export default function Questions() {
                       </div>
                     </div>
                     <div style={userCardStyle}>
-                      <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small" />
-                      {/* <Avatar src={profileIconSrc}/>
+                      <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small">
+                        <Avatar src={question.url}/>
+                      </IconButton>
+                      {/* 
                       <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
                       <a onClick={() => navigate('/profile')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{question.user.username}</p>  : <p></p>}</a>
 
-                      <span style={{ margin: 'auto 0px auto 0px'}}>{ question.user ? <p>{question.user.reputation}</p>  : <p></p>}</span>
+                      <span style={{ margin: 'auto 0px auto 0px'}}>{ question.user ? <p>{numFormatter(question.user.reputation)}</p>  : <p></p>}</span>
                       {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
-                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{getNumberOfDays(question.updatedAt)}</p>  : <p></p>}</a>
+                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{`asked ${getNumberOfDays(question.updatedAt)}`}</p>  : <p></p>}</a>
                       
                     </div>
                   </div>
