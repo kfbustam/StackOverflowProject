@@ -512,7 +512,7 @@ class User {
                                 let tags = []
                                 every_answer["answeredDate"] = element["createdAt"]
                                 every_answer["isAccepted"] = element["isBest"]
-                                every_answer["numOfVotes"] = element["question_id"]["upvote"] + element["question_id"]["downvote"]
+                                every_answer["numOfVotes"] = element["question_id"]["score"]
                                 every_answer["questionTitle"] = element["question_id"]["title"]
                                 every_answer["questionId"] = element["question_id"]["_id"]
                                 element["question_id"]["tags"].forEach(e=>{
@@ -551,7 +551,7 @@ class User {
                                 else{
                                         every_ques["isAccepted"] = false
                                 }
-                                every_ques["numOfVotes"] = element["upvote"] + element["downvote"]
+                                every_ques["numOfVotes"] = element["score"] 
                                 every_ques["questionTitle"] = element["title"]
                                 every_ques["questionId"] = element["_id"]
                                 element["tags"].forEach(e=>{

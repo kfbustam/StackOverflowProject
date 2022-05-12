@@ -7,6 +7,10 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import Check from '@mui/icons-material/Check';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import API_URL from '../../../apiConfig';
+import { useNavigate } from 'react-router-dom';
+
 
 const rootStyle = {
   display: 'flex',
@@ -30,65 +34,18 @@ const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` :
 function Questions() {
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
   const [questions, setQuestions] = useState([])
-  // [
-  //   {
-  //     answerCount: 1,
-  //     askedDate: 'Oct 14, 2021 at 14:30',
-  //     lastModified: 'modified Apr 7 at 11:14',
-  //     isAccepted: true,
-  //     numOfVotes: 10,
-  //     questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
-  //     url: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
-  //     reputationCount: 50,
-  //     tags: [
-  //       {
-  //         name: 'javascript',
-  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //       },
-  //       {
-  //         name: 'python',
-  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //       },
-  //       {
-  //         name: 'pandas',
-  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //       }
-  //     ],
-  //     user: {
-  //       reputationCount: 123,
-  //       username: 'kfbustam',
-  //       userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
-  //       profileIconSrc: 'http://placekitten.com/200/300' 
-  //     },
-  //     voteCount: 4,
-  //     viewCount: 124
-  //   }
-  // ]
-  const user = {
-    aboutMeText: 'about',
-    questionsCount: 12,
-    bronzeCount: 123,
-    goldCount: 54,
-    lastSeen: 'this week',
-    lengthOfTimeAsMember: '3 days',
-    profileIconSrc: 'http://placekitten.com/200/300',
-    reachedCount: 42,
-    reputationCount: 123,
-    questionsCount: 64,
-    silverCount: 12,
-    username: 'kfbustam',
-  }
-  const {
-    questionsCount,
-  } = user
+  const [quescount, setQuestionCount] = useState(0)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (questions.length > 0) return
     async function fetchQuestions() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getQuestionsTab/' + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getQuestionsTab/` + user._id )
+      console.log(response.data.user.length)
       const questionData = response.data.user
-      console.log(questionData);
+      setQuestionCount(response.data.user.length)
       setQuestions(questionData)
     }
     fetchQuestions()
@@ -97,7 +54,7 @@ function Questions() {
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{questionsCount} Questions</h3>
+        <h3>{quescount} Question(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>
@@ -114,8 +71,9 @@ function Questions() {
               askedDate,
               isAccepted,
               numOfVotes,
-              url,
+              questionId,
               questionTitle,
+              admin_approval,
               tags,
               viewCount
             } = post
@@ -124,12 +82,12 @@ function Questions() {
                 <ListItem style={postListItem}>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%', gap: 5}}>
                     <div style={{display: 'flex', margin: 'auto 0px auto 0px'}}>{numOfVotes} votes</div>
-                    <Chip icon={isAccepted ? <Check /> : null} label="Accepted" color="success" />
-                    <div style={{display: 'flex', margin: 'auto 0px auto 0px', color: '#6A747C'}}>{viewCount} views</div>
+                    {isAccepted?<Chip icon={ <Check />} label="Best Answer" color="success" />:null}
+                    {admin_approval?null:<Chip icon={ <PendingActionsIcon />} label="Pending Approval" color="error" />}
                   </div>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                     <h3>
-                      <a href={url} style={{color: '#0074cc', fontSize: 17}}>{truncate(questionTitle)}</a>
+                      <a onClick={() => navigate(`/questions/${questionId}`)} style={{color: '#0074cc', fontSize: 17}}>{truncate(questionTitle)}</a>
                     </h3>
                   </div>
                   <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
