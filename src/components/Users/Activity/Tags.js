@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@mui/icons-material/Circle';
+import API_URL from '../../../apiConfig';
 
 const rootStyle = {
   display: 'flex',
@@ -56,6 +57,7 @@ const silverCircleIconStyle = {
 
 function Tags() {
   const [tags, setTags] = useState([])
+  const [tcount, setTagCount] = useState(0)
   // [
   //   {
   //     isBronze: false,
@@ -109,18 +111,18 @@ function Tags() {
     if (tags.length > 0) return
     async function fetchTags() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getTagsTab/' + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getTagsTab/` + user._id )
       const tagData = response.data.user
-      console.log(tagData);
+      setTagCount(response.data.user.length)
       setTags(tagData)
     }
     fetchTags()
-  }, [tags])
+  }, [])
 
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Tags</h3>
+        <h3>{tcount} Tag(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>

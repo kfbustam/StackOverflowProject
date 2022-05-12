@@ -13,6 +13,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Profile from './Profile';
 import Activity from './Activity';
 import defaultimg from '../../default/default.png';
+import API_URL from '../../apiConfig'
 
 const rootStyle = {
   display: 'flex',
@@ -55,7 +56,7 @@ function Users() {
     if (userData != null) return
     async function fetchInfo() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getBasicDetails/' + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getBasicDetails/` + user._id )
       let {
         about,
         answerIds,
@@ -77,12 +78,7 @@ function Users() {
         lastSeen,
         profileURL
       } = response.data.user;
-      //lengthOfTimeAsMember: new Date((new Date().getTime()) - (new Date(memberFrom).getTime())).toLocaleDateString("en-US", options),
-      if(profileURL=="")
-      {
-        profileURL = defaultimg
-      }
-      //console.log(profileURL)
+      
       setUserData({
         aboutMeText: about,
         answersCount: answerIds.length,

@@ -5,6 +5,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@mui/icons-material/Circle';
+import API_URL from '../../../apiConfig';
 
 const rootStyle = {
   display: 'flex',
@@ -48,6 +49,7 @@ const silverCircleIconStyle = {
 
 function Badges() {
   const navigate = useNavigate()
+  const [bcount, setBadgeCount] = useState(0)
   const [badges, setBadges] = useState([])
   const user = {
     aboutMeText: 'about',
@@ -67,84 +69,24 @@ function Badges() {
     answersCount,
   } = user
 
-  // const tags = [
-  //   {
-  //     isBadge: true,
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'javascript',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBadge: true,
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'python',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBadge: true,
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'pandas',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBadge: false,
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'pandas',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBadge: false,
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'pandas',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBadge: false,
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'pandas',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   }
-  // ]
+
 
   useEffect(() => {
     if (badges.length > 0) return
     async function fetchAnswers() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getAllBadges/' + user._id )
-      const badgeData = response.data.tags
+      const response = await axios.get(`${API_URL}/api/user/getAllBadges/` + user._id )
+      const badgeData = response.data.badges
+      setBadgeCount(response.data.badges.length)
       setBadges(badgeData)
     }
   fetchAnswers()
-  }, [badges])
+  }, [])
 
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Badges</h3>
+        <h3>{bcount} Badge(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Recent</Button>

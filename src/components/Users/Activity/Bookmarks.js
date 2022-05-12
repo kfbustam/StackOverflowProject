@@ -7,6 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import Check from '@mui/icons-material/Check';
+import API_URL from '../../../apiConfig';
 
 const rootStyle = {
   display: 'flex',
@@ -90,7 +91,7 @@ function Bookmarks() {
     if (bookmarks.length > 0) return
     async function fetchBookmarks() {
       let user = JSON.parse(localStorage.getItem('user'))
-      axios.post("http://localhost:3001/api/question/getAllBookmarkedQuestions/", {
+      axios.post(`${API_URL}/api/question/getAllBookmarkedQuestions/`, {
         user: user._id
       })
       .then(res => {
@@ -101,7 +102,7 @@ function Bookmarks() {
       })
     }
   fetchBookmarks()
-  }, [bookmarks])
+  }, [])
 
   return (
     <div style={rootStyle}>

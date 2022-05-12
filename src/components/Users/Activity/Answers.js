@@ -7,6 +7,8 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import Check from '@mui/icons-material/Check';
+import { useNavigate } from 'react-router-dom';
+import API_URL from '../../../apiConfig'
 
 const rootStyle = {
   display: 'flex',
@@ -29,41 +31,9 @@ const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` :
 
 function Answers() {
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+  const [anscount, setAnswerCount] = useState(0)
   const [answers, setAnswers] = useState([])
-  // [
-  //   {
-  //     answerCount: 1,
-  //     answeredDate: 'Oct 14, 2021 at 14:30',
-  //     lastModified: 'modified Apr 7 at 11:14',
-  //     isAccepted: true,
-  //     numOfVotes: 10,
-  //     questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
-  //     url: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
-  //     reputationCount: 50,
-  //     tags: [
-  //       {
-  //         name: 'javascript',
-  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //       },
-  //       {
-  //         name: 'python',
-  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //       },
-  //       {
-  //         name: 'pandas',
-  //         url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //       }
-  //     ],
-  //     user: {
-  //       reputationCount: 123,
-  //       username: 'kfbustam',
-  //       userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
-  //       profileIconSrc: 'http://placekitten.com/200/300' 
-  //     },
-  //     voteCount: 4,
-  //     viewCount: 124
-  //   }
-  // ]
+
   const user = {
     aboutMeText: 'about',
     answersCount: 12,
@@ -81,22 +51,28 @@ function Answers() {
   const {
     answersCount,
   } = user
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (answers.length > 0) return
     async function fetchAnswers() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get('http://localhost:3001/api/user/getAnswersTab/' + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getAnswersTab/` + user._id )
       const answersData = response.data.user
+ 
+      let anstotal = response.data.user.length 
+  
+      //console.log(anstotal)
+      setAnswerCount(anstotal)
       setAnswers(answersData)
     }
   fetchAnswers()
-  }, [answers])
+  }, [])
 
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Answers</h3>
+        <h3>{anscount} Answer(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>
@@ -113,7 +89,7 @@ function Answers() {
               answerTitle,
               isAccepted,
               numOfVotes,
-              url,
+              questionId,
               questionTitle,
               tagLabel,
               tags,
@@ -123,11 +99,11 @@ function Answers() {
                 <ListItem style={postListItem}>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%', gap: 5}}>
                     <div style={{display: 'flex', margin: 'auto 0px auto 0px'}}>{numOfVotes} votes</div>
-                    <Chip icon={isAccepted ? <Check /> : null} label="Accepted" color="success" />
+                   {isAccepted?<Chip icon={ <Check />} label="Best Answer" color="success" />:null} 
                   </div>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                     <h3>
-                      <a href={url} style={{color: '#0074cc', fontSize: 17}}>{truncate(questionTitle)}</a>
+                      <a onClick={() => navigate(`/questions/${questionId}`)} style={{color: '#0074cc', fontSize: 17}}>{truncate(questionTitle)}</a>
                     </h3>
                   </div>
                   <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>

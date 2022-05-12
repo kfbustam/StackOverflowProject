@@ -17,8 +17,12 @@ router.get("/getAllBadges/:id", async(req,res)=>
         const result = await User.getAllBadges(user);          
         //await client.set('user', JSON.stringify(result))
         if(result){
+            console.log(result)
             response.success = true;
-            response.tags = result;
+            response.badges = result.badges;
+            response.goldCount = result.goldCount;
+            response.silverCount = result.silverCount;
+            response.bronzeCount = result.bronzeCount;
             response.status = "200";
             res.status(200).send(response);
 
@@ -470,11 +474,10 @@ router.get("/getReputationHistory/:id", async (req, res) => {
 })
 
 router.put('/editInfo/:id', async (req, res) => {
+    const response = {}
+
     try {
         const result = await User.editInfo(req.params.id, req.body)
-
-        const response = {}
-
         if (result) {
             response.success = true;
             response.user = result;
