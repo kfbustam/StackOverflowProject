@@ -15,8 +15,14 @@ const Search = () => {
     const [posts, setPosts] = useState([])
     const { search_query } = useParams()
     const date = new Date()
+    const [resultString, setResultString] = useState('')
+    const [tag, setTag] = useState({})
 
     useEffect(() => {
+        setResultString('')
+        setTag({})
+        showTagDesc()
+
         axios.get(`${API_URL}/api/question/search/${search_query}`)
         .then(res => {
             const data = res.data.posts
@@ -67,6 +73,30 @@ const Search = () => {
         setPosts([].concat(posts).sort((a, b) => b.score - a.score))
     }
 
+    const showTagDesc = () => {
+        let queryArr = search_query.split(' ')
+
+        queryArr = queryArr.filter(word => word.charAt(0) === '[' && word.charAt(word.length - 1))
+
+        if (queryArr.length === 1 && search_query.charAt(0) === '[') {
+
+            axios.get(`${API_URL}/api/tag/getNameTags`)
+            .then(res => {
+                const tagName = queryArr[0].substring(1, queryArr[0].length - 1)
+                const allTags = res.data.tags
+
+                const foundTag = allTags.find(tag => tag.name === tagName)
+                setTag(foundTag)
+                
+                const resString = search_query.replace(queryArr[0], ' ')
+                setResultString(resString)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+    }
+
     return (
         <div className='search-container mb-3'>
             <Container className='mt-3 search-head-container'>
@@ -77,6 +107,9 @@ const Search = () => {
             </Container>
             <Container className='mt-3'>
                 <div>
+                    {(resultString && tag) && <p style={{fontSize:'12px'}}>Results for {resultString} tagged with 
+                    <div className='search-tag-block me-1 ms-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div></p>}
+                    {tag && <p style={{maxWidth: '700px', fontSize: '13px', color: 'black'}}>{tag.description}</p>}
                     <p className='num-results mt-2'>{posts.length} results</p>
                     <ButtonGroup style={{ marginLeft: '52%' }}>
                         <Button variant='outline-secondary' onClick={handleRelevance}>Relevance</Button>

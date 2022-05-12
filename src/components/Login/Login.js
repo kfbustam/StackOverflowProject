@@ -52,7 +52,7 @@ function Login() {
                     _id: foundUser._id
                 }))
     
-                if (email === 'admin@gmail.com') navigate('/admin')
+                if (email === 'admin@gmail.com') navigate('/addtag')
                 else navigate('/users')
             })
             .catch(err => {
