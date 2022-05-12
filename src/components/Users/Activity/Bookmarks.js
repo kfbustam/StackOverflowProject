@@ -101,7 +101,7 @@ function Bookmarks() {
       })
     }
   fetchBookmarks()
-  }, [bookmarks])
+  }, [])
 
   return (
     <div style={rootStyle}>

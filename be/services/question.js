@@ -201,7 +201,7 @@ class Question {
                                 ]
                                 }
                                 const questions = await QuestionModel.find(query).populate('tags', 'name')
-                                        .populate('user', 'username reputation')
+                                        .populate('user', 'username reputation profileURL')
                                         .populate('answer_id', 'isBest')
                                 if(questions?.length)
                                 {
@@ -493,7 +493,7 @@ class Question {
                 try {
                         let result = {}
                         const question = await QuestionModel.findById(data)
-                                                .populate('user', '_id username reputation')
+                                                .populate('user')
                                                 .populate('tags', '_id name')
                                                 .populate("comment_id")
                                                 .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } })

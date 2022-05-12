@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import axios from 'axios'
 import API_URL from '../../apiConfig'
+import defaultimg from '../../default/default.png'
 
 function AllUsers() {
   const [users, setUsers] = useState([{}])
@@ -21,11 +22,6 @@ function AllUsers() {
     axios.get(`${API_URL}/api/user/getPopularUsers`)
     .then(res => {
       const dataUsers = res.data.user
-
-      dataUsers.forEach(user => {
-        user.picture = 'http://placekitten.com/200/300'
-        user.location = 'San Jose, CA'
-      })
 
       setUsers(dataUsers)
       setFilteredUsers(dataUsers)
@@ -57,7 +53,7 @@ function AllUsers() {
       <Row className='mt-5'>
         {filteredUsers.map(user => (
           <Col sm={6} md={filteredUsers.length < 3 ? 6 : 4} lg={filteredUsers.length < 3 ? 4 : 3} className='mb-3'>
-            <Image src={user.picture} className='all-users-image me-2'/>
+            <Image src={user.profileURL ? `${API_URL}/image/${user.profileURL}` : defaultimg} className='all-users-image me-2'/>
             <Link to='/users' className='all-users-link'>{user.username && user.username}</Link>
             <p className='all-users-location'>{user.location && user.location}</p>
             <p className='all-users-reputation mb-0'>{user.reputation}</p>

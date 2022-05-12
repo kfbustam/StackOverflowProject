@@ -92,7 +92,7 @@ function Questions() {
       setQuestions(questionData)
     }
     fetchQuestions()
-  }, [questions])
+  }, [])
 
   return (
     <div style={rootStyle}>

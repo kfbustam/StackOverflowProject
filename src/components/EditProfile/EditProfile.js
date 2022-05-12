@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button'
 import axios from 'axios'
 import API_URL from '../../apiConfig';
 import MyToast from '../MyToast/MyToast'
-
+import defaultimg from '../../default/default.png'
 
 const titleHeaderStyle = {
     display: 'flex',
@@ -23,7 +23,7 @@ const EditProfile = () => {
     const [user, setUser] = useState({})
     const userID = JSON.parse(localStorage.getItem('user'))._id
 
-    const [imgPrev, setImgPrev] = useState(null)
+    const [image, setImage] = useState(defaultimg)
     const hiddenFileInput = useRef(null)
 
     const [username, setUsername] = useState('')
@@ -34,7 +34,30 @@ const EditProfile = () => {
     const [toastText, setToastText] = useState('')
 
     const handlePicUpload = (e) => {
-        setImgPrev(URL.createObjectURL(e.target.files[0]))
+        //setImgPrev(URL.createObjectURL(e.target.files[0]))
+
+        const formData = new FormData()
+        formData.append('profile-file', e.target.files[0])
+
+        axios.post(`${API_URL}/uploadprofiledp`, formData)
+        .then(res => {
+            const imageKey = res.data.data.key
+
+            axios.post(`${API_URL}/api/user/updatePathDP`, {
+                userId: userID,
+                profileURL: imageKey
+            })
+            .then(res => {
+                console.log(res.data)
+                setImage(`${API_URL}/image/${imageKey}`)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
 
     useEffect(() => {
@@ -45,6 +68,8 @@ const EditProfile = () => {
                 setUsername(userData.username)
                 setLocation(userData.location)                
                 setAbout(userData.about)
+
+                if (userData.profileURL) setImage(`${API_URL}/image/${userData.profileURL}`)
             })
             .catch(err => {
                 console.log(err)
@@ -72,7 +97,7 @@ const EditProfile = () => {
                 <div>
                     <div style={titleHeaderStyle}>
                         <IconButton key="profileIcon" onClick={() => navigate('/users')}>
-                            <Avatar src='' style={{ width: 160, height: 160 }} />
+                            <Avatar src={image} style={{ width: 160, height: 160 }} />
                         </IconButton>
                         <div style={{ display: 'flex', flexDirection: 'column', margin: 'auto auto auto 0px' }}>
                             <h2 className='ms-2'>
@@ -89,7 +114,7 @@ const EditProfile = () => {
                     <Form className='edit-profile-form'>
                         <Form.Group className='mb-3'>
                             <strong>Profile picture</strong>
-                            <Image src={imgPrev} className='mb-2 mt-1'
+                            <Image src={image} className='mb-2 mt-1'
                                 style={{ width: '150px', height: '150px' }} />
                             <Button onClick={() => hiddenFileInput.current.click()}>Change picture</Button>
                         </Form.Group>
