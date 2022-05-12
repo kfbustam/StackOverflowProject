@@ -43,7 +43,6 @@ function Questions() {
     async function fetchQuestions() {
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get(`${API_URL}/api/user/getQuestionsTab/` + user._id )
-      console.log(response.data.user.length)
       const questionData = response.data.user
       setQuestionCount(response.data.user.length)
       setQuestions(questionData)

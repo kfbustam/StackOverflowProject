@@ -58,7 +58,6 @@ function Answers() {
     async function fetchAnswers() {
       let anstotal = 0
       let user = JSON.parse(localStorage.getItem('user'))
-      //console.log(`{${API_URL}}/api/user/getAnswersTab/` + user._id)
       const response = await axios.get(`${API_URL}/api/user/getAnswersTab/` + user._id )
       const answersData = response.data.user
       if(response.data.user.length<=1)
