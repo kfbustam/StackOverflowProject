@@ -232,7 +232,7 @@ const QuestionOverview = () => {
                   </div>
                 ))}
                 <form>
-                  <input className="w-full" type="text" onChange={e => setQComment(e.target.value)}></input>
+                  <input className="w-full" placeholder="Add Comment" type="text" onChange={e => setQComment(e.target.value)}></input>
                 </form>
                 <button
                   onClick={(e) => addComment("question", id, user._id)}
@@ -441,14 +441,14 @@ const QuestionOverview = () => {
                 {parse(String(a.answer))}
                 <br />
               <div className="">
-                <div className="text-1xl font-bold">Comments</div>
+                <div className=" text-1xl font-bold">Comments</div>
                 {a.comment_id.map((c) => (
-                  <div>
+                  <div className="border-b border-gray-300">
                     {c.comment}
                 </div>
                 ))}
                 <form>
-                  <input className="w-full" type="text" onChange={e => setComment(e.target.value)}></input>
+                  <input className="w-full"  placeholder="Add Comment" type="text" onChange={e => setComment(e.target.value)}></input>
                 </form>
 
                 <button
