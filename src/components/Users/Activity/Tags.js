@@ -57,6 +57,7 @@ const silverCircleIconStyle = {
 
 function Tags() {
   const [tags, setTags] = useState([])
+  const [tcount, setTagCount] = useState(0)
   // [
   //   {
   //     isBronze: false,
@@ -112,7 +113,7 @@ function Tags() {
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get(`${API_URL}/api/user/getTagsTab/` + user._id )
       const tagData = response.data.user
-      console.log(tagData);
+      setTagCount(response.data.user.length)
       setTags(tagData)
     }
     fetchTags()
@@ -121,7 +122,7 @@ function Tags() {
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Tags</h3>
+        <h3>{tcount} Tag(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>

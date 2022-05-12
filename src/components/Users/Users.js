@@ -78,12 +78,7 @@ function Users() {
         lastSeen,
         profileURL
       } = response.data.user;
-      //lengthOfTimeAsMember: new Date((new Date().getTime()) - (new Date(memberFrom).getTime())).toLocaleDateString("en-US", options),
-      if(profileURL=="")
-      {
-        profileURL = defaultimg
-      }
-      //console.log(profileURL)
+      
       setUserData({
         aboutMeText: about,
         answersCount: answerIds.length,

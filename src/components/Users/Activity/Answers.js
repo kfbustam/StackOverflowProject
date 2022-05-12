@@ -56,17 +56,12 @@ function Answers() {
   useEffect(() => {
     if (answers.length > 0) return
     async function fetchAnswers() {
-      let anstotal = 0
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get(`${API_URL}/api/user/getAnswersTab/` + user._id )
       const answersData = response.data.user
-      if(response.data.user.length<=1)
-      {
-        anstotal = response.data.user.length + " Answer"
-      }
-      else{
-        anstotal = response.data.user.length + " Answers"
-      }
+ 
+      let anstotal = response.data.user.length 
+  
       //console.log(anstotal)
       setAnswerCount(anstotal)
       setAnswers(answersData)
@@ -77,7 +72,7 @@ function Answers() {
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{anscount}</h3>
+        <h3>{anscount} Answer(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>
