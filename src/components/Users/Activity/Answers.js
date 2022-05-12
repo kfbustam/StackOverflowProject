@@ -91,7 +91,7 @@ function Answers() {
       setAnswers(answersData)
     }
   fetchAnswers()
-  }, [answers])
+  }, [])
 
   return (
     <div style={rootStyle}>

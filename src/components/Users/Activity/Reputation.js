@@ -1,22 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
 import Accordion from 'react-bootstrap/Accordion'
 
 const rootStyle = {
   display: 'flex',
   flexDirection: 'column',
-}
-
-const postListItem = {
-  display: 'flex',
-  flexDirection: 'row',
-  gap: 5,
-  height: 150,
 }
 
 const filterButtonGroupStyle = {
@@ -26,6 +16,8 @@ const filterButtonGroupStyle = {
 }
 
 function Reputation() {
+  const [reputations, setReputations] = useState([])
+  const [errorMessages, setErrorMessages] = useState([])
   const user = {
     aboutMeText: 'about',
     answersCount: 12,
@@ -108,6 +100,17 @@ function Reputation() {
     ]
   }
 
+  useEffect(() => {
+    if (Object.values(reputations).length > 0) return
+    async function fetchReputations() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      const response = await axios.get('http://localhost:3001/api/user/getReputationHistory/' + user._id )
+      const reputationData = response.data.groupByDate
+      setReputations(reputationData)
+    }
+    fetchReputations()
+  }, [])
+
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -122,7 +125,7 @@ function Reputation() {
       </div>
       <Accordion defaultActiveKey="0">
         {
-          Object.entries(timeStrings).map(([timeString, reputations]) => {
+          Object.entries(reputations).map(([timeString, reputations]) => {
             return (
               <Accordion.Item eventKey={timeString}>
                 <Accordion.Header>{timeString}</Accordion.Header>

@@ -139,7 +139,7 @@ function Badges() {
       setBadges(badgeData)
     }
   fetchAnswers()
-  }, [badges])
+  }, [])
 
   return (
     <div style={rootStyle}>
