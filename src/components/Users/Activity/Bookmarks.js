@@ -92,8 +92,8 @@ function Bookmarks() {
     async function fetchBookmarks() {
       let user = JSON.parse(localStorage.getItem('user'))
       axios.post(`${API_URL}/api/question/getAllBookmarkedQuestions/`, {
-        // user: user._id
-        user: "6270916b10d71bab3c5630fe"
+        user: user._id
+        // user: "6270916b10d71bab3c5630fe"
       })
       .then(res => {
         setBookmarks(res.data.data)
@@ -109,7 +109,7 @@ function Bookmarks() {
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Bookmarks</h3>
+        <h3>{bookmarks.length} Bookmarks</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>
