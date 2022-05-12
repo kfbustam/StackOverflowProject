@@ -4,6 +4,7 @@ const TagModel = require("../model/tag.js")
 const CommentsModel = require("../model/comments.js")
 const QuestionModel = require('../model/questions.js')
 const UserModel = require('../model/user')
+const ActivityModel = require('../model/activity.js')
 
 class Answer {
 

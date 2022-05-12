@@ -23,22 +23,54 @@ const QuestionOverview = () => {
       dataSet(response)
     }
 
-    async function increaseView() {
-      await axios.get(`${API_URL}/api/question/getById/${id}`)
-    }
-
     fetchMyAPI()
-    increaseView()
   }, [])
 
   let user = JSON.parse(localStorage.getItem('user'))
   function answer(){
     axios.post(`${API_URL}/api/answer/addAnswer`, {
-      question_id: "6275d5f3b319fc3904964e84",
+      question_id: id,
       answer: editorRef.current.getContent(),
       user_id: user._id 
   })
   window.location.reload()
+  }
+  function bestAns(ans_id){
+    axios.post(`${API_URL}/api/answer/bestAnswer`, {
+      answerId: ans_id
+    })
+    window.location.reload()
+  }
+
+  function vote(v, type , id){
+    if(v === "up" && type === "question"){
+      axios.post(`${API_URL}/api/question/upvoteQuestion`, {
+        questionId: id,
+        userId: user._id
+      })
+      window.location.reload();
+    }
+    if(v === "down" && type === "question"){
+      axios.post(`${API_URL}/api/question/downvoteQuestion`, {
+        questionId: id,
+        userId: user._id
+      })
+      window.location.reload();
+    }
+    if(v === "up" && type === "answer"){
+      axios.post(`${API_URL}/api/answer/upvoteAnswer`, {
+        answerId: id,
+        userId: user._id
+      })
+      window.location.reload();
+    }
+    if(v === "down" && type === "answer"){
+      axios.post(`${API_URL}/api/answer/downvoteAnswer`, {
+        answerId: id,
+        userId: user._id
+      })
+      window.location.reload();
+    }
   }
   function getNumberOfDays(start) {
     const date1 = new Date(start);
@@ -66,7 +98,7 @@ const QuestionOverview = () => {
             {data?.data.question.title}
           </div>
           <div className="mt-1 text-right gap-4 col-span-3">
-            <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded">
+            <button className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded" onClick={() => navigate('/askQuestion')}>
               Ask Question
             </button>
           </div>
@@ -81,7 +113,7 @@ const QuestionOverview = () => {
         </div>
         <div className="grid grid-cols-12 mt-1 mr-[10%]">
           <div class="col-span-1">
-            <button>
+            <button onClick={(e) => vote("up","question", data?.data.question._id)}>
               <svg
                 aria-hidden="true"
                 class="svg-icon iconArrowUpLg"
@@ -93,7 +125,7 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <div className="ml-[15%] mb-[10%]">{data?.data.question.score}</div>
-            <button>
+            <button onClick={(e) => vote("down","question", data?.data.question._id)}>
               <svg
                 aria-hidden="true"
                 class="svg-icon iconArrowDownLg"
@@ -133,7 +165,7 @@ const QuestionOverview = () => {
             {parse(String(data?.data.question.body))}
             <div className="flex mt-5 flex-wrap gap-2 overflow-auto">
             {data?.data.question.tags.map(tag => (
-              <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded">
+              <button className="bg-[#E1ECF4] text-[#39739F] text-sm font-light py-2 px-2 rounded" onClick={() => navigate(`/questions/tagged/${tag.name}`)}>
                 {tag.name}
               </button>
               ))}
@@ -286,7 +318,7 @@ const QuestionOverview = () => {
         {data?.data.question.answer_id.map(a => (
         <div className="border-b border-gray-300 grid grid-cols-12 mb-5 mt-5">
           <div class="col-span-1">
-            <button>
+            <button onClick={(e) => vote("up","answer", a._id)}>
               <svg
                 aria-hidden="true"
                 class="svg-icon iconArrowUpLg"
@@ -298,7 +330,7 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <div className="ml-[15%] mb-[10%]">{a.score}</div>
-            <button>
+            <button onClick={(e) => vote("down", "answer", a._id)}>
               <svg
                 aria-hidden="true"
                 class="svg-icon iconArrowDownLg"
@@ -310,6 +342,7 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <br />
+            {a._id === data?.data.question.best_ans &&
             <button className="">
               <svg
                 aria-hidden="true"
@@ -321,6 +354,7 @@ const QuestionOverview = () => {
                 <path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path>
               </svg>
             </button>
+          }
             <br />
             <button className="ml-1.5 mt-1">
               <svg
@@ -332,6 +366,12 @@ const QuestionOverview = () => {
                 <path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9Zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5Z"></path>
               </svg>
             </button>
+            <br />
+            {user._id === data?.data.question.user._id &&
+            <button onClick={(e)=> bestAns(a._id)}className="mt-1">
+              Best?
+            </button>
+}
           </div>
           <div className="col-span-11 font-normal mt-2 mr-[40%]">
               {parse(String(a.answer))}

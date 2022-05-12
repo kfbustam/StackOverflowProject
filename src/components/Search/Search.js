@@ -103,7 +103,7 @@ const Search = () => {
                                     <p className='vote-text' style={{color: post.isBest ? '#47A868' : '#6A747C'}}>votes</p>
                                 </Col>}
                             <Col md={10} style={{ width: '700px' }}>
-                                <Link to='/' className='search-question-title mb-2'>{post.type === 'question' ? 'Q' : 'A'}: {post.type === 'question' ? post.title : post.question_id.title}</Link>
+                                <Link to={post.type === 'question' ? `/questions/${post._id}` : `/questions/${post.question_id._id}`} className='search-question-title mb-2'>{post.type === 'question' ? 'Q' : 'A'}: {post.type === 'question' ? post.title : post.question_id.title}</Link>
                                 <p className='search-question-desc mb-1'>{post.type === 'question' ? post.body : post.answer}</p>
                                 {post.type === 'question' ? post.tags.map(tag => (
                                     <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>
