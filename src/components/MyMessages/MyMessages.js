@@ -13,7 +13,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 import axios from 'axios'
 import API_URL from '../../apiConfig'
-
+import defaultimg from '../../default/default.png'
 
 const MyMessages = () => {
     const date = new Date()
@@ -25,14 +25,6 @@ const MyMessages = () => {
     const [allUsers, setAllUsers] = useState([{}])
 
     const userID = JSON.parse(localStorage.getItem('user'))._id.toString()
-    
-    let users = []
-    for (let i = 0; i < 10; i++) {
-        users[i] = {
-            _id: `${i}`,
-            username: `First last ${i}`
-        }
-    }
 
     useEffect(() => {
         getConversations()
@@ -124,7 +116,7 @@ const MyMessages = () => {
                     <DropdownButton title="Start a conversation" size='sm' variant='dark'>
                         {allUsers.map(user => (
                             <Dropdown.Item onClick={() => handleCreate(user._id)}>
-                                <Image src='http://placekitten.com/200/300' roundedCircle className='my-messages-dropdown-image me-2'/>
+                                <Image src={user.profileURL? `${API_URL}/image/${user.profileURL}` : defaultimg} roundedCircle className='my-messages-dropdown-image me-2'/>
                                 {user.username}
                             </Dropdown.Item>
                         ))}
@@ -143,7 +135,7 @@ const MyMessages = () => {
                                 className={roomID === conversation._id && 'my-messages-active'}>
                                 <Row>
                                     <Col md={3}>
-                                        <Image src='http://placekitten.com/200/300' roundedCircle />
+                                        <Image src={(conversation.receiver && conversation.receiver.profileURL) ? `${API_URL}/image/${conversation.receiver.profileURL}` : defaultimg} roundedCircle />
                                     </Col>
                                     <Col md={9}>
                                         <p className='my-messages-name-list'>{conversation.receiver && conversation.receiver.username}</p>

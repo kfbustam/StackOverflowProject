@@ -45,7 +45,7 @@ class Message {
         try {
             const conversations = await ConversationModel.find({
                 members: { $in: [data] },
-              }).populate('members', 'username')
+              }).populate('members', 'username profileURL')
               .populate('lastMessage', 'message createdAt')
               .sort({ lastMessageDate: -1 });
     
