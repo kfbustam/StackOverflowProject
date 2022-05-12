@@ -92,7 +92,8 @@ function Bookmarks() {
     async function fetchBookmarks() {
       let user = JSON.parse(localStorage.getItem('user'))
       axios.post(`${API_URL}/api/question/getAllBookmarkedQuestions/`, {
-        user: user._id
+        // user: user._id
+        user: "6270916b10d71bab3c5630fe"
       })
       .then(res => {
         setBookmarks(res.data.data)
@@ -103,6 +104,7 @@ function Bookmarks() {
     }
   fetchBookmarks()
   }, [])
+  console.log("book",bookmarks)
 
   return (
     <div style={rootStyle}>
@@ -120,43 +122,46 @@ function Bookmarks() {
       </div>
       <List>
         {
-          posts.map((post) => {
-            const {
-              answerCount,
-              answeredDate,
-              bookmarkCount,
-              isAccepted,
-              numOfVotes,
-              url,
-              questionTitle,
-              tags,
-              viewCount
-            } = post
+          bookmarks.map((post) => {
+            // const {
+            //   answerCount,
+            //   answeredDate,
+            //   bookmarkCount,
+            //   isAccepted,
+            //   numOfVotes,
+            //   url,
+            //   questionTitle,
+            //   tags,
+            //   viewCount
+            // } = post
             return (
               <>
                 <ListItem style={postListItem}>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%', gap: 5}}>
-                  <Chip icon={isAccepted ? <Check /> : null} label={`${answerCount} answers`} color="success" />
-                    <div style={{display: 'flex', margin: 'auto 0px auto 0px', color: '#6A747C'}}>{numFormatter(numOfVotes)} votes</div>
-                    <div style={{display: 'flex', margin: 'auto 0px auto 0px', color: 'orange'}}>{numFormatter(viewCount)} views</div>
-                    <div style={{display: 'flex', margin: 'auto 0px auto 0px'}}>{numFormatter(bookmarkCount)} bookmarks</div>
+                  {/* <Chip icon={isAccepted ? <Check /> : null} label={`${post.answer_id.count} answers`} color="success" /> */}
+                  <Chip icon={1 ? <Check /> : null} label={`${post.answer_id.length} answers`} color="success" />
+
+                    <div style={{display: 'flex', margin: 'auto 0px auto 0px', color: '#6A747C'}}>{numFormatter(post.vote_id.length)} votes</div>
+                    <div style={{display: 'flex', margin: 'auto 0px auto 0px', color: 'orange'}}>{numFormatter(post.totalviews)} views</div>
+                    {/* <div style={{display: 'flex', margin: 'auto 0px auto 0px'}}>{numFormatter(bookmarkCount)} bookmarks</div> */}
                   </div>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                     <h3>
-                      <a href={url} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a>
+                      {/* <a href={url} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a> */}
+                      <a  style={{color: '#0074cc', fontSize: 17}}>{post.title}</a>
                     </h3>
                   </div>
                   <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
                     <div>
                       {
-                        tags.map(tag => {
-                          const {name, url} = tag;
-                          return <a className='search-tag-block me-1' href={url}>{name}</a>;
+                        post.tags.map(tag => {
+                          // const {name, url} = tag;
+                          return <a className='search-tag-block me-1' href={tag.url}>{tag.name}</a>;
                         })
                       }
                     </div>
                     <div>
-                      {answeredDate}
+                      {posts.createdAt}
                     </div>
                   </div>
                 </ListItem>
