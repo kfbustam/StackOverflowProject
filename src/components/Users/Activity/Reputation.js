@@ -132,16 +132,15 @@ function Reputation() {
                 {
                   Object.entries(reputations).map(([index, reputation]) => {
                     const {
-                      eventCount,
-                      reputationCount,
-                      questionTitle,
-                      url
+                      what,
+                      reputationChanged,
+                      comment,
                     } = reputation
                     return (
                         <Accordion.Body style={{display: 'flex', flexDirection: 'row', gap: 40, margin: 'auto 0px auto 0px'}}>
-                          <div>{`${eventCount} events`}</div>
-                          <div style={{display: 'flex', color: 'green'}}>{`+ ${numFormatter(reputationCount)}`}</div>
-                          <a href={url} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a>
+                          <div>{what}</div>
+                          <div style={{display: 'flex', color: 'green'}}>{reputationChanged}</div>
+                          <dev style={{color: '#0074cc', fontSize: 17}}>{comment}</dev>
                         </Accordion.Body>
                     )
                   })
