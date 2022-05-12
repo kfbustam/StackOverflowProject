@@ -9,6 +9,8 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ReactTimeAgo from 'react-time-ago'
+import Image from 'react-bootstrap/Image'
+import defaultimg from '../../default/default.png'
 
 const TagsOverview = () => {
     const { tagName } = useParams()
@@ -147,6 +149,7 @@ const TagsOverview = () => {
                                     <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>
                                 ))}
                                 <p className='search-author'>
+                                    <Image src={(question.user && question.user.profileURL) ? `${API_URL}/image/${question.user.profileURL}` : defaultimg} style={{width: '25px', height: '25px', display: 'inline-block'}}/>
                                     <Link to='/users' className='search-name-link'> {question.user && question.user.username}</Link>
                                     <strong> {question.user && question.user.reputation} </strong>
                                     {question.modifiedAt ? 'modifed at ' : 'asked '}
