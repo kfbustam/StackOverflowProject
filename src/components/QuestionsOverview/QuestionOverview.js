@@ -18,6 +18,8 @@ const QuestionOverview = () => {
       console.log(editorRef.current.getContent());
     }
   };
+
+  
   useEffect(() => {
     async function fetchMyAPI() {
       let response = await axios.get(`${API_URL}/api/question/getById/${id}`);
@@ -44,18 +46,21 @@ const QuestionOverview = () => {
   }
 
   function addComment(type, qa_id, u_id) {
+    console.log(type)
     if (type === "question") {
       axios.post(`${API_URL}/api/question/addComment`, {
         question_id: qa_id,
         comment: editorRef.current.getContent(),
-        userId: u_id,
+        user_id: u_id,
       });
-      window.location.reload();
+      
+      console.log(editorRef.current.getContent())
+     window.location.reload();
     } else {
       axios.post(`${API_URL}/api/answer/addComment`, {
         answer_id: qa_id,
         comment: editorRef.current.getContent(),
-        userId: u_id,
+        user_id: u_id,
       });
       window.location.reload();
     }
@@ -90,6 +95,7 @@ const QuestionOverview = () => {
       window.location.reload();
     }
   }
+  
   function getNumberOfDays(start) {
     const date1 = new Date(start);
     const date2 = new Date();
@@ -238,7 +244,7 @@ const QuestionOverview = () => {
                 />
 
                 <button
-                  onClick={(e) => addComment("answer", id, user._id)}
+                  onClick={(e) => addComment("question", id, user._id)}
                   className="bg-[#0A95FF] mt-2 text-white font-light py-2 px-2 rounded"
                 >
                   comment
