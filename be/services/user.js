@@ -158,7 +158,6 @@ class User {
                                         
                                 });                                
                         });
-                        console.log(tagData,score)
                         for(let i=0;i<tagData.length;i++)
                         {
                                 let badge
@@ -187,7 +186,6 @@ class User {
                                                 'score': score[i]
                                         }
                                 }
-                                console.log(badge)
                                 badges.push(badge)
 
                         }
@@ -371,8 +369,31 @@ class User {
                                 } 
                         }
 
+                        let goldCount =0;
+                        let silverCount=0;
+                        let bronzeCount=0;
+
+                        badges.forEach(element => {
+                                if(element.type=="Bronze")
+                                {
+                                        bronzeCount=bronzeCount+1;
+                                }
+                                else if(element.type=="Gold")
+                                {
+                                        goldCount=goldCount+1;
+                                }
+                                else if(element.type=="Silver")
+                                {
+                                        silverCount=silverCount+1;
+                                }
+                        });
+
+                        result.badges=badges;
+                        result.goldCount=goldCount;
+                        result.bronzeCount=bronzeCount;
+                        result.silverCount=silverCount;
                         
-                        return result=badges;
+                        return result;
                 }
                 catch(err){
                         console.log(err);
