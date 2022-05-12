@@ -33,20 +33,7 @@ function Users() {
   const navigate = useNavigate()
   const [tab, setTab] = useState('activity')
   const [userData, setUserData] = useState(null)
-  // const user = {
-  //   aboutMeText: 'about',
-  //   answersCount: 12,
-  //   bronzeCount: 123,
-  //   goldCount: 54,
-  //   lastSeen: 'this week',
-  //   lengthOfTimeAsMember: '3 days',
-  //   profileIconSrc: 'http://placekitten.com/200/300',
-  //   reachedCount: 42,
-  //   reputationCount: 123,
-  //   questionsCount: 64,
-  //   silverCount: 12,
-  //   username: 'kfbustam',
-  // }
+  const [profileimage, setimgData] = useState(null)
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -57,6 +44,7 @@ function Users() {
     async function fetchInfo() {
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get(`${API_URL}/api/user/getBasicDetails/` + user._id )
+      setimgData(`${API_URL}/image/${response.data.user.profileURL}`)
       let {
         about,
         answerIds,
@@ -86,7 +74,6 @@ function Users() {
         questionsCount: questionIds.length,
         reputationCount: reputation,
         lastSeen: new Date(updatedAt).toLocaleDateString("en-US", options),
-        profileIconSrc: defaultimg,
         username,
         visitedDateInterval: new Date(updatedAt).toLocaleDateString("en-US", options),
         location:location
@@ -99,7 +86,7 @@ function Users() {
     <div style={rootStyle}>
       <div style={titleHeaderStyle}>    
         <IconButton key="profileIcon" onClick={() => navigate('/users')}>
-          <Avatar src={userData?.profileIconSrc} style={{width: 160, height: 160}} />
+          <Avatar src={profileimage} style={{width: 160, height: 160}} />
         </IconButton>
         <div style={{display: 'flex', flexDirection: 'column', margin: 'auto auto auto 0px'}}>
           <h2>

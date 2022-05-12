@@ -425,7 +425,8 @@ class User {
                         }
                         let about = user_doc["about"]
                         let badges = await this.getAllBadges(data)
-                        badges.forEach(badge=>{
+                        //console.log(badges)
+                        badges["badges"].forEach(badge=>{
                                 if(badge["type"]=="Bronze")
                                 {
                                         topBronzeTags.push({"name":badge["badgeName"]})
@@ -440,7 +441,8 @@ class User {
                                 }
                         })
                         let taguser = await this.getTagsTab(data)
-                        //console.log(taguser)
+                        let postsuser = await this.getSortPost(data, "All","Score")
+                        
                         return {
                                 "stats":stats,
                                 "aboutMeText":about,
@@ -449,7 +451,8 @@ class User {
                                         "topSilverTags":topSilverTags,
                                         "topBronzeTags":topBronzeTags
                                 },
-                                "tags":taguser
+                                "tags":taguser,
+                                "posts":postsuser
                         }
 
                 }
@@ -538,7 +541,7 @@ class User {
                         let result = []
                         let question_doc = await UserModel.findOne({"_id":mongoose.Types.ObjectId(data)})
                                                         .populate([{ path: 'questionIds', populate: { path: 'tags'}}])
-                        console.log(question_doc)
+                        //console.log(question_doc)
                         question_doc["questionIds"].forEach(element=>{
                                 let every_ques = {}
                                 let tags = []
@@ -615,7 +618,7 @@ class User {
                                 each_tag["name"] = tagname[index]
                                 each_tag["postCount"] = tagcount[index]
                                 each_tag["scoreCount"] = score[index]
-                                each_tag["percentage"] = percentage[index]+"%"
+                                each_tag["percentage"] = percentage[index]
                                 if(score[index]>20)
                                 {
                                         each_tag["isBronze"] = false
@@ -711,7 +714,7 @@ class User {
                                 let allques = all_ques.concat(all_ans)
                                 //console.log(allques)
                                 result = await QuestionModel.find({"_id":allques}).sort({"score":-1})   
-                                console.log(result)     
+                                //console.log(result)     
                         }
                         else if(filterval=="All" && sortoption=="Newest")
                         {

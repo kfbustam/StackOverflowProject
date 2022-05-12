@@ -384,7 +384,7 @@ class Question {
 
         static getAllBookmarkedQuestions = async (data) => {
                 let result = {}
-                let bookmarkedQuestions = await QuestionModel.find({"_id":{$in : (await UserModel.findById(data.user)).bookmarks}})
+                let bookmarkedQuestions = await QuestionModel.find({"_id":{$in : (await UserModel.findById(data.user)).bookmarks}}).populate('tags', '_id name')
 
                 // let bookmarkedQuestions = await UserModel.find({"_id":data.user},{bookmarks:1,_id:0})
 

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -15,7 +16,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
-
+import API_URL from '../../apiConfig'
 
 const postListItem = {
   display: 'flex',
@@ -28,97 +29,88 @@ const filterButtonGroupStyle = {
   margin: '15px 0px 15px 0px',
   justifyContent: 'end'
 }
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
 function Profile() {
-  const user = {
-    aboutMeText: 'about',
-    answersCount: 12,
-    bronzeCount: 123,
-    goldCount: 54,
-    lastSeen: 'this week',
-    lengthOfTimeAsMember: '3 days',
-    profileIconSrc: 'http://placekitten.com/200/300',
-    reachedCount: 42,
-    reputationCount: 123,
-    questionsCount: 64,
-    silverCount: 12,
-    username: 'kfbustam',
-  }
-  const {
-    aboutMeText,
-    answersCount,
-    bronzeCount,
-    goldCount,
-    reputationCount,
-    reachedCount,
-    questionsCount,
-    silverCount,
-  } = user
-  const topTags = [
-    {name: 'Autobiographer', score: 123, postCount: 1233, postPercentage: 12, badgeType: 'gold', createDate: 'Nov 7'},
-    {name: 'Legendary', score: 123, postCount: 1233, postPercentage: 12, badgeType: 'gold', createDate: 'Nov 7'},
-    {name: 'Dataframe', score: 123, postCount: 1233, postPercentage: 12, badgeType: 'gold', createDate: 'Nov 7'}
-  ]
-  const topGoldTags = [
-    {name: 'Autobiographer', createDate: 'Nov 7'},
-    {name: 'Legendary', createDate: 'Nov 7'},
-    {name: 'Dataframe', createDate: 'Nov 7'}
-  ]
-  const topSilverTags = [
-    {name: 'Autobiographer', createDate: 'Nov 7'},
-    {name: 'Legendary', createDate: 'Nov 7'},
-    {name: 'Dataframe', createDate: 'Nov 7'}
-  ]
-  const topBronzeTags = [
-    {name: 'Autobiographer', createDate: 'Nov 7'},
-    {name: 'Legendary', createDate: 'Nov 7'},
-    {name: 'Dataframe', createDate: 'Nov 7'}
-  ]
-  const allTagsURL = ''
-  const posts = [
-    {
-      answerCount: 1,
-      lastModified: 'modified Apr 7 at 11:14',
-      questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
-      url: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
-      reputationCount: 50,
-      tags: [
-        {
-          name: 'javascript',
-          url: 'https://stackoverflow.com/questions/tagged/javascript'
-        }
-      ],
-      user: {
-        reputationCount: 123,
-        username: 'kfbustam',
-        userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
-        profileIconSrc: 'http://placekitten.com/200/300' 
-      },
-      voteCount: 4,
-      viewCount: 124
+  const [profile, setProfile] = useState([])
+  const [repcount,setRepCount] = useState(0)
+  const [reachcount, setReached] = useState(0)
+  const [anscount, setAnswer]= useState(0)
+  const [quescount, setQuestion] = useState(0)
+  const [goldTags, setGoldtags] = useState([])
+  const [silverTags, setSilvertags]= useState([])
+  const [bronzeTags, setBronzetags]= useState([])
+  const [about, setAbout]=useState("")
+  const [tagstop, setTopTags] = useState([])
+  const [questionpost, setQPost] = useState([])
+
+  useEffect(() => {
+    if (Object.values(profile).length > 0) return
+    async function fetchProfile() {
+      let user = JSON.parse(localStorage.getItem('user'))
+      const response = await axios.get(`${API_URL}/api/user/getProfileTab/` + user._id )
+      const userData = response.data.user
+      setRepCount(userData["stats"]["reputationCount"])
+      setAnswer(userData["stats"]["answersCount"])
+      setReached(userData["stats"]["reachedCount"])
+      setQuestion(userData["stats"]["questionsCount"])
+      setAbout(userData["aboutMeText"])
+      
+      setGoldtags(userData["badges"]["topGoldTags"])
+      setSilvertags(userData["badges"]["topSilverTags"])
+      setBronzetags(userData["badges"]["topBronzeTags"])
+      setTopTags(userData["tags"])
+      setQPost(userData["posts"])
+      setProfile(userData)
     }
-  ]
+    fetchProfile()
+  }, [])
+  
+  const sendFilters = (value) =>{
+    let filter;
+    let sort;
+    if(value=="All"||value=="Questions"||value=="Answers")
+    {
+      filter = value
+      sort = "Score"
+    }
+    else{
+      filter="All"
+      sort = value
+      
+    }
+    let user = JSON.parse(localStorage.getItem('user'))
+    axios.get(`${API_URL}/api/user/getSortPost/` + user._id+"/"+filter+"/"+sort)
+    .then(response=>{
+      //console.log(response)
+      setQPost(response.data.user)
+    })
+    .catch(error => {
+      console.log(error.response.data.error)
+   })
+  }
 
   return (
     <div style={{display: 'flex', flexDirection: 'row', gap: '5%', margin: '10px 0px 0px 20px'}}>
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <h3>Stats</h3>
         <Card variant="outlined" style={{width: 250, height: 160}}>
+          
           <Grid container rowSpacing={1} style={{margin: 20}}>
             <Grid item xs={6} style={{display: 'flex', flexDirection: 'column'}}>
-              <span>{reputationCount}</span>
+              <span>{repcount}</span>
               <span>reputation</span>
             </Grid>
             <Grid item xs={6} style={{display: 'flex', flexDirection: 'column'}}>
-              <span>{reachedCount}</span>
+              <span>{reachcount}</span>
               <span>reached</span>
             </Grid>
             <Grid item xs={6} style={{display: 'flex', flexDirection: 'column'}}>
-              <span>{answersCount}</span>
+              <span>{anscount}</span>
               <span>answers</span>
             </Grid>
             <Grid item xs={6} style={{display: 'flex', flexDirection: 'column'}}>
-              <span>{questionsCount}</span>
+              <span>{quescount}</span>
               <span>questions</span>
             </Grid>
           </Grid>
@@ -127,7 +119,7 @@ function Profile() {
       <div style={{display: 'flex', flexDirection: 'column', gap: 40}}>
         <div>
           <h3>About</h3>
-          {aboutMeText}
+          {about}
         </div>
         <div>
           <h3>Badges</h3>
@@ -137,7 +129,7 @@ function Profile() {
                 <EmojiEventsIcon sx={{ color: yellow[600] }} style={{width: 60, height: 60}}/>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                   <h4>
-                    {goldCount}
+                    {goldTags.length}
                   </h4>
                   <div style={{fontSize: 13}}>
                     gold badges
@@ -145,10 +137,10 @@ function Profile() {
                 </div>
               </div>
               <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'start', margin: 20}}>
-                {topGoldTags.map(tag => 
+                {goldTags.map(tag => 
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Badge badgeContent={tag.name} color="primary" style={{width: 40, margin: 'auto 0px auto'}} />
-                    <div>{tag.createDate}</div>
+                    <br/>
                   </div>
                 )}
               </div>
@@ -158,7 +150,7 @@ function Profile() {
                 <EmojiEventsIcon sx={{ color: grey[400] }} style={{width: 60, height: 60}}/>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                   <h4>
-                    {silverCount}
+                    {silverTags.length}
                   </h4>
                   <div style={{fontSize: 13}}>
                     silver badges
@@ -166,10 +158,10 @@ function Profile() {
                 </div>
               </div>
               <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'start', margin: 20}}>
-                {topSilverTags.map(tag => 
+                {silverTags.map(tag => 
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Badge badgeContent={tag.name} color="primary" style={{width: 40, margin: 'auto 0px auto'}} />
-                    <div>{tag.createDate}</div>
+                    <br/>
                   </div>
                 )}
               </div>
@@ -179,7 +171,7 @@ function Profile() {
                 <EmojiEventsIcon sx={{ color: brown[400] }} style={{width: 60, height: 60}}/>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                   <h4>
-                    {bronzeCount}
+                    {bronzeTags.length}
                   </h4>
                   <div style={{fontSize: 13}}>
                     bronze badges
@@ -187,10 +179,10 @@ function Profile() {
                 </div>
               </div>
               <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'start', margin: 20}}>
-                {topBronzeTags.map(tag => 
+                {bronzeTags.map(tag => 
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Badge badgeContent={tag.name} color="primary" style={{width: 40, margin: 'auto 0px auto'}} />
-                    <div>{tag.createDate}</div>
+                    <br/>
                   </div>
                 )}
               </div>
@@ -200,12 +192,12 @@ function Profile() {
         <div>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <h3>Top tags</h3>
-            <a href={allTagsURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>View all tags</a>
+            <a style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>View all tags</a>
           </div>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableBody>
-                {topTags.map((topTag) => (
+                {tagstop.map((topTag) => (
                   <TableRow
                     key={topTag.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -213,9 +205,9 @@ function Profile() {
                     <TableCell component="th" scope="row">
                       {topTag.name}
                     </TableCell>
-                    <TableCell align="right">{topTag.score} score</TableCell>
+                    <TableCell align="right">{topTag.scoreCount} score</TableCell>
                     <TableCell align="right">{topTag.postCount} posts</TableCell>
-                    <TableCell align="right">{topTag.postPercentage} posts %</TableCell>
+                    <TableCell align="right">{topTag.percentage} posts %</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -226,47 +218,40 @@ function Profile() {
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <h3>Top posts</h3>
             <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-              <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-                <Button>All</Button>
-                <Button>Questions</Button>
-                <Button>Answers</Button>
-                <Button>Articles</Button>
+              <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle} onClick={(e)=>sendFilters(e.target.attributes.getNamedItem('data-key').value)} >
+                <Button data-key="All">All</Button>
+                <Button data-key="Questions">Questions</Button>
+                <Button data-key="Answers">Answers</Button>
               </ButtonGroup>
-              <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-                <Button>Score</Button>
-                <Button>Newest</Button>
+              <ButtonGroup variant="outlined" aria-label="outlined button group" onClick={(e)=>sendFilters(e.target.attributes.getNamedItem('data-key').value)} style={filterButtonGroupStyle}>
+                <Button data-key="Score">Score</Button>
+                <Button data-key="Newest">Newest</Button>
               </ButtonGroup>
             </div>
           </div>
           <List>
             {
-              posts.map((post) => {
+              questionpost.map((post, index) => {
                 const {
-                  answerTitle,
-                  url,
-                  questionTitle,
-                  tagLabel,
-                  tags,
+                _id,
+                title,
+                score,
+                createdAt
                 } = post
                 return (
                   <>
                     <ListItem style={postListItem}>
                       <div style={{textAlign: 'center'}}>
-                        {questionTitle != null && <>Q</>}
-                        {answerTitle != null && <>A</>}
-                        {tagLabel != null && <>tagLabel</>}
-                      </div>
-                      <div>
-                        <Button variant="outlined" color="primary" style={{width: 100}}>
-                          {reputationCount}
-                        </Button>
                       </div>
                       <div>
                         <h3>
-                          <a href={url} style={{color: '#0074cc', fontSize: 17}}>{questionTitle}</a>
+                          <a  style={{color: '#0074cc', fontSize: 17}} >{index+1}.{title}</a>
+                          <br/>
+                          <h6><b>Score:</b> {score}</h6>
+                          <h6><b>CreatedAt:</b> {new Date(createdAt).toLocaleDateString("en-US", options)}</h6>
                         </h3>
                       </div>
-                      <div>
+                      {/* <div>
                       {
                         tags.map((tag) => {
                           const {name, url} = tag
@@ -275,7 +260,7 @@ function Profile() {
                           );
                         })
                       }
-                      </div>
+                      </div> */}
                     </ListItem>
                     <Divider />
                   </>
