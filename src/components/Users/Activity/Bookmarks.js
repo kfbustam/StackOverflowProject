@@ -111,13 +111,13 @@ function Bookmarks() {
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{bookmarks.length} Bookmarks</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
+          {/* <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>
             <Button>Activity</Button>
             <Button>Newest</Button>
             <Button>Views</Button>
             <Button>Added</Button>
-          </ButtonGroup>
+          </ButtonGroup> */}
         </div>
       </div>
       <List>
