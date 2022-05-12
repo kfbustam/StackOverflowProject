@@ -115,7 +115,7 @@ function Tags() {
       setTags(tagData)
     }
     fetchTags()
-  }, [tags])
+  }, [])
 
   return (
     <div style={rootStyle}>
