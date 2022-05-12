@@ -201,7 +201,7 @@ class Question {
                                 ]
                                 }
                                 const questions = await QuestionModel.find(query).populate('tags', 'name')
-                                        .populate('user', 'username reputation')
+                                        .populate('user', 'username reputation profileURL')
                                         .populate('answer_id', 'isBest')
                                 if(questions?.length)
                                 {
