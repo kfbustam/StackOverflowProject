@@ -70,21 +70,21 @@ function Answers() {
 
   const onClickScore = async () => {
     const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Questions/Score`)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Answers/Score`)
     const answersData = response.data.user
     setAnswers(answersData)
   }
 
   const onActivityScore = async () => {
     const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Questions/Activity`)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Answers/Activity`)
     const answersData = response.data.user
     setAnswers(answersData)
   }
 
   const onNewestScore = async () => {
     const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Questions/Newest`)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Answers/Newest`)
     const answersData = response.data.user
     setAnswers(answersData)
   }
