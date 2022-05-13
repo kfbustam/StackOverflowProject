@@ -102,7 +102,7 @@ const Search = () => {
             <Container className='mt-3 search-head-container'>
                 <div>
                     <h3 className='search-results-title'>Search results</h3>
-                    <Button className='search-ask-question-button' onClick={() => navigate('/askQuestion')}>Ask question</Button>
+                    <Button className='search-ask-question-button' onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')}>Ask question</Button>
                 </div>
             </Container>
             <Container className='mt-3'>

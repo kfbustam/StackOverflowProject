@@ -110,7 +110,7 @@ const TagsOverview = () => {
         <div className='tags-overview-container'>
             <Container className='mt-3'>
                 <h3 className='tags-overview-title'>Questions tagged {'['}{tagName}{']'}</h3>
-                <Button className='tags-ask-question-button' onClick={() => navigate('/askQuestion')}>Ask question</Button>
+                <Button className='tags-ask-question-button' onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')}>Ask question</Button>
                 <div className='tags-overview-desc mt-3'>
                     <p style={{ fontSize: '13px', color: 'black' }}>{tagDesc}</p>
                 </div>

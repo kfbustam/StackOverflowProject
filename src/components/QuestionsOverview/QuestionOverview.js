@@ -134,7 +134,7 @@ const QuestionOverview = () => {
           <div className="mt-1 text-right gap-4 col-span-3">
             <button
               className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded"
-              onClick={() => navigate("/askQuestion")}
+              onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')}
             >
               Ask Question
             </button>
