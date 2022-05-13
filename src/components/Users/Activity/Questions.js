@@ -110,7 +110,7 @@ function Questions() {
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%', gap: 5}}>
                     <div style={{display: 'flex', margin: 'auto 0px auto 0px'}}>{numOfVotes} votes</div>
                     {isAccepted?<Chip icon={ <Check />} label="Best Answer" color="success" />:null}
-                    {admin_approval ? <Chip icon={ <PendingActionsIcon />} label="Pending Approval" color="error" /> : <></>}
+                    {!admin_approval ? <Chip icon={ <PendingActionsIcon />} label="Pending Approval" color="error" /> : <></>}
                   </div>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                     <h3>
