@@ -62,7 +62,12 @@ const reputationCountStyle = {
   textAlign: 'center',
   width: 50,
 }
+const numFormatter = (num) => Math.abs(num) > 9999 ? 
+  Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + 'm' : 
+  (Math.abs(num) > 999 ? 
+  Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num))
 
+const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` : input;
 
 export default function ReviewQuestion() {
   const [data, setData] = useState([])
@@ -118,7 +123,6 @@ export default function ReviewQuestion() {
         
         { data.length > 0 &&
           data.map((question) => {
-            console.log("b",question)
             // const {
             //   answerCount,
             //   isAnswered,
@@ -170,10 +174,10 @@ export default function ReviewQuestion() {
                       <strong style={answerCountStyle}>{question.answer_id.length}</strong>
                       <span style={answeredTextStyle}>{question.answer_id.length=== 1 ? 'answer': 'answers'}</span>
                     </div>
-                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
+                    {/* <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
                       <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.vote_id.length}</strong>
                       <span style={{fontSize: 11}}>votes</span>
-                    </div>
+                    </div> */}
                     {/* <div style={reputationCountStyle}>
                       <span style={{fontSize: 11, color: 'white'}}>+{questionReputationCount}</span>
                     </div> */}
@@ -195,10 +199,8 @@ export default function ReviewQuestion() {
                       </div>
                     </div>
                     <div style={userCardStyle}>
-                      <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small" />
-                      {/* <Avatar src={profileIconSrc}/>
-                      <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
-                      <a onClick={() => navigate('/profile')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{question.user.username}</p>  : <p></p>}</a>
+         
+                      <a onClick={() => navigate('/users/'+question.user._id)} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{question.user.username}</p>  : <p></p>}</a>
 
                       <span style={{ margin: 'auto 0px auto 0px'}}>{ question.user ? <p>{question.user.reputation}</p>  : <p></p>}</span>
                       {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
