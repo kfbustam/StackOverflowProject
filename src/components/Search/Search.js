@@ -21,7 +21,7 @@ const Search = () => {
     useEffect(() => {
         setResultString('')
         setTag({})
-        if (search_query) showTagDesc()
+        //if (search_query) showTagDesc()
 
         axios.get(`${API_URL}/api/question/search/${search_query}`)
         .then(res => {

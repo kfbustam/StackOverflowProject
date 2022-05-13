@@ -538,10 +538,10 @@ class Question {
                 try {
                         let result = []
 
-                        let questions = await QuestionModel.find({"isApproved": true}).select('title body tags user score isApproved createdAt updatedAt answer_id modifiedAt').lean()
+                        let questions = await QuestionModel.find({}).select('title body tags user score isApproved createdAt updatedAt answer_id modifiedAt').lean()
                                 .populate('tags', '_id name')
                                 .populate('answer_id', '_id isBest')
-                                .populate('user', '_id username').limit(10)
+                                .populate('user', '_id username')
                         let answers = await AnswerModel.find({}).select('answer question_id isBest score createdAt updatedAt').lean()
                                 .populate({ path: 'question_id', populate: { path: 'tags', select: 'name' }, select: 'tags title'})
                                 .populate('user_id', '_id username')
@@ -551,6 +551,7 @@ class Question {
                                 answers.forEach(answer => answer.type = 'answer')
                                 return [...questions, ...answers]
                         }
+
 
                         searchCriteria.forEach(criteria => {
                                 if (criteria.substring(0, 3) === 'is:') {
