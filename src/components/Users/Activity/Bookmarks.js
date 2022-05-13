@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -103,69 +101,14 @@ function Bookmarks() {
   fetchBookmarks()
   }, [])
 
-  const onClickScore = async () => {
-    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Bookmarks/Score`)
-    const questionData = response.data.user
-    setBookmarks(questionData)
-  }
-
-  const onClickActivity = async () => {
-    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Bookmarks/Activity`)
-    const questionData = response.data.user
-    setBookmarks(questionData)
-  }
-
-  const onClickNewest = async () => {
-    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Bookmarks/Newest`)
-    const questionData = response.data.user
-    setBookmarks(questionData)
-  }
-
-  const onClickViews = async () => {
-    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Bookmarks/Views`)
-    const questionData = response.data.user
-    setBookmarks(questionData)
-  }
-
-  const onClickAdded = async () => {
-    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Bookmarks/Added`)
-    const questionData = response.data.user
-    setBookmarks(questionData)
-  }
-
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{answersCount} Bookmarks</h3>
-        <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button onClick={onClickScore}>Score</Button>
-            <Button onClick={onClickActivity}>Activity</Button>
-            <Button onClick={onClickNewest}>Newest</Button>
-            <Button onClick={onClickViews}>Views</Button>
-            <Button onClick={onClickAdded}>Added</Button>
-          </ButtonGroup>
-        </div>
       </div>
       <List>
         {
           bookmarks.map((post) => {
-            // const {
-            //   answerCount,
-            //   answeredDate,
-            //   bookmarkCount,
-            //   isAccepted,
-            //   numOfVotes,
-            //   url,
-            //   questionTitle,
-            //   tags,
-            //   viewCount
-            // } = post
             return (
               <>
                 <ListItem style={postListItem}>
