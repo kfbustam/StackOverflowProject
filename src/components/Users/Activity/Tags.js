@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -58,35 +56,6 @@ const silverCircleIconStyle = {
 function Tags() {
   const [tags, setTags] = useState([])
   const [tcount, setTagCount] = useState(0)
-  // [
-  //   {
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'javascript',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'python',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   },
-  //   {
-  //     isBronze: false,
-  //     isSilver: false,
-  //     isGold: true,
-  //     name: 'pandas',
-  //     postCount: 1250,
-  //     scoreCount: 2040,
-  //     url: 'https://stackoverflow.com/questions/tagged/javascript'
-  //   }
-  // ]
 
   const navigate = useNavigate()
   const user = {
@@ -122,12 +91,6 @@ function Tags() {
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{tcount} Tag(s)</h3>
-        <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Score</Button>
-            <Button>Name</Button>
-          </ButtonGroup>
-        </div>
       </div>
       <List>
         {
@@ -139,13 +102,16 @@ function Tags() {
               name,
               postCount,
               scoreCount,
-              url
+              tagId
             } = tag
             return (
               <>
                 <ListItem style={tagListItemStyle}>
                   <div>
-                    <a className='search-tag-block me-1' href={url}>{name}</a>
+                    <div className='search-tag-block me-1' onClick={()=>{
+                      const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+                      navigate(`/questions?tagID=${tagId}&userID=${userID}`)
+                    }}>{name}</div>
                     {isGold && <IconButton key="gold" size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
                     {isSilver && <IconButton key="silver" size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
                     {isBronze && <IconButton key="bronze" size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}

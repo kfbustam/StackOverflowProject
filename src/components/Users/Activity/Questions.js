@@ -49,16 +49,45 @@ function Questions() {
     fetchQuestions()
   }, [])
 
+
+  const onClickScore = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Questions/Score`)
+    const questionData = response.data.user
+    setQuestions(questionData)
+  }
+
+  const onActivityScore = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Questions/Activity`)
+    const questionData = response.data.user
+    setQuestions(questionData)
+  }
+
+  const onNewestScore = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Questions/Newest`)
+    const questionData = response.data.user
+    setQuestions(questionData)
+  }
+
+  const onViewsScore = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Questions/Newest`)
+    const questionData = response.data.user
+    setQuestions(questionData)
+  }
+
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{quescount} Question(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Score</Button>
-            <Button>Activity</Button>
-            <Button>Newest</Button>
-            <Button>Views</Button>
+            <Button onClick={onClickScore}>Score</Button>
+            <Button onClick={onActivityScore}>Activity</Button>
+            <Button onClick={onNewestScore}>Newest</Button>
+            <Button onClick={onViewsScore}>Views</Button>
           </ButtonGroup>
         </div>
       </div>
@@ -71,9 +100,9 @@ function Questions() {
               numOfVotes,
               questionId,
               questionTitle,
+              title,
               admin_approval,
-              tags,
-              viewCount
+              tags
             } = post
             return (
               <>
@@ -81,11 +110,12 @@ function Questions() {
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%', gap: 5}}>
                     <div style={{display: 'flex', margin: 'auto 0px auto 0px'}}>{numOfVotes} votes</div>
                     {isAccepted?<Chip icon={ <Check />} label="Best Answer" color="success" />:null}
-                    {admin_approval?null:<Chip icon={ <PendingActionsIcon />} label="Pending Approval" color="error" />}
+                    {admin_approval ? <Chip icon={ <PendingActionsIcon />} label="Pending Approval" color="error" /> : <></>}
                   </div>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                     <h3>
-                      <a onClick={() => navigate(`/questions/${questionId}`)} style={{color: '#0074cc', fontSize: 17}}>{truncate(questionTitle)}</a>
+                      {questionTitle ? <a onClick={() => navigate(`/questions/${questionId}`)} style={{color: '#0074cc', fontSize: 17}}>{questionTitle ? truncate(questionTitle) : ''}</a> : <></>}
+                      {title ? <a onClick={() => navigate(`/questions/${questionId}`)} style={{color: '#0074cc', fontSize: 17}}>{questionTitle ? truncate(questionTitle) : ''}</a> : <></>}
                     </h3>
                   </div>
                   <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>

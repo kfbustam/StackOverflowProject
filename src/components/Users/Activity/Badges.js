@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -18,12 +16,6 @@ const badgeGridStyle = {
   gridTemplateColumns: '1fr 1fr 1fr 1fr',
   columnGap: 10,
   rowGap: 15,
-}
-
-const filterButtonGroupStyle = {
-  display: 'flex',
-  margin: '15px 0px 15px 0px',
-  justifyContent: 'end'
 }
 
 const goldCircleIconStyle = {
@@ -86,13 +78,6 @@ function Badges() {
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{bcount} Badge(s)</h3>
-        <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Recent</Button>
-            <Button>Class</Button>
-            <Button>Name</Button>
-          </ButtonGroup>
-        </div>
       </div>
       <div style={badgeGridStyle}>
         {badges.length > 0 && 
