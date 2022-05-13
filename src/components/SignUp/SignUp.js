@@ -66,7 +66,8 @@ function SignUp() {
                 localStorage.setItem('user', JSON.stringify({
                     username: newUser.username,
                     email: newUser.email,
-                    _id: newUser._id
+                    _id: newUser._id,
+                    profileURL: newUser.profileURL
                 }))
     
                 navigate('/')
