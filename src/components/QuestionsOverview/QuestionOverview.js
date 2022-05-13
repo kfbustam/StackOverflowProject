@@ -466,7 +466,7 @@ const QuestionOverview = () => {
                 {a.comment_id.map((c) => (
                   <div className="text-sm border-b border-gray-300">
                     {c.comment}
-                    <span className="ml-[20%] font-thin w-full text-xs text-right">{ a.user_id.username} asked { getNumberOfDays(a.updatedAt)}</span>
+                    <span className="ml-[20%] font-thin w-full text-xs text-right">{ c.user?c.user.username:null} asked { getNumberOfDays(a.updatedAt)}</span>
                 </div>
                 ))}
                 <form>
