@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Tabs from '@mui/material/Tabs';
@@ -14,6 +14,8 @@ import Profile from './Profile';
 import Activity from './Activity';
 import defaultimg from '../../default/default.png';
 import API_URL from '../../apiConfig'
+
+
 
 const rootStyle = {
   display: 'flex',
@@ -34,6 +36,8 @@ function Users() {
   const [tab, setTab] = useState('activity')
   const [userData, setUserData] = useState(null)
   const [profileimage, setimgData] = useState(null)
+  let { paramid } = useParams();
+  console.log(paramid)
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -43,7 +47,12 @@ function Users() {
     if (userData != null) return
     async function fetchInfo() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getBasicDetails/` + user._id )
+      if(!paramid)
+      {
+        paramid = user._id
+      }
+      const response = await axios.get(`${API_URL}/api/user/getBasicDetails/` + paramid )
+      console.log(response)
       setimgData(`${API_URL}/image/${response.data.user.profileURL}`)
       let {
         about,
@@ -64,7 +73,8 @@ function Users() {
         upvotenum,
         username,
         lastSeen,
-        profileURL
+        profileURL,
+        _id
       } = response.data.user;
       
       setUserData({
@@ -99,7 +109,7 @@ function Users() {
           </div>
         </div>
         <div style={{display: 'flex', flexDirection: 'row'}}>
-          <Button key="askQuestion" onClick={() => navigate('/editProfile')} variant="contained" style={{height: 40}}>Edit profile</Button>
+         {JSON.parse(localStorage.getItem("user"))._id==paramid ?<Button key="askQuestion" onClick={() => navigate('/editProfile')} variant="contained" style={{height: 40}}>Edit profile</Button> :null}
         </div>
       </div>
       <Tabs
