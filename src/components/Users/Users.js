@@ -37,20 +37,13 @@ function Users() {
   const [userData, setUserData] = useState(null)
   const [profileimage, setimgData] = useState(null)
   let { paramid } = useParams();
-  console.log(paramid)
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
   }
 
   useEffect(() => {
-    if (userData != null) return
     async function fetchInfo() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      if(!paramid)
-      {
-        paramid = user._id
-      }
       const response = await axios.get(`${API_URL}/api/user/getBasicDetails/` + paramid )
       console.log(response)
       setimgData(`${API_URL}/image/${response.data.user.profileURL}`)
@@ -90,7 +83,7 @@ function Users() {
       })
     }
     fetchInfo()
-  }, [userData])
+  }, [paramid])
 
   return (
     <div style={rootStyle}>

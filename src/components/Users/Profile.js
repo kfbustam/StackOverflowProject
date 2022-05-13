@@ -47,9 +47,7 @@ function Profile() {
   useEffect(() => {
     if (Object.values(profile).length > 0) return
     async function fetchProfile() {
-      const response = await axios.get(`${API_URL}/api/user/getProfileTab/` + window.location.href
-.substring(window.location.href
-.lastIndexOf('/') + 1) )
+      const response = await axios.get(`${API_URL}/api/user/getProfileTab/` + window.location.href.substring(window.location.href.lastIndexOf('/') + 1) )
       const userData = response.data.user
       setRepCount(userData["stats"]["reputationCount"])
       setAnswer(userData["stats"]["answersCount"])

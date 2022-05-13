@@ -68,15 +68,36 @@ function Answers() {
   fetchAnswers()
   }, [])
 
+  const onClickScore = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Answers/Score`)
+    const answersData = response.data.user
+    setAnswers(answersData)
+  }
+
+  const onActivityScore = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Answers/Activity`)
+    const answersData = response.data.user
+    setAnswers(answersData)
+  }
+
+  const onNewestScore = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Answers/Newest`)
+    const answersData = response.data.user
+    setAnswers(answersData)
+  }
+
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{anscount} Answer(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Score</Button>
-            <Button>Activity</Button>
-            <Button>Newest</Button>
+            <Button onClick={onClickScore}>Score</Button>
+            <Button onClick={onActivityScore}>Activity</Button>
+            <Button onClick={onNewestScore}>Newest</Button>
           </ButtonGroup>
         </div>
       </div>
