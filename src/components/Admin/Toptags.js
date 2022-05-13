@@ -8,12 +8,16 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import axios from 'axios'
 import API_URL from '../../apiConfig'
+import { useNavigate } from 'react-router-dom'
+
 
 export default function Toptags() {
     const [tags, setTags] = useState([{}])
     const [filteredTags, setFilteredTags] = useState([{}])
     const [tagNames, setTagNames] = useState([])
     const [searchText, setSearchText] = useState('')
+    const navigate = useNavigate()
+
   
     useEffect(() => {
       axios.get(`${API_URL}/api/user/top10Results`)
@@ -46,7 +50,7 @@ export default function Toptags() {
         {filteredTags.map(tag => (
           <Col sm={6} md={filteredTags.length < 3 ? 6 : 4} lg={filteredTags.length < 3 ? 4 : 3} className='mb-3'>
             <Container className='all-tags-tag-container pt-2'>
-              <div className='all-tags-block'>{tag.name}</div>
+            <div className='all-tags-block' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>
               <p className='all-tags-description mt-2'>{tag.description}</p>
               <div className='all-tags-count-container'>
                 <p className='all-tags-count'>{tag.count} questions</p>

@@ -32,6 +32,7 @@ import QuestionOverview from './components/QuestionsOverview/QuestionOverview';
 import Search from './components/Search/Search';
 import AllUsers from './components/AllUsers/AllUsers'
 import AllTags from './components/AllTags/AllTags'
+import Questionactivity from './components/QuestionsOverview/Questionactivity';
 
 import Toptags from './components/Admin/Toptags';
 
@@ -238,9 +239,12 @@ function App() {
         <Route exact path="/questions/edit/:id" element={localStorage.getItem('jwt') != null ? <EditQuestion /> : <Navigate to='/login'/>} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
+
         <Route exact path="/askQuestion" element={<PostQuestion />} />
         <Route path="/myMessages" element={<MyMessages />} />
         <Route exact path="/myMessages/:roomID" element={<MyMessages />} />
+        <Route exact path="/questionactivity/:questionID" element={<Questionactivity />} />
+
 
         <Route exact path="/admin" element={(user && user.email === 'admin@gmail.com') ? <Admin /> : <Navigate to='/' />} />
 
@@ -258,6 +262,14 @@ function App() {
 
 
         <Route path="/search/:search_query" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='questions'/>
+              <Search/>
+            </div>    
+          </div>
+        }/>
+        <Route path="/search/" element={   
           <div className='stack-layout'>
             <div >
               <LeftSideBar activeTab='questions'/>

@@ -545,6 +545,12 @@ class Question {
                                 .populate({ path: 'question_id', populate: { path: 'tags', select: 'name' }, select: 'tags title'})
                                 .populate('user_id', '_id username')
 
+                        if (data === 'undefined') {
+                                questions.forEach(question => question.type = 'question')
+                                answers.forEach(answer => answer.type = 'answer')
+                                return [...questions, ...answers]
+                        }
+
                         searchCriteria.forEach(criteria => {
                                 if (criteria.substring(0, 3) === 'is:') {
                                         const type = criteria.substring(3, criteria.length)
@@ -741,7 +747,7 @@ class Question {
 
          static getAllQuestionActivities = async (id) => {
                 try {
-                        const result = await QuestionModel.find({"_id":id},{activity:1,_id:0}).populate('activity');
+                        const result = await QuestionModel.find({"_id":id},{activity:1,_id:0}).populate({path: 'activity', populate:{ path:'user',select:'_id username'}});
                         
                          if(result)
                          {

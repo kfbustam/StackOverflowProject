@@ -10,6 +10,7 @@ import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import { Link } from 'react-router-dom'
 import { Typeahead } from 'react-bootstrap-typeahead'
+import defaultimg from '../../default/default.png'
 
 
 
@@ -169,10 +170,7 @@ function AllUsers() {
     .then(res => {
       const dataUsershigh = res.data.top10Results.top10Users_high_reputation
 
-      dataUsershigh.forEach(user => {
-        user.picture = 'http://placekitten.com/200/300'
-        
-      })
+
 
       setUsers(dataUsershigh)
       
@@ -187,10 +185,7 @@ function AllUsers() {
     .then(res => {
       const dataUsers = res.data.top10Results.top10Users_low_reputation
 
-      dataUsers.forEach(user => {
-        user.picture = 'http://placekitten.com/200/300'
-        
-      })
+
 
      
       setFilteredUsers(dataUsers)
@@ -214,8 +209,8 @@ function AllUsers() {
       <Row className='mt-5'>
         {users.map(user => (
           <Col sm={6} md={users.length < 3 ? 6 : 4} lg={users.length < 3 ? 4 : 3} className='mb-3'>
-            <Image src={user.picture} className='all-users-image me-2'/>
-            <Link to='/users' className='all-users-link'>{user.username && user.username}</Link>
+            <Image src={user.profileURL ? `${API_URL}/image/${user.profileURL}` : defaultimg} className='all-users-image me-2'/>
+            <Link to={`/users/${user._id}`} className='all-users-link'>{user.username && user.username}</Link>
             <p className='all-users-location'>{user.location && user.location}</p>
             <p className='all-users-reputation mb-0'>{user.reputation}</p>
           </Col>
@@ -227,8 +222,8 @@ function AllUsers() {
       <Row className='mt-5'>
         {filteredUsers.map(user => (
           <Col sm={6} md={filteredUsers.length < 3 ? 6 : 4} lg={filteredUsers.length < 3 ? 4 : 3} className='mb-3'>
-            <Image src={user.picture} className='all-users-image me-2'/>
-            <Link to='/users' className='all-users-link'>{user.username && user.username}</Link>
+            <Image src={user.profileURL ? `${API_URL}/image/${user.profileURL}` : defaultimg} className='all-users-image me-2'/>
+            <Link to={`/users/${user._id}`} className='all-users-link'>{user.username && user.username}</Link>
             <p className='all-users-location'>{user.location && user.location}</p>
             <p className='all-users-reputation mb-0'>{user.reputation}</p>
           </Col>

@@ -21,7 +21,7 @@ const Search = () => {
     useEffect(() => {
         setResultString('')
         setTag({})
-        showTagDesc()
+        if (search_query) showTagDesc()
 
         axios.get(`${API_URL}/api/question/search/${search_query}`)
         .then(res => {
@@ -147,7 +147,7 @@ const Search = () => {
                                 <p className='search-author'>{post.type === 'question' ? (post.modifiedAt ? 'Modifed ' : 'Asked ') : 'Answered '} 
                                 {post.modifiedAt ? <ReactTimeAgo date={post.modifiedAt ? post.modifiedAt : date} locale="en-US" />
                                     : <ReactTimeAgo date={post.createdAt ? post.createdAt : date} locale="en-US" />} by
-                                    <Link to='/users' className='search-name-link'> {post.type === 'question' ? post.user?.username : post.user_id?.username}</Link>
+                                    <Link to={post.type === 'question' ? `/users/${post.user?._id}` : `/users/${post.user_id?._id}`} className='search-name-link'> {post.type === 'question' ? post.user?.username : post.user_id?.username}</Link>
                                 </p>
                             </Col>
                         </Row>

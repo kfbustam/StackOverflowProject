@@ -55,6 +55,14 @@ const QuestionOverview = () => {
     window.location.reload();
   }
 
+
+  function addBookmark(u_id, q_id){
+    axios.post(`${API_URL}/api/question/addBookmark`, {
+      user: u_id,
+      question: q_id
+    }).then(alert("Bookmark Added!"))
+  }
+
   function addComment(type, qa_id, u_id) {
     console.log(type)
     if (type === "question") {
@@ -184,7 +192,7 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <br />
-            <button className="ml-2">
+            <button onClick={(e) => addBookmark(user._id, data?.data.question._id)} className="ml-2">
               <svg
                 aria-hidden="true"
                 class="svg-icon iconBookmark"
@@ -196,7 +204,9 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <br />
-            <button className="ml-1.5 mt-1">
+            <button onClick={() => navigate('/questionactivity/'+ data?.data.question._id)} className="ml-1.5 mt-1">
+
+            {/* </button><button className="ml-1.5 mt-1"> */}
               <svg
                 aria-hidden="true"
                 class="mln2 mr0 svg-icon iconHistory"
