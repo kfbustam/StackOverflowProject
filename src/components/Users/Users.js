@@ -102,7 +102,7 @@ function Users() {
           </div>
         </div>
         <div style={{display: 'flex', flexDirection: 'row'}}>
-         {JSON.parse(localStorage.getItem("user"))._id==paramid ?<Button key="askQuestion" onClick={() => navigate('/editProfile')} variant="contained" style={{height: 40}}>Edit profile</Button> :null}
+         {(localStorage.getItem('user') && JSON.parse(localStorage.getItem("user"))._id==paramid) ?<Button key="askQuestion" onClick={() => navigate('/editProfile')} variant="contained" style={{height: 40}}>Edit profile</Button> :null}
         </div>
       </div>
       <Tabs
