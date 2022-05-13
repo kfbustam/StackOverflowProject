@@ -150,7 +150,7 @@ const TagsOverview = () => {
                                 ))}
                                 <p className='search-author'>
                                     <Image src={(question.user && question.user.profileURL) ? `${API_URL}/image/${question.user.profileURL}` : defaultimg} style={{width: '25px', height: '25px', display: 'inline-block'}}/>
-                                    <Link to='/users' className='search-name-link'> {question.user && question.user.username}</Link>
+                                    <Link to={question.user ? `/users/${question.user._id}` : '/'} className='search-name-link'> {question.user && question.user.username}</Link>
                                     <strong> {question.user && question.user.reputation} </strong>
                                     {question.modifiedAt ? 'modifed at ' : 'asked '}
                                     {question.modifiedAt ? <ReactTimeAgo date={question.modifiedAt ? question.modifiedAt : date} locale="en-US" />
