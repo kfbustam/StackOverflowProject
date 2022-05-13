@@ -1,3 +1,4 @@
+import "../Questions/Questions.css";
 import React, { useRef, useState, useEffect } from "react";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import { Editor } from "@tinymce/tinymce-react";
@@ -5,7 +6,8 @@ import axios from "axios";
 import parse from "html-react-parser";
 import { useNavigate, useParams } from "react-router-dom";
 import API_URL from "../../apiConfig";
-import { AddComment, CommentsDisabled } from "@mui/icons-material";
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
 
 const QuestionOverview = () => {
   const [ans, ansSet] = useState(null);
@@ -21,7 +23,13 @@ const QuestionOverview = () => {
     }
   };
 
-  
+  const userCardStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'end',
+    marginRight: 4
+  }
+
   useEffect(() => {
     async function fetchMyAPI() {
       let response = await axios.get(`${API_URL}/api/question/getById/${id}`);
@@ -376,6 +384,19 @@ const QuestionOverview = () => {
               </li>
             </ul>
           </div>
+          <div className="flex mt-5 w-full">
+                      <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small">
+                        <Avatar src={data?.data.question.body_image}/>
+                      </IconButton>
+                      {/* 
+                      <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
+                      <a onClick={() => navigate('/profile')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ data?.data.question.user.username ? <p>{data?.data.question.user.username}</p>  : <p></p>}</a>
+
+                      <span style={{ margin: 'auto 0px auto 0px'}}>{ data?.data.question.user.username ? <p>{data?.data.question.user.reputation}</p>  : <p></p>}</span>
+                      {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
+                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ data?.data.question.user.username ? <p>{`asked ${getNumberOfDays(data?.data.question.user.updatedAt)}`}</p>  : <p></p>}</a>
+                      
+                    </div>
         </div>
         <div className="">
           <div className="font-semibold text-2xl">Answers</div>
@@ -457,6 +478,16 @@ const QuestionOverview = () => {
                 >
                   comment
                 </button>
+                <div className="flex mt-5 w-full">
+                      {/* 
+                      <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
+                      <a onClick={() => navigate('/profile')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ a.user_id.username ? <p>{a.user_id.username}</p>  : <p></p>}</a>
+
+                      <span style={{ margin: 'auto 0px auto 0px'}}>{ a.user_id.username ? <p>{a.user_id.reputation}</p>  : <p></p>}</span>
+                      {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
+                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ a.user_id.username ? <p>{`asked ${getNumberOfDays(a.updatedAt)}`}</p>  : <p></p>}</a>
+                      
+                </div>
               </div>
               </div>
             </div>
