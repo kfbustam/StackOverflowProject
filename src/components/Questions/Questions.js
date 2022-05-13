@@ -276,12 +276,12 @@ export default function Questions() {
                       </div>
                     </div>
                     <div style={userCardStyle}>
-                      <IconButton key="profileIcon" onClick={() => navigate('/users/'+question.user._id)} size="small">
+                      <IconButton key="profileIcon" onClick={() => localStorage.getItem('jwt')!= null? navigate('/users/'+question.user._id): navigate('/login')} size="small">
                         <Avatar src={question.user && question.user.profileURL ? `${API_URL}/image/${question.user.profileURL}` : ''}/>
                       </IconButton>
                       {/* 
                       <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
-                      <a onClick={() => navigate('/users/'+question.user._id)} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{question.user.username}</p>  : <p></p>}</a>
+                      <a onClick={() => localStorage.getItem('jwt')!= null? navigate('/users/'+question.user._id): navigate('/login')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{question.user.username}</p>  : <p></p>}</a>
                       <br/>
                       <span style={{ margin: 'auto 0px auto 0px'}}>{ question.user ? <p>Reputation: {numFormatter(question.user.reputation)}</p>  : <p></p>}</span>
                       {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
