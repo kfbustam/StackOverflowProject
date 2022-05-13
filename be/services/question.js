@@ -747,7 +747,7 @@ class Question {
 
          static getAllQuestionActivities = async (id) => {
                 try {
-                        const result = await QuestionModel.find({"_id":id},{activity:1,_id:0}).populate('activity');
+                        const result = await QuestionModel.find({"_id":id},{activity:1,_id:0}).populate({path: 'activity', populate:{ path:'user',select:'_id username'}});
                         
                          if(result)
                          {
