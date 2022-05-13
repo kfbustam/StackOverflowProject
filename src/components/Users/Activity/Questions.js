@@ -41,8 +41,7 @@ function Questions() {
   useEffect(() => {
     if (questions.length > 0) return
     async function fetchQuestions() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getQuestionsTab/` + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getQuestionsTab/` + window.location.href.substring(window.location.href.lastIndexOf('/') + 1) )
       const questionData = response.data.user
       setQuestionCount(response.data.user.length)
       setQuestions(questionData)
