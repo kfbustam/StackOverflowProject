@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema(
   {
-    date: { type: String, required: true },
+    date: { type: Date, required: true },
     what: { type: String, required: true },
     user: {
       type: mongoose.Schema.Types.ObjectId,
