@@ -132,21 +132,23 @@ export default function Questions() {
 
   const handleInteresting = async () => {
     setEnabledFilter('interesting')
-    const userID = JSON.parse(localStorage.getItem("user"))._id
-    const response = await axios.get(`${API_URL}/getSortPost/${userID}/Questions/Score`)
-    console.log(response)
+    const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Interesting`)
+    setData(response)
   }
-  const handleBountied = () => {
-    setEnabledFilter('bountied')
-  }
-  const handleHot = () => {
+  const handleHot = async () => {
     setEnabledFilter('hot')
+    const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Hot`)
+    setData(response)
   }
-  const handleWeek = () => {
-    setEnabledFilter('week')
+  const handleScore = async () => {
+    setEnabledFilter('score')
+    const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Score`)
+    setData(response)
   }
-  const handleMonth = () => {
-    setEnabledFilter('month')
+  const handleUnanswered = async () => {
+    setEnabledFilter('unanswered')
+    const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Unanswered`)
+    setData(response)
   }
   
   return (
@@ -166,10 +168,9 @@ export default function Questions() {
       <div style={{  display: 'flex', justifyContent: 'end' }}>
         <Tabs value={enabledFilter} onChange={setEnabledFilter} aria-label="basic tabs example">
           <Tab label="Interesting" onClick={handleInteresting} value={'interesting'} />
-          <Tab label="Bountied" onClick={handleBountied} value={'bountied'} />
           <Tab label="Hot" onClick={handleHot} value={'hot'} />
-          <Tab label="Week" onClick={handleWeek} value={'week'} />
-          <Tab label="Month" onClick={handleMonth} value={'month'} />
+          <Tab label="Score" onClick={handleScore} value={'score'} />
+          <Tab label="Unanswered" onClick={handleUnanswered} value={'unanswered'} />
         </Tabs>
         </div>
       <Divider />
