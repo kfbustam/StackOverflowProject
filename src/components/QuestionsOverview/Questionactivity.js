@@ -1,20 +1,23 @@
 import axios from 'axios';
 import { Button, Row, Col, Table } from 'react-bootstrap';
 import API_URL from '../../apiConfig'
-import React, { useState, useEffect, useParams} from 'react'
+import React, { useState, useEffect} from 'react'
+import { useParams } from 'react-router-dom'
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 
 
 function Questionactivity() {
 
     const [tags, setTags] = useState([{}])
-    const { id } = useParams();
+    const { questionID } = useParams();
 
 
     useEffect(() => {
-        axios.get(`${API_URL}/api/question/getAllQuestionActivities/${id}`)
+        console.log(questionID)
+        axios.get(`${API_URL}/api/question/getAllQuestionActivities/${questionID}`)
         .then(res => {
-          const dataTags = res.data.data
+          const dataTags = res.data.data[0].activity
+          console.log(dataTags)
     
           setTags(dataTags)
 
@@ -41,6 +44,7 @@ function Questionactivity() {
                                         <th>when</th>
                                         <th>what</th>
                                         <th>by</th>
+                                        <th>comment</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -48,9 +52,10 @@ function Questionactivity() {
                                         tags && tags.map((tags, index) =>
                                             <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{tags.created}</td>
-                                                <td>{tags.type}</td>
+                                                <td>{tags.date}</td>
+                                                <td>{tags.what}</td>
                                                 <td>{tags._id ? tags._id: 'Unknown'}</td>
+                                                <td>{tags.comment}</td>
                                             </tr>
                                         )
                                     }
