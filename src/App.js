@@ -202,13 +202,13 @@ function App() {
             </div>    
           </div>
         }/>
-        <Route path="/questions" element={   
+        <Route path="/questions" element={  localStorage.getItem('jwt') != null ?
           <div className='stack-layout'>
             <div className='stack-layout-container'>
               <LeftSideBar activeTab='questions'/>
               <Questions/>
             </div>    
-          </div>
+          </div> : <Navigate to='/login' />
         }/>
         <Route path="/tags" element={   
           <div className='stack-layout'>
@@ -234,8 +234,8 @@ function App() {
           </div>
         }/>
         <Route exact path="/users/:paramid" element={<Users />} />
-        <Route exact path="/questions/:id" element={<QuestionOverview />} />
-        <Route exact path="/questions/edit/:id" element={<EditQuestion />} />
+        <Route exact path="/questions/:id" element={localStorage.getItem('jwt') != null ? <QuestionOverview /> : <Navigate to='/login' />} />
+        <Route exact path="/questions/edit/:id" element={localStorage.getItem('jwt') != null ? <EditQuestion /> : <Navigate to='/login'/>} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/askQuestion" element={<PostQuestion />} />
@@ -281,13 +281,14 @@ function App() {
             </div>    
           </div>
         }/>
-        <Route exact path="/questions/tagged/:tagName" element={   
+        <Route exact path="/questions/tagged/:tagName" element={
+          localStorage.getItem('jwt') != null ?
           <div className='stack-layout'>
             <div >
               <LeftSideBar activeTab='questions'/>
               <TagsOverview/>
             </div>    
-          </div>
+          </div> : <Navigate to='/login' />
         }/>
         <Route exact path="/editProfile" element={   
           <div className='stack-layout'>
