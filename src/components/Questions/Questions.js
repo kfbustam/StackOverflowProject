@@ -286,7 +286,7 @@ export default function Questions() {
                           question.tags.map(tag => {
                             //const {name, url} = tag;
                             //return <a className='search-tag-block me-1' href={url}>{name}</a>;
-                            return <a className='search-tag-block me-1' >{tag.name}</a>;
+                            return <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>;
                           })
                         }
                       </div>
@@ -301,7 +301,11 @@ export default function Questions() {
                       <br/>
                       <span style={{ margin: 'auto 0px auto 0px'}}>{ question.user ? <p>Reputation: {numFormatter(question.user.reputation)}</p>  : <p></p>}</span>
                       {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
-                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{`asked ${getNumberOfDays(question.updatedAt)}`}</p>  : <p></p>}</a>
+                      <p style={{fontSize: 14}} className='mt-2 ms-1'>
+                            {question.modifiedAt ? ' modified at ' : ' asked '}
+                            {question.modifiedAt ? <ReactTimeAgo date={question.modifiedAt ? question.modifiedAt : date} locale="en-US" />
+                                    : <ReactTimeAgo date={question.createdAt ? question.createdAt : date} locale="en-US" />}
+                            </p>
                       
                     </div>
                   </div>
