@@ -545,6 +545,12 @@ class Question {
                                 .populate({ path: 'question_id', populate: { path: 'tags', select: 'name' }, select: 'tags title'})
                                 .populate('user_id', '_id username')
 
+                        if (data === 'undefined') {
+                                questions.forEach(question => question.type = 'question')
+                                answers.forEach(answer => answer.type = 'answer')
+                                return [...questions, ...answers]
+                        }
+
                         searchCriteria.forEach(criteria => {
                                 if (criteria.substring(0, 3) === 'is:') {
                                         const type = criteria.substring(3, criteria.length)

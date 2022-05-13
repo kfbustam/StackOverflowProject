@@ -265,6 +265,14 @@ function App() {
             </div>    
           </div>
         }/>
+        <Route path="/search/" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='questions'/>
+              <Search/>
+            </div>    
+          </div>
+        }/>
         <Route path="/allUsers" element={   
           <div className='stack-layout'>
             <div >
