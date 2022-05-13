@@ -45,15 +45,39 @@ function Reputation() {
     fetchReputations()
   }, [])
 
+  const onClickPost = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Reputations/Post`)
+    const reputationData = response.data.user
+    setReputations(reputationData)
+  }
+
+
+  const onClickTime = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Reputations/Time`)
+    const reputationData = response.data.user
+    setReputations(reputationData)
+  }
+
+
+  const onClickGraph = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Reputations/Graph`)
+    const reputationData = response.data.user
+    setReputations(reputationData)
+  }
+
+
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>Reputation</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Post</Button>
-            <Button>Time</Button>
-            <Button>Graph</Button>
+            <Button onClick={onClickPost}>Post</Button>
+            <Button onClick={onClickTime}>Time</Button>
+            <Button onClick={onClickGraph}>Graph</Button>
           </ButtonGroup>
         </div>
       </div>

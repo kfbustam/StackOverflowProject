@@ -82,15 +82,35 @@ function Badges() {
   fetchAnswers()
   }, [])
 
+  const onClickRecent = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Badges/Recent`)
+    const setBadgesData = response.data.user
+    setBadges(setBadgesData)
+  }
+
+  const onClickClass = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Badges/Class`)
+    const setBadgesData = response.data.user
+    setBadges(setBadgesData)
+  }
+
+  const onClickName = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Badges/Name`)
+    const setBadgesData = response.data.user
+    setBadges(setBadgesData)
+  }
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{bcount} Badge(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Recent</Button>
-            <Button>Class</Button>
-            <Button>Name</Button>
+            <Button onClick={onClickRecent}>Recent</Button>
+            <Button onClick={onClickClass}>Class</Button>
+            <Button onClick={onClickName}>Name</Button>
           </ButtonGroup>
         </div>
       </div>

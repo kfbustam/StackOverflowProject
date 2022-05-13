@@ -118,14 +118,28 @@ function Tags() {
     fetchTags()
   }, [])
 
+  const onClickScore = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Tags/Score`)
+    const tagData = response.data.user
+    setTags(tagData)
+  }
+
+  const onClickName = async () => {
+    const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+    const response = await axios.get(`${API_URL}/api/user/getSortPost/${userID}/Tags/Name`)
+    const tagData = response.data.user
+    setTags(tagData)
+  }
+
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{tcount} Tag(s)</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Score</Button>
-            <Button>Name</Button>
+            <Button onClick={onClickScore}>Score</Button>
+            <Button onClick={onClickName}>Name</Button>
           </ButtonGroup>
         </div>
       </div>
