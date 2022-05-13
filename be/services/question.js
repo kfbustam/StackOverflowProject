@@ -328,7 +328,7 @@ class Question {
                         let result = {}
                         const questions = await QuestionModel.find({"isApproved":true})
                                 .populate('tags', 'name')
-                                .populate('user', 'username reputation')   
+                                .populate('user')   
                                 .sort({"createdAt":1});
                         if (questions?.length) {
                                 result.data = questions

@@ -74,7 +74,7 @@ export default function Question() {
     .then(res => {
       const dataQuestions = res.data.top10Results.top10Questions
       setData(dataQuestions)
-      console.log("bleh",data);
+      //console.log("bleh",data);
     })
     .catch(err => {
       console.log(err)
