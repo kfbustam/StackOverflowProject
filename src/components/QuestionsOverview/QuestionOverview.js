@@ -204,7 +204,9 @@ const QuestionOverview = () => {
               </svg>
             </button>
             <br />
-            <button className="ml-1.5 mt-1">
+            <button onClick={() => navigate('/questionactivity/'+ data?.data.question._id)} className="ml-1.5 mt-1">
+
+            {/* </button><button className="ml-1.5 mt-1"> */}
               <svg
                 aria-hidden="true"
                 class="mln2 mr0 svg-icon iconHistory"
