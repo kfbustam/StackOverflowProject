@@ -18,7 +18,6 @@ const filterButtonGroupStyle = {
 
 function Reputation() {
   const [reputations, setReputations] = useState([])
-  const [repCount, setReputationCount] = useState(0)
 
   const [errorMessages, setErrorMessages] = useState([])
   const user = {
@@ -35,82 +34,13 @@ function Reputation() {
     silverCount: 12,
     username: 'kfbustam',
   }
-  const {
-    answersCount,
-  } = user
-
-  const numFormatter = (num) => Math.abs(num) > 9999 ? 
-    Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + 'm' : 
-    (Math.abs(num) > 999 ? 
-    Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num))
-
-  const timeStrings = {
-    'yesterday': [
-      {
-        eventCount: 1,
-        questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
-        url: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
-        reputationCount: 50,
-        tags: [
-          {
-            name: 'javascript',
-            url: 'https://stackoverflow.com/questions/tagged/javascript'
-          },
-          {
-            name: 'python',
-            url: 'https://stackoverflow.com/questions/tagged/javascript'
-          },
-          {
-            name: 'pandas',
-            url: 'https://stackoverflow.com/questions/tagged/javascript'
-          }
-        ],
-        user: {
-          reputationCount: 123,
-          username: 'kfbustam',
-          userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
-          profileIconSrc: 'http://placekitten.com/200/300' 
-        },
-      }
-    ],
-    '2 days ago': [
-      {
-        eventCount: 1,
-        questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
-        url: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
-        reputationCount: 50,
-        tags: [
-          {
-            name: 'javascript',
-            url: 'https://stackoverflow.com/questions/tagged/javascript'
-          },
-          {
-            name: 'python',
-            url: 'https://stackoverflow.com/questions/tagged/javascript'
-          },
-          {
-            name: 'pandas',
-            url: 'https://stackoverflow.com/questions/tagged/javascript'
-          }
-        ],
-        user: {
-          reputationCount: 123,
-          username: 'kfbustam',
-          userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
-          profileIconSrc: 'http://placekitten.com/200/300' 
-        },
-      }
-    ]
-  }
-
+  
   useEffect(() => {
     if (Object.values(reputations).length > 0) return
     async function fetchReputations() {
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get(`${API_URL}/api/user/getReputationHistory/` + user._id )
       const reputationData = response.data.groupByDate;
-      setReputationCount(response.data.groupByDate.length)
-      const count = reputationData
       setReputations(reputationData)
     }
     fetchReputations()

@@ -106,28 +106,28 @@ export default function Questions() {
 }
 
 
-  const questions = [{
-    answerCount: 1,
-    isAnswered: false,
-    lastModified: 'modified Apr 7 at 11:14',
-    questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
-    questionURL: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
-    // reputationCount: 50,
-    tags: [
-      {
-        name: 'javascript',
-        // url: 'https://stackoverflow.com/questions/tagged/javascript'
-      }
-    ],
-    user: {
-      reputationCount: 123,
-      username: 'kfbustam',
-      userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
-      profileIconSrc: 'http://placekitten.com/200/300' 
-    },
-    voteCount: 4,
-    viewCount: 124
-  }]
+  // const questions = [{
+  //   answerCount: 1,
+  //   isAnswered: false,
+  //   lastModified: 'modified Apr 7 at 11:14',
+  //   questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
+  //   questionURL: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
+  //   // reputationCount: 50,
+  //   tags: [
+  //     {
+  //       name: 'javascript',
+  //       // url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //     }
+  //   ],
+  //   user: {
+  //     reputationCount: 123,
+  //     username: 'kfbustam',
+  //     userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
+  //     profileIconSrc: 'http://placekitten.com/200/300' 
+  //   },
+  //   voteCount: 4,
+  //   viewCount: 124
+  // }]
 
   const handleInteresting = () => {}
   const handleBountied = () => {}
@@ -147,7 +147,7 @@ export default function Questions() {
         <h2>
           Questions
         </h2>
-        <Button key="askQuestion" onClick={() => navigate('/askQuestion')} variant="contained" style={{height: 40}}>Ask question</Button>
+        <Button key="askQuestion" onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')} variant="contained" style={{height: 40}}>Ask question</Button>
       </div>
       <ButtonGroup style={{ marginLeft: '52%' }}>
         <Button variant='outline-secondary' onClick={handleInteresting}>Interesting</Button>
