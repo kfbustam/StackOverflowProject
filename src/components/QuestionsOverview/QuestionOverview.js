@@ -10,6 +10,8 @@ import { AddComment, CommentsDisabled } from "@mui/icons-material";
 const QuestionOverview = () => {
   const [ans, ansSet] = useState(null);
   const [data, dataSet] = useState(null);
+  const [comm, setComment] = useState("");
+  const[qComm, setQComment] = useState("");
   const editorRef = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -18,6 +20,8 @@ const QuestionOverview = () => {
       console.log(editorRef.current.getContent());
     }
   };
+
+  
   useEffect(() => {
     async function fetchMyAPI() {
       let response = await axios.get(`${API_URL}/api/question/getById/${id}`);
@@ -44,18 +48,21 @@ const QuestionOverview = () => {
   }
 
   function addComment(type, qa_id, u_id) {
+    console.log(type)
     if (type === "question") {
       axios.post(`${API_URL}/api/question/addComment`, {
         question_id: qa_id,
-        comment: editorRef.current.getContent(),
-        userId: u_id,
+        comment: qComm,
+        user_id: u_id,
       });
-      window.location.reload();
+      
+      console.log(editorRef.current.getContent())
+     window.location.reload();
     } else {
       axios.post(`${API_URL}/api/answer/addComment`, {
         answer_id: qa_id,
-        comment: editorRef.current.getContent(),
-        userId: u_id,
+        comment: comm,
+        user_id: u_id,
       });
       window.location.reload();
     }
@@ -90,6 +97,7 @@ const QuestionOverview = () => {
       window.location.reload();
     }
   }
+  
   function getNumberOfDays(start) {
     const date1 = new Date(start);
     const date2 = new Date();
@@ -223,22 +231,11 @@ const QuestionOverview = () => {
                   {c.comment}
                   </div>
                 ))}
-                <Editor
-                  onInit={(evt, editor) => (editorRef.current = editor)}
-                  init={{
-                    height: 200,
-                    width: 550,
-                    menubar: false,
-                    plugins: "lists link codesample image",
-                    toolbar:
-                      "bold italic | link codesample image | bullist numlist ",
-                    content_style:
-                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                  }}
-                />
-
+                <form>
+                  <input className="w-full" placeholder="Add Comment" type="text" onChange={e => setQComment(e.target.value)}></input>
+                </form>
                 <button
-                  onClick={(e) => addComment("answer", id, user._id)}
+                  onClick={(e) => addComment("question", id, user._id)}
                   className="bg-[#0A95FF] mt-2 text-white font-light py-2 px-2 rounded"
                 >
                   comment
@@ -444,25 +441,15 @@ const QuestionOverview = () => {
                 {parse(String(a.answer))}
                 <br />
               <div className="">
-                <div className="text-1xl font-bold">Comments</div>
+                <div className=" text-1xl font-bold">Comments</div>
                 {a.comment_id.map((c) => (
-                  <div>
+                  <div className="border-b border-gray-300">
                     {c.comment}
                 </div>
                 ))}
-                <Editor
-                  onInit={(evt, editor) => (editorRef.current = editor)}
-                  init={{
-                    height: 200,
-                    width: 800,
-                    menubar: false,
-                    plugins: "lists link codesample image",
-                    toolbar:
-                      "bold italic | link codesample image | bullist numlist ",
-                    content_style:
-                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                  }}
-                />
+                <form>
+                  <input className="w-full"  placeholder="Add Comment" type="text" onChange={e => setComment(e.target.value)}></input>
+                </form>
 
                 <button
                   onClick={(e) => addComment("answer", a._id, user._id)}
