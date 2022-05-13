@@ -38,97 +38,94 @@ const addQuestion = async (msg, callback) => {
     }
 }
 
-router.get('/getById/:id', async (req, res) => {
-    const question_id = req.params.id
-
-    const response = {}
+const getById = async (msg, callback) => {
+    const data = msg.data;
+    const response={}
     try {
-        const result = await Question.getQuestionById(question_id)
+        const result = await Question.getQuestionById(data)
 
         if(result){
             response.success = true;
             response.question = result;
             response.status = "200";
-            res.status(200).send(response);
+            callback(null,response);
 
         }else{
             response.success = false;
             response.error = "Failed to find question by id.";
             response.status = "400";
-            res.status(400).send(response);
+            callback(null,response);
         }
     } catch (err) {
         console.log(err);
         response.success = false;
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
-        res.status(500).send(response);
+        callback(null,response);
     }
-})
+}
 
 
 // Interesting, Hot, Score, Unanswered questions on Dashboard
-router.get('/getQuestionsByFilter/:filter', async (req, res) => {
-    const filter = req.params.filter
-
+const getQuestionsByFilter = async (msg, callback) => {
+    const data = msg.data
     const response = {}
     try {
-        const result = await Question.getQuestionsByFilter(filter)
+        const result = await Question.getQuestionsByFilter(data)
 
         if(result){
             response.success = true;
             response.question = result;
             response.status = "200";
-            res.status(200).send(response);
+            callback(null,response);
 
         }else{
             response.success = false;
             response.error = "Failed to find question by id.";
             response.status = "400";
-            res.status(400).send(response);
+            callback(null,response);
         }
     } catch (err) {
         console.log(err);
         response.success = false;
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
-        res.status(500).send(response);
+        callback(null,response);
     }
-})
+}
 
 
-router.get('/search/:query?', async (req, res) => {
-    const query = req.params.query
+const search = async (msg, callback) => {
+    const data = msg.data;
 
     const response = {}
 
     try {
-        const result = await Question.search(query)
+        const result = await Question.search(data)
 
         if(result){
             response.success = true;
             response.posts = result;
             response.status = "200";
-            res.status(200).send(response);
+            callback(null,response);
 
         }else{
             response.success = false;
             response.error = "Failed to find posts from search query.";
             response.status = "400";
-            res.status(400).send(response);
+            callback(null,response);
         }
     } catch(err) {
         console.log(err);
         response.success = false;
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
-        res.status(500).send(response);
+        callback(null,response);
     }
-})
-
+}
 
     //Base
-    router.get("/getAllQuestions",  async (req, res) => {
+    const getAllQuestions =  async (msg, callback) => {
         let response={}
 
         try{
@@ -151,12 +148,12 @@ router.get('/search/:query?', async (req, res) => {
                     response.success = true;
                     response.status = "200";
                     response.question= result.data;
-                    res.status(200).send(response);
+                    callback(null,response);
                 }else{
                     response.success = false;
                     response.error = "Cannot fetch the questions";
                     response.status = "400";
-                    res.status(400).send(response);
+                    callback(null,response);
                 }
            
         }catch(e){
@@ -164,10 +161,10 @@ router.get('/search/:query?', async (req, res) => {
             response.success = false;
             response.error = "Some error occurred. Please try again later";
             response.status = "500";
-            res.status(500).send(response);
+            callback(null,response);
         }
     
-    })    
+    }
 
 // const runRedis = async() =>{
 //     router.get("/getAllQuestions",  async (req, res) => {
@@ -566,7 +563,21 @@ router.post("/addComment", async (req, res) => {
         }else if (msg.path === "get_all_questions") {
           getAllQuestions(msg, callback);
         }else if(msg.path ==="addQuestionComments"){
-          addComment(msg, callback)
+          addComment(msg, callback);
+        }
+        else if(msg.path === "get_by_id")
+        {
+            getById(msg,callback);
+        }
+        else if(msg.path === "get_questions_by_filter"){
+            getQuestionsByFilter(msg,callback)
+        }
+        else if(msg.path === "search"){
+            search(msg,callback)
+        }
+        else if(msg.path === "get_all_questions")
+        {
+            getAllQuestions(msg,callback)
         }
       }
     
