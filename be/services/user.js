@@ -482,14 +482,14 @@ class User {
 
                         let groupByDate={}
                         history.forEach(element => {
-                                if(date.includes(element.date.substring(0,15)))
+                                if(date.includes(element.date.toString().substring(0,15)))
                                 {
-                                        groupByDate[element.date.substring(0,15)].push(element)
+                                        groupByDate[element.date.toString().substring(0,15)].push(element)
                                 }
                                 else
                                 {
-                                        date.push(element.date.substring(0,15))
-                                        groupByDate[element.date.substring(0,15)]=[element]
+                                        date.push(element.date.toString().substring(0,15))
+                                        groupByDate[element.date.toString().substring(0,15)]=[element]
                                 }
                                 
                         }); 

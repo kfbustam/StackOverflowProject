@@ -679,19 +679,23 @@ class Question {
                         
                         if(filter === "Interesting")
                         {       
-                                questions = await QuestionModel.find({'isApproved':true}).populate('tags').sort({"updatedAt":1});             
+                                questions = await QuestionModel.find({'isApproved':true}).sort({"createdAt":1}).populate('tags')
+                                .populate('user')              
                         }
                         else if(filter === "Hot")
                         {
-                                questions = await QuestionModel.find({'isApproved':true}).populate('tags').sort({"todayview":-1})
+                                questions = await QuestionModel.find({'isApproved':true}).sort({"todayview":-1}).populate('tags')
+                                .populate('user')   
                         }
                         else if(filter === "Score")
                         {
-                                questions = await QuestionModel.find({'isApproved':true}).populate('tags').sort({"score":-1})
+                                questions = await QuestionModel.find({'isApproved':true}).sort({"score":-1}).populate('tags')
+                                .populate('user') 
                         }
                         else if (filter === "Unanswered")
                         {
-                                questions = await QuestionModel.find( {$and:[{'answer_id.0':{ $exists:false  }}, {'isApproved':true}]}).populate('tags');
+                                questions = await QuestionModel.find( {$and:[{'answer_id.0':{ $exists:false  }}, {'isApproved':true}]}).populate('tags')
+                                .populate('user') ;
                                 console.log("UNANSWERED", questions)
                         }
                      
