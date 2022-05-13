@@ -54,7 +54,7 @@ function AllUsers() {
         {filteredUsers.map(user => (
           <Col sm={6} md={filteredUsers.length < 3 ? 6 : 4} lg={filteredUsers.length < 3 ? 4 : 3} className='mb-3'>
             <Image src={user.profileURL ? `${API_URL}/image/${user.profileURL}` : defaultimg} className='all-users-image me-2'/>
-            <Link to='/users' className='all-users-link'>{user.username && user.username}</Link>
+            <Link to={`/users/${user._id}`} className='all-users-link'>{user.username && user.username}</Link>
             <p className='all-users-location'>{user.location && user.location}</p>
             <p className='all-users-reputation mb-0'>{user.reputation}</p>
           </Col>

@@ -1,7 +1,8 @@
 import "./Questions.css";
 // import React from 'react';
 import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import List from '@mui/material/List';
 import { useNavigate } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
@@ -73,7 +74,7 @@ const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` :
 
 export default function Questions() {
   const [data, setData] = useState([])
-
+  const [enabledFilter, setEnabledFilter] = useState()
   const navigate = useNavigate()
   useEffect(() => {
     if(data.length >0){return}
@@ -103,7 +104,7 @@ export default function Questions() {
     }
 
     return diffInDays + " days ago";
-}
+  }
 
 
   // const questions = [{
@@ -129,11 +130,24 @@ export default function Questions() {
   //   viewCount: 124
   // }]
 
-  const handleInteresting = () => {}
-  const handleBountied = () => {}
-  const handleHot = () => {}
-  const handleWeek = () => {}
-  const handleMonth = () => {}
+  const handleInteresting = async () => {
+    setEnabledFilter('interesting')
+    const userID = JSON.parse(localStorage.getItem("user"))._id
+    const response = await axios.get(`${API_URL}/getSortPost/${userID}/Questions/Score`)
+    console.log(response)
+  }
+  const handleBountied = () => {
+    setEnabledFilter('bountied')
+  }
+  const handleHot = () => {
+    setEnabledFilter('hot')
+  }
+  const handleWeek = () => {
+    setEnabledFilter('week')
+  }
+  const handleMonth = () => {
+    setEnabledFilter('month')
+  }
   
   return (
     <>
@@ -141,7 +155,7 @@ export default function Questions() {
        <LeftSideBar />
     
    
-    <div className="newTag">
+      <div className="newTag">
         <div style={rootStyle}>
         <div style={titleHeaderStyle}>
         <h2>
@@ -149,13 +163,15 @@ export default function Questions() {
         </h2>
         <Button key="askQuestion" onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')} variant="contained" style={{height: 40}}>Ask question</Button>
       </div>
-      <ButtonGroup style={{ marginLeft: '52%' }}>
-        <Button variant='outline-secondary' onClick={handleInteresting}>Interesting</Button>
-        <Button variant='outline-secondary' onClick={handleBountied}>Bountied</Button>
-        <Button variant='outline-secondary' onClick={handleHot}>Hot</Button>
-        <Button variant='outline-secondary' onClick={handleWeek}>Week</Button>
-        <Button variant='outline-secondary' onClick={handleMonth}>Month</Button>
-      </ButtonGroup>
+      <div style={{  display: 'flex', justifyContent: 'end' }}>
+        <Tabs value={enabledFilter} onChange={setEnabledFilter} aria-label="basic tabs example">
+          <Tab label="Interesting" onClick={handleInteresting} value={'interesting'} />
+          <Tab label="Bountied" onClick={handleBountied} value={'bountied'} />
+          <Tab label="Hot" onClick={handleHot} value={'hot'} />
+          <Tab label="Week" onClick={handleWeek} value={'week'} />
+          <Tab label="Month" onClick={handleMonth} value={'month'} />
+        </Tabs>
+        </div>
       <Divider />
       <List>
         
@@ -238,7 +254,6 @@ export default function Questions() {
                     </div>
                     <div style={userCardStyle}>
                       <IconButton key="profileIcon" onClick={() => navigate('/users/'+question.user._id)} size="small">
-                        {console.log(question.user)}
                         <Avatar src={question.user?`${API_URL}/image/`+question.user.profileURL:null}/>
                       </IconButton>
                       {/* 
