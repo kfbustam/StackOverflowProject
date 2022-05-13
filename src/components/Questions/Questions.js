@@ -277,7 +277,7 @@ export default function Questions() {
                     </div>
                     <div style={userCardStyle}>
                       <IconButton key="profileIcon" onClick={() => navigate('/users/'+question.user._id)} size="small">
-                        <Avatar src={question.user?`${API_URL}/image/`+question.user.profileURL:null}/>
+                        <Avatar src={question.user && question.user.profileURL ? `${API_URL}/image/${question.user.profileURL}` : ''}/>
                       </IconButton>
                       {/* 
                       <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
