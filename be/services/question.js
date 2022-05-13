@@ -588,9 +588,9 @@ class Question {
                                 else if (criteria.substring(0, 5) === 'user:') {
                                         const userID = criteria.substring(5, criteria.length)
 
-                                        questions = questions.filter(question => question.user._id.toString() === userID)
+                                        questions = questions.filter(question => question.user && question.user._id.toString() === userID)
 
-                                        answers = answers.filter(answer => answer.user_id._id.toString() === userID)
+                                        answers = answers.filter(answer => answer.user_id && answer.user_id._id.toString() === userID)
                                 }
                                 else if (criteria.charAt(0) === '"' && criteria.charAt(criteria.length - 1) === '"') {
                                         const exact = criteria.substring(1, criteria.length - 1).toLowerCase()
@@ -679,19 +679,19 @@ class Question {
                         
                         if(filter === "Interesting")
                         {       
-                                questions = await QuestionModel.find({'isApproved':true}).sort({"updatedAt":1});             
+                                questions = await QuestionModel.find({'isApproved':true}).populate('tags').sort({"updatedAt":1});             
                         }
                         else if(filter === "Hot")
                         {
-                                questions = await QuestionModel.find({'isApproved':true}).sort({"todayview":-1})
+                                questions = await QuestionModel.find({'isApproved':true}).populate('tags').sort({"todayview":-1})
                         }
                         else if(filter === "Score")
                         {
-                                questions = await QuestionModel.find({'isApproved':true}).sort({"score":-1})
+                                questions = await QuestionModel.find({'isApproved':true}).populate('tags').sort({"score":-1})
                         }
                         else if (filter === "Unanswered")
                         {
-                                questions = await QuestionModel.find( {$and:[{'answer_id.0':{ $exists:false  }}, {'isApproved':true}]});
+                                questions = await QuestionModel.find( {$and:[{'answer_id.0':{ $exists:false  }}, {'isApproved':true}]}).populate('tags');
                                 console.log("UNANSWERED", questions)
                         }
                      

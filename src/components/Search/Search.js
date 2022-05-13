@@ -78,7 +78,7 @@ const Search = () => {
 
         queryArr = queryArr.filter(word => word.charAt(0) === '[' && word.charAt(word.length - 1))
 
-        if (queryArr.length === 1 && search_query.charAt(0) === '[') {
+        if (queryArr.length === 1) {
 
             axios.get(`${API_URL}/api/tag/getNameTags`)
             .then(res => {
@@ -88,8 +88,8 @@ const Search = () => {
                 const foundTag = allTags.find(tag => tag.name === tagName)
                 setTag(foundTag)
                 
-                const resString = search_query.replace(queryArr[0], ' ')
-                setResultString(resString)
+                //const resString = search_query.replace(queryArr[0], ' ')
+                //setResultString(resString)
             })
             .catch(err => {
                 console.log(err)
@@ -107,7 +107,7 @@ const Search = () => {
             </Container>
             <Container className='mt-3'>
                 <div>
-                    {(resultString && tag) && <p style={{fontSize:'12px'}}>Results for {resultString} tagged with 
+                    {tag.name && <p style={{fontSize:'12px'}}>Results tagged with 
                     <div className='search-tag-block me-1 ms-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div></p>}
                     {tag && <p style={{maxWidth: '700px', fontSize: '13px', color: 'black'}}>{tag.description}</p>}
                     <p className='num-results mt-2'>{posts.length} results</p>

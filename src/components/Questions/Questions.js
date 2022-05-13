@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import React, { useState, useEffect } from 'react'
+import ReactTimeAgo from "react-time-ago";
 
 import axios from 'axios'
 import API_URL from '../../apiConfig'
@@ -44,7 +45,7 @@ const questionListItemRightSideStyle = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  width: '100%', 
+  width: '100%',
 }
 
 const userCardStyle = {
@@ -65,10 +66,10 @@ const reputationCountStyle = {
   width: 50,
 }
 
-const numFormatter = (num) => Math.abs(num) > 9999 ? 
-  Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + 'm' : 
-  (Math.abs(num) > 999 ? 
-  Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num))
+const numFormatter = (num) => Math.abs(num) > 9999 ?
+  Math.sign(num) * ((Math.abs(num) / 1000000).toFixed(1)) + 'm' :
+  (Math.abs(num) > 999 ?
+    Math.sign(num) * ((Math.abs(num) / 1000).toFixed(1)) + 'k' : Math.sign(num) * Math.abs(num))
 
 const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` : input;
 
@@ -79,16 +80,17 @@ const getUrlParameter = function getUrlParameter(sParam) {
   let i = 0;
 
   for (i = 0; i < sURLVariables.length; i++) {
-      sParameterName = sURLVariables[i].split('=');
+    sParameterName = sURLVariables[i].split('=');
 
-      if (sParameterName[0] === sParam) {
-          return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-      }
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+    }
   }
   return false;
 };
 
 export default function Questions() {
+  const date = new Date()
   const [data, setData] = useState([])
   const [enabledFilter, setEnabledFilter] = useState('all')
   const navigate = useNavigate()
@@ -117,10 +119,10 @@ export default function Questions() {
     const diffInTime = date2.getTime() - date1.getTime();
     const diffInDays = Math.round(diffInTime / oneDay);
 
-    if(diffInDays < 1){
+    if (diffInDays < 1) {
       return "today";
     }
-    if(diffInDays < 2){
+    if (diffInDays < 2) {
       return "yesterday";
     }
 
@@ -154,108 +156,122 @@ export default function Questions() {
   const handleInteresting = async () => {
     setEnabledFilter('interesting')
     const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Interesting`)
-    setData(response)
+
+    /*setFilteredQuestions([].concat(temp).sort((a, b) => {
+      if (a.modifiedAt && b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
+      else if (a.modifiedAt) return new Date(b.createdAt).getTime() - new Date(a.modifiedAt).getTime()
+      else if (b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.createdAt).getTime()
+      else return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    }))*/
+
+    setData([].concat(response.data.question.questions).sort((a, b) => {
+      if (a.modifiedAt && b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
+      else if (a.modifiedAt) return new Date(b.createdAt).getTime() - new Date(a.modifiedAt).getTime()
+      else if (b.modifiedAt) return new Date(b.modifiedAt).getTime() - new Date(a.createdAt).getTime()
+      else return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    }))
   }
   const handleHot = async () => {
     setEnabledFilter('hot')
     const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Hot`)
-    setData(response)
+    console.log(response.data)
+    setData(response.data.question.questions)
   }
   const handleScore = async () => {
     setEnabledFilter('score')
     const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Score`)
-    setData(response)
+    setData(response.data.question.questions)
   }
   const handleUnanswered = async () => {
     setEnabledFilter('unanswered')
     const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Unanswered`)
-    setData(response)
+    setData(response.data.question.questions)
   }
-  
+
   return (
     <>
-    <div className="containers">
-       <LeftSideBar />
-    
-   
-      <div className="newTag">
-        <div style={rootStyle}>
-        <div style={titleHeaderStyle}>
-        <h2>
-          Questions
-        </h2>
-        <Button key="askQuestion" onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')} variant="contained" style={{height: 40}}>Ask question</Button>
-      </div>
-      <div style={{  display: 'flex', justifyContent: 'end' }}>
-        <Tabs value={enabledFilter} onChange={setEnabledFilter} aria-label="basic tabs example">
-          <Tab label="All" onClick={onAllClick} value={'all'} />
-          <Tab label="Interesting" onClick={handleInteresting} value={'interesting'} />
-          <Tab label="Hot" onClick={handleHot} value={'hot'} />
-          <Tab label="Score" onClick={handleScore} value={'score'} />
-          <Tab label="Unanswered" onClick={handleUnanswered} value={'unanswered'} />
-        </Tabs>
-        </div>
-      <Divider />
-      <List>
-        
-        { data.length > 0 &&
-          data.map((question) => {
-            // const {
-            //   answerCount,
-            //   isAnswered,
-            //   lastModified,
-            //   questionURL,
-            //   questionTitle,
-            //   reputationCount: questionReputationCount,
-            //   tags,
-            //   user,
-            //   voteCount, 
-            //   viewCount
-            // } = question
-            // const {
-            //   reputationCount: userReputationCount,
-            //   username,
-            //   userProfileURL,
-            //   profileIconSrc
-            // } = user
-            //question.answer_id.length? 
+      <div className="containers">
+        <LeftSideBar />
 
-            const answeredStyle = question.answer_id && question.answer_id.length ? {backgroundColor: '#5DBA7C', borderRadius: 5} : {};
-            const answerCountStyle = question.answer_id && question.answer_id.length ? {
-              fontWeight: 'bold',
-              color: 'white',
-            } : 
-            {
-              fontWeight: 'bold',
-              color: '#6A747C',
-              fontSize: 17
-            };
-            const answeredTextStyle = question.answer_id && question.answer_id.length ? {
-              fontSize: 11,
-              color: 'white',
-              marginBottom: 5
-            } : {
-              fontSize: 11,
-              color: '#6A747C',
-              marginBottom: 5
-            }
-            return (
-              <>
-                <div style={questionListItem}>
-                  <div style={{display: 'flex', flexDirection: 'column'}}>
-                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
-                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.vote_id.length}</strong>
-                      <span style={{fontSize: 11}}>votes</span>
-                    </div>
-                    <div style={ {...answeredStyle, ...{display: 'flex', flexDirection: 'column', textAlign: 'center'}} }>
-                      <strong style={answerCountStyle}>{question.answer_id.length}</strong>
-                      <span style={answeredTextStyle}>{question.answer_id.length=== 1 ? 'answer': 'answers'}</span>
-                    </div>
-                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
-                      <strong style={{ fontWeight: 'bold', color: '#6A747C',fontSize: 17}}>{question.totalviews}</strong>
-                      <span style={{fontSize: 11}}>views</span>
-                    </div>
-                    {/* <div style={reputationCountStyle}>
+
+        <div className="newTag">
+          <div style={rootStyle}>
+            <div style={titleHeaderStyle}>
+              <h2>
+                Questions
+              </h2>
+              <Button key="askQuestion" onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')} variant="contained" style={{ height: 40 }}>Ask question</Button>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'end' }}>
+              <Tabs value={enabledFilter} onChange={setEnabledFilter} aria-label="basic tabs example">
+                <Tab label="All" onClick={onAllClick} value={'all'} />
+                <Tab label="Interesting" onClick={handleInteresting} value={'interesting'} />
+                <Tab label="Hot" onClick={handleHot} value={'hot'} />
+                <Tab label="Score" onClick={handleScore} value={'score'} />
+                <Tab label="Unanswered" onClick={handleUnanswered} value={'unanswered'} />
+              </Tabs>
+            </div>
+            <Divider/>
+            <List>
+
+              {data.length > 0 &&
+                data.map((question) => {
+                  // const {
+                  //   answerCount,
+                  //   isAnswered,
+                  //   lastModified,
+                  //   questionURL,
+                  //   questionTitle,
+                  //   reputationCount: questionReputationCount,
+                  //   tags,
+                  //   user,
+                  //   voteCount, 
+                  //   viewCount
+                  // } = question
+                  // const {
+                  //   reputationCount: userReputationCount,
+                  //   username,
+                  //   userProfileURL,
+                  //   profileIconSrc
+                  // } = user
+                  //question.answer_id.length? 
+
+                  const answeredStyle = question.answer_id && question.answer_id.length ? { backgroundColor: '#5DBA7C', borderRadius: 5 } : {};
+                  const answerCountStyle = question.answer_id && question.answer_id.length ? {
+                    fontWeight: 'bold',
+                    color: 'white',
+                  } :
+                    {
+                      fontWeight: 'bold',
+                      color: '#6A747C',
+                      fontSize: 17
+                    };
+                  const answeredTextStyle = question.answer_id && question.answer_id.length ? {
+                    fontSize: 11,
+                    color: 'white',
+                    marginBottom: 5
+                  } : {
+                    fontSize: 11,
+                    color: '#6A747C',
+                    marginBottom: 5
+                  }
+                  return (
+                    <>
+                      <div style={questionListItem}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                            <strong style={{ fontWeight: 'bold', color: '#6A747C', fontSize: 17 }}>{question.score}</strong>
+                            <span style={{ fontSize: 11 }}>votes</span>
+                          </div>
+                          <div style={{ ...answeredStyle, ...{ display: 'flex', flexDirection: 'column', textAlign: 'center' } }}>
+                            <strong style={answerCountStyle}>{question.answer_id.length}</strong>
+                            <span style={answeredTextStyle}>{question.answer_id.length === 1 ? 'answer' : 'answers'}</span>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                            <strong style={{ fontWeight: 'bold', color: '#6A747C', fontSize: 17 }}>{question.totalviews}</strong>
+                            <span style={{ fontSize: 11 }}>views</span>
+                          </div>
+                          {/* <div style={reputationCountStyle}>
                       <span style={{fontSize: 11, color: 'white'}}>+{questionReputationCount}</span>
                     </div> */}
                   </div>
@@ -298,8 +314,9 @@ export default function Questions() {
       </List>
     </div>
 
-    </div>
-    </div>
+                      
+        </div>
+      </div>
     </>
   );
 }
