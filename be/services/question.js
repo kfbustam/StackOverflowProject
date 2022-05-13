@@ -497,7 +497,7 @@ class Question {
                                                 .populate('tags', '_id name')
                                                 .populate("comment_id")
                                                 .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } })
-                                                .populate({ path: 'answer_id', populate: { path: 'comment_id', select:'comment'}})
+                                                .populate({ path: 'answer_id', populate: { path: 'comment_id', populate: { path: 'user', select: "_id username"}}})
 
                         const viewUpdate = await QuestionModel.updateOne({"_id":mongoose.Types.ObjectId(data)}, {$inc:{totalviews:1}});
 
