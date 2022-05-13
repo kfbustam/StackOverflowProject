@@ -153,13 +153,16 @@ function Tags() {
               name,
               postCount,
               scoreCount,
-              url
+              tagId
             } = tag
             return (
               <>
                 <ListItem style={tagListItemStyle}>
                   <div>
-                    <a className='search-tag-block me-1' href={url}>{name}</a>
+                    <div className='search-tag-block me-1' onClick={()=>{
+                      const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+                      navigate(`/questions?tagID=${tagId}&userID=${userID}`)
+                    }}>{name}</div>
                     {isGold && <IconButton key="gold" size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
                     {isSilver && <IconButton key="silver" size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
                     {isBronze && <IconButton key="bronze" size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}

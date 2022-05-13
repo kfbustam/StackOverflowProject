@@ -72,22 +72,43 @@ const numFormatter = (num) => Math.abs(num) > 9999 ?
 
 const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` : input;
 
+const getUrlParameter = function getUrlParameter(sParam) {
+  const sPageURL = window.location.search.substring(1);
+  let sURLVariables = sPageURL.split('&');
+  let sParameterName = '';
+  let i = 0;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+
+      if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+      }
+  }
+  return false;
+};
+
 export default function Questions() {
   const [data, setData] = useState([])
-  const [enabledFilter, setEnabledFilter] = useState()
+  const [enabledFilter, setEnabledFilter] = useState('all')
   const navigate = useNavigate()
+
+  const onAllClick = async () => {
+    const response = await axios.get(`${API_URL}/api/question/getAllQuestions`)
+    console.log(response.data.question)
+    setData(response.data.question)
+  }
+
   useEffect(() => {
-    if(data.length >0){return}
-    axios.get(`${API_URL}/api/question/getAllQuestions`)
-    .then(res => {
-      const dataQuestions = res.data.question
-      setData(dataQuestions)
-     // console.log("bleh",data);
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  }, [data])
+    const userID = getUrlParameter('userID');
+    const tagID = getUrlParameter('tagID');
+    console.log('test');
+    if (userID && tagID) {
+      axios.get(`${API_URL}/api/user/getQuestionsbyTag/${userID}/${tagID}`).then((res) => setData(res.data.user))
+    } else {
+      onAllClick()
+    }
+  }, [])
 
   function getNumberOfDays(start) {
     const date1 = new Date(start);
@@ -167,6 +188,7 @@ export default function Questions() {
       </div>
       <div style={{  display: 'flex', justifyContent: 'end' }}>
         <Tabs value={enabledFilter} onChange={setEnabledFilter} aria-label="basic tabs example">
+          <Tab label="All" onClick={onAllClick} value={'all'} />
           <Tab label="Interesting" onClick={handleInteresting} value={'interesting'} />
           <Tab label="Hot" onClick={handleHot} value={'hot'} />
           <Tab label="Score" onClick={handleScore} value={'score'} />
