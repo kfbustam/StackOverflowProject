@@ -72,22 +72,43 @@ const numFormatter = (num) => Math.abs(num) > 9999 ?
 
 const truncate = (input) => input.length > 70 ? `${input.substring(0, 70)}...` : input;
 
+const getUrlParameter = function getUrlParameter(sParam) {
+  const sPageURL = window.location.search.substring(1);
+  let sURLVariables = sPageURL.split('&');
+  let sParameterName = '';
+  let i = 0;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+
+      if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+      }
+  }
+  return false;
+};
+
 export default function Questions() {
   const [data, setData] = useState([])
-  const [enabledFilter, setEnabledFilter] = useState()
+  const [enabledFilter, setEnabledFilter] = useState('all')
   const navigate = useNavigate()
+
+  const onAllClick = async () => {
+    const response = await axios.get(`${API_URL}/api/question/getAllQuestions`)
+    console.log(response.data.question)
+    setData(response.data.question)
+  }
+
   useEffect(() => {
-    if(data.length >0){return}
-    axios.get(`${API_URL}/api/question/getAllQuestions`)
-    .then(res => {
-      const dataQuestions = res.data.question
-      setData(dataQuestions)
-     // console.log("bleh",data);
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  }, [data])
+    const userID = getUrlParameter('userID');
+    const tagID = getUrlParameter('tagID');
+    console.log('test');
+    if (userID && tagID) {
+      axios.get(`${API_URL}/api/user/getQuestionsbyTag/${userID}/${tagID}`).then((res) => setData(res.data.user))
+    } else {
+      axios.get(`${API_URL}/api/question/getAllQuestions`).then((res) => setData(res.data.question))
+    }
+  }, [])
 
   function getNumberOfDays(start) {
     const date1 = new Date(start);
@@ -132,21 +153,23 @@ export default function Questions() {
 
   const handleInteresting = async () => {
     setEnabledFilter('interesting')
-    const userID = JSON.parse(localStorage.getItem("user"))._id
-    const response = await axios.get(`${API_URL}/getSortPost/${userID}/Questions/Score`)
-    console.log(response)
+    const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Interesting`)
+    setData(response)
   }
-  const handleBountied = () => {
-    setEnabledFilter('bountied')
-  }
-  const handleHot = () => {
+  const handleHot = async () => {
     setEnabledFilter('hot')
+    const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Hot`)
+    setData(response)
   }
-  const handleWeek = () => {
-    setEnabledFilter('week')
+  const handleScore = async () => {
+    setEnabledFilter('score')
+    const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Score`)
+    setData(response)
   }
-  const handleMonth = () => {
-    setEnabledFilter('month')
+  const handleUnanswered = async () => {
+    setEnabledFilter('unanswered')
+    const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Unanswered`)
+    setData(response)
   }
   
   return (
@@ -165,11 +188,11 @@ export default function Questions() {
       </div>
       <div style={{  display: 'flex', justifyContent: 'end' }}>
         <Tabs value={enabledFilter} onChange={setEnabledFilter} aria-label="basic tabs example">
+          <Tab label="All" onClick={onAllClick} value={'all'} />
           <Tab label="Interesting" onClick={handleInteresting} value={'interesting'} />
-          <Tab label="Bountied" onClick={handleBountied} value={'bountied'} />
           <Tab label="Hot" onClick={handleHot} value={'hot'} />
-          <Tab label="Week" onClick={handleWeek} value={'week'} />
-          <Tab label="Month" onClick={handleMonth} value={'month'} />
+          <Tab label="Score" onClick={handleScore} value={'score'} />
+          <Tab label="Unanswered" onClick={handleUnanswered} value={'unanswered'} />
         </Tabs>
         </div>
       <Divider />
@@ -254,7 +277,7 @@ export default function Questions() {
                     </div>
                     <div style={userCardStyle}>
                       <IconButton key="profileIcon" onClick={() => navigate('/users/'+question.user._id)} size="small">
-                        <Avatar src={question.user?`${API_URL}/image/`+question.user.profileURL:null}/>
+                        <Avatar src={question.user && question.user.profileURL ? `${API_URL}/image/${question.user.profileURL}` : ''}/>
                       </IconButton>
                       {/* 
                       <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}

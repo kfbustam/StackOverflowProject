@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import Accordion from 'react-bootstrap/Accordion'
 import API_URL from '../../../apiConfig';
 
@@ -10,30 +8,10 @@ const rootStyle = {
   flexDirection: 'column',
 }
 
-const filterButtonGroupStyle = {
-  display: 'flex',
-  margin: '15px 0px 15px 0px',
-  justifyContent: 'end'
-}
-
 function Reputation() {
   const [reputations, setReputations] = useState([])
 
   const [errorMessages, setErrorMessages] = useState([])
-  const user = {
-    aboutMeText: 'about',
-    answersCount: 12,
-    bronzeCount: 123,
-    goldCount: 54,
-    lastSeen: 'this week',
-    lengthOfTimeAsMember: '3 days',
-    profileIconSrc: 'http://placekitten.com/200/300',
-    reachedCount: 42,
-    reputationCount: 123,
-    questionsCount: 64,
-    silverCount: 12,
-    username: 'kfbustam',
-  }
 
   useEffect(() => {
     if (Object.values(reputations).length > 0) return
@@ -49,13 +27,6 @@ function Reputation() {
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>Reputation</h3>
-        <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Post</Button>
-            <Button>Time</Button>
-            <Button>Graph</Button>
-          </ButtonGroup>
-        </div>
       </div>
       <Accordion defaultActiveKey="0">
         {

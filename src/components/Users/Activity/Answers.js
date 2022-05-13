@@ -123,7 +123,7 @@ function Answers() {
                   </div>
                   <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                     <h3>
-                      <a onClick={() => navigate(`/questions/${questionId}`)} style={{color: '#0074cc', fontSize: 17}}>{truncate(questionTitle)}</a>
+                      <a onClick={() => navigate(`/questions/${questionId}`)} style={{color: '#0074cc', fontSize: 17}}>{questionTitle ? truncate(questionTitle) : ''}</a>
                     </h3>
                   </div>
                   <div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>

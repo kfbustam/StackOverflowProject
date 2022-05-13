@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -104,36 +102,15 @@ function Bookmarks() {
     }
   fetchBookmarks()
   }, [])
-  console.log("book",bookmarks)
 
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <h3>{bookmarks.length} Bookmarks</h3>
-        <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-          {/* <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
-            <Button>Score</Button>
-            <Button>Activity</Button>
-            <Button>Newest</Button>
-            <Button>Views</Button>
-            <Button>Added</Button>
-          </ButtonGroup> */}
-        </div>
       </div>
       <List>
         {
           bookmarks.map((post) => {
-            // const {
-            //   answerCount,
-            //   answeredDate,
-            //   bookmarkCount,
-            //   isAccepted,
-            //   numOfVotes,
-            //   url,
-            //   questionTitle,
-            //   tags,
-            //   viewCount
-            // } = post
             return (
               <>
                 <ListItem style={postListItem}>
