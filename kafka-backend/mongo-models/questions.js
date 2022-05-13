@@ -1,10 +1,12 @@
-const  mongoose = require('mongoose')
+const  mongoose = require('mongoose');
+const { DateTime } = require("luxon");
+
 
 const questionsSchema = new mongoose.Schema({
     title:  { type: String, required: true },
     body: { type: String, required: true },
     score: { type: Number, default: 0 },
-    views: { type: Number, default: 0 },
+    //views: { type: Number, default: 0 },
 
     body_image: {
         type:String,
@@ -16,6 +18,7 @@ const questionsSchema = new mongoose.Schema({
     },
     viewdate:{
         type:String,
+        default: new Date().getDate()
     },
     todayview:{
         type:Number,
@@ -26,7 +29,11 @@ const questionsSchema = new mongoose.Schema({
         default:0
     },
     tags: [{ type:mongoose.Schema.Types.ObjectId, ref:"tag" , required: true }],    
-    
+    best_ans : {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Answers",
+        default:null
+    },    
     answer_id:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Answers",
@@ -34,7 +41,7 @@ const questionsSchema = new mongoose.Schema({
     }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: "User",
         required:true
       },
     comment_id:[{
@@ -56,15 +63,8 @@ const questionsSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
-    score:{
-        type:Number,
-        default:0   
-    },
-    
-    history:{
-        // If needed, create a history model
-        type: String
-    }
+    modifiedAt: { type: Date },
+    activity: [{ type:mongoose.Schema.Types.ObjectId, ref:"activity"}],
 }, { timestamps: true });
 
-module.exports = mongoose.model('Questions',questionsSchema)
+module.exports = mongoose.model('questions',questionsSchema)

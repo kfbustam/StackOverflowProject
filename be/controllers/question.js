@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const {Question} = require("../services/question.js")
 const bcrypt = require('bcryptjs');
-//const kafka = require("../kafka/client");
+const kafka = require("../kafka/client");
 const { response } = require("../index.js");
 const jwt = require("jsonwebtoken");
 const redis = require('redis')
@@ -18,8 +18,22 @@ const passport = require('passport')
 
 
 router.post("/addQuestion",  async (req, res) => {
+    const msg = {};
+    msg.data = req.body;
+    msg.path = "add_question";
+    kafka.make_request('question',msg, function(err,results){
+        if (err){
+            console.log("kafka error");
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }else{
+            res.status(results.status).send(results);
+        }
+    });
     
-    const data = req.body;
+    /*const data = req.body;
     const response={}
     try{
         const result = await Question.addQuestion(data);
@@ -48,7 +62,7 @@ router.post("/addQuestion",  async (req, res) => {
         response.error = "Some error occurred. Please try again later";
         response.status = "500";
         res.status(500).send(response);
-    }
+    }*/
 });
 
 router.get('/getById/:id', async (req, res) => {

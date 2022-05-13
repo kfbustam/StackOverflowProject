@@ -3,7 +3,7 @@ const answersSchema = new mongoose.Schema({
 
     question_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Questions"
+        ref:"questions"
     },
     answer: String,
     /*tags: [{ type: String, required: true }],*/
@@ -27,6 +27,18 @@ const answersSchema = new mongoose.Schema({
     isAdmin:{
         type:Boolean,
         default:false
+    },
+    upvote:{
+        type:Number,
+        default:0
+    },
+    downvote:{
+        type:Number,
+        default:0
+    },
+    score:{
+        type:Number,
+        default:0
     }
 }, { timestamps: true });
 

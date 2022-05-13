@@ -11,11 +11,13 @@ class Tag {
                                 name : data.name,
                                 description : data.description                                
                         }
+                        console.log(data);
                         const tag = new tagModel(query);
-                        const result = tag.save();
+                        const result = await tag.save();
                         if(result)
                         {
                                 return result;
+                                console.log("success")
                         }
                         else{
                                 return {};
@@ -30,7 +32,7 @@ class Tag {
 
         static getPopularTags = async (data) => {
                 try {                        
-                        const result = tagModel.find({}).sort({"count":-1});
+                        const result = await tagModel.find({}).sort({"count":-1});
                         if(result)
                         {
                                 return result;
@@ -47,7 +49,7 @@ class Tag {
 
         static getNewTags = async (data) => {
                 try {                        
-                        const result = tagModel.find({}).sort({"createdAt":1});
+                        const result = await tagModel.find({}).sort({"createdAt":1});
                         if(result)
                         {
                                 return result;
@@ -64,7 +66,7 @@ class Tag {
 
         static getNameTags = async (data) => {
                 try {                        
-                        const result = tagModel.find({}).sort({"name":1});
+                        const result = await tagModel.find({}).sort({"name":1});
                         if(result)
                         {
                                 return result;
@@ -83,7 +85,7 @@ class Tag {
                 try {    
                         let searchValue = data.searchValue;  
                         const regex = new RegExp(searchValue,'i')                  
-                        const result = tagModel.find({name:{$regex: regex}}).limit(5);
+                        const result = await tagModel.find({name:{$regex: regex}}).limit(5);
                         if(result)
                         {
                                 return result;
