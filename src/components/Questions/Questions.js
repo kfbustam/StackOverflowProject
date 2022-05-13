@@ -174,7 +174,7 @@ export default function Questions() {
   const handleHot = async () => {
     setEnabledFilter('hot')
     const response = await axios.get(`${API_URL}/api/question/getQuestionsByFilter/Hot`)
-    console.log(response.data)
+    console.log(response.data.question.questions)
     setData(response.data.question.questions)
   }
   const handleScore = async () => {
