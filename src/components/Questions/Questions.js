@@ -106,7 +106,7 @@ export default function Questions() {
     if (userID && tagID) {
       axios.get(`${API_URL}/api/user/getQuestionsbyTag/${userID}/${tagID}`).then((res) => setData(res.data.user))
     } else {
-      onAllClick()
+      axios.get(`${API_URL}/api/question/getAllQuestions`).then((res) => setData(res.data.question))
     }
   }, [])
 
