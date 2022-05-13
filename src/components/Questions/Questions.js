@@ -270,7 +270,7 @@ export default function Questions() {
                           question.tags.map(tag => {
                             //const {name, url} = tag;
                             //return <a className='search-tag-block me-1' href={url}>{name}</a>;
-                            return <a className='search-tag-block me-1' >{tag.name}</a>;
+                            return <div className='search-tag-block me-1' onClick={() => navigate(`/questions/tagged/${tag.name}`)}>{tag.name}</div>;
                           })
                         }
                       </div>
