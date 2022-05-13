@@ -588,9 +588,9 @@ class Question {
                                 else if (criteria.substring(0, 5) === 'user:') {
                                         const userID = criteria.substring(5, criteria.length)
 
-                                        questions = questions.filter(question => question.user._id.toString() === userID)
+                                        questions = questions.filter(question => question.user && question.user._id.toString() === userID)
 
-                                        answers = answers.filter(answer => answer.user_id._id.toString() === userID)
+                                        answers = answers.filter(answer => answer.user_id && answer.user_id._id.toString() === userID)
                                 }
                                 else if (criteria.charAt(0) === '"' && criteria.charAt(criteria.length - 1) === '"') {
                                         const exact = criteria.substring(1, criteria.length - 1).toLowerCase()

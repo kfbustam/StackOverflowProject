@@ -110,7 +110,7 @@ function Tags() {
                   <div>
                     <div className='search-tag-block me-1' onClick={()=>{
                       const userID = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-                      navigate(`/questions?tagID=${tagId}&userID=${userID}`)
+                      navigate(`/search/[${name}]%20user:${userID}`)
                     }}>{name}</div>
                     {isGold && <IconButton key="gold" size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
                     {isSilver && <IconButton key="silver" size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
