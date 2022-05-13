@@ -385,7 +385,7 @@ const QuestionOverview = () => {
             </ul>
           </div>
           <div className="flex mt-5 w-full">
-                      <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small">
+                      <IconButton key="profileIcon" onClick={() => navigate(`/users/${data?.data.question.user._id}`)} size="small">
                         <Avatar src={data?.data.question.body_image}/>
                       </IconButton>
                       {/* 
@@ -464,8 +464,9 @@ const QuestionOverview = () => {
               <div className="">
                 <div className=" text-1xl font-bold">Comments</div>
                 {a.comment_id.map((c) => (
-                  <div className="border-b border-gray-300">
+                  <div className="text-sm border-b border-gray-300">
                     {c.comment}
+                    <span className="ml-[20%] font-thin w-full text-xs text-right">{ a.user_id.username} asked { getNumberOfDays(a.updatedAt)}</span>
                 </div>
                 ))}
                 <form>
