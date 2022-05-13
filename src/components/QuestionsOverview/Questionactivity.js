@@ -2,12 +2,14 @@ import axios from 'axios';
 import { Button, Row, Col, Table } from 'react-bootstrap';
 import API_URL from '../../apiConfig'
 import React, { useState, useEffect} from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
+import ReactTimeAgo from 'react-time-ago'
+import './Questionactivity.css'
 
 
 function Questionactivity() {
-
+    const today = new Date()
     const [tags, setTags] = useState([{}])
     const { questionID } = useParams();
 
@@ -16,8 +18,10 @@ function Questionactivity() {
         console.log(questionID)
         axios.get(`${API_URL}/api/question/getAllQuestionActivities/${questionID}`)
         .then(res => {
-          const dataTags = res.data.data[0].activity
+          let dataTags = res.data.data[0].activity
           console.log(dataTags)
+
+          dataTags = dataTags.sort((a, b) => new Date(b.date) - new Date(a.date))
     
           setTags(dataTags)
 
@@ -52,9 +56,15 @@ function Questionactivity() {
                                         tags && tags.map((tags, index) =>
                                             <tr>
                                                 <td>{index + 1}</td>
-                                                <td>{tags.date}</td>
+                                                <td>
+                                                    <ReactTimeAgo date={tags.date ? tags.date : today} locale="en-US" />
+                                                </td>
                                                 <td>{tags.what}</td>
-                                                <td>{tags._id ? tags._id: 'Unknown'}</td>
+                                                <td>
+                                                    <Link className='question-activity-user' to={tags.user ? `/users/${tags.user._id}` : '/'}>
+                                                        {tags.user && tags.user.username}
+                                                    </Link>
+                                                </td>
                                                 <td>{tags.comment}</td>
                                             </tr>
                                         )
