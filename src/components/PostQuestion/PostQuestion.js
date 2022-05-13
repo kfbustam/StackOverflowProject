@@ -114,7 +114,7 @@ function PostQuestion() {
                             <p className='info-text'>Add up to 5 tags to describe what your question is about</p>
                             <Form.Control size='sm' placeholder='e.g. (sql jquery reactjs)' type='text' ref={tagsInput} />
                         </Container>
-                        <Button className='review-question-button mt-3 mb-3' onClick={handleSubmit}>Review your question</Button>
+                        <Button className='review-question-button mt-3 mb-3' onClick={handleSubmit}>Post your question</Button>
                     </Col>
                     <Col md={4}>
                         <Card className='mb-3'>

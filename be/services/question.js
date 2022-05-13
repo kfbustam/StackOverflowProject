@@ -328,7 +328,7 @@ class Question {
                         let result = {}
                         const questions = await QuestionModel.find({"isApproved":true})
                                 .populate('tags', 'name')
-                                .populate('user', 'username reputation')   
+                                .populate('user')   
                                 .sort({"createdAt":1});
                         if (questions?.length) {
                                 result.data = questions
@@ -497,7 +497,7 @@ class Question {
                                                 .populate('tags', '_id name')
                                                 .populate("comment_id")
                                                 .populate({ path: 'answer_id', populate: { path: 'user_id', select: 'username reputation' } })
-                                                .populate({ path: 'answer_id', populate: { path: 'comment_id', select:'comment'}})
+                                                .populate({ path: 'answer_id', populate: { path: 'comment_id', populate: { path: 'user', select: "_id username"}}})
 
                         const viewUpdate = await QuestionModel.updateOne({"_id":mongoose.Types.ObjectId(data)}, {$inc:{totalviews:1}});
 
@@ -544,6 +544,12 @@ class Question {
                         let answers = await AnswerModel.find({}).select('answer question_id isBest score createdAt updatedAt').lean()
                                 .populate({ path: 'question_id', populate: { path: 'tags', select: 'name' }, select: 'tags title'})
                                 .populate('user_id', '_id username')
+
+                        if (data === 'undefined') {
+                                questions.forEach(question => question.type = 'question')
+                                answers.forEach(answer => answer.type = 'answer')
+                                return [...questions, ...answers]
+                        }
 
                         searchCriteria.forEach(criteria => {
                                 if (criteria.substring(0, 3) === 'is:') {

@@ -81,7 +81,7 @@ export default function Questions() {
     .then(res => {
       const dataQuestions = res.data.question
       setData(dataQuestions)
-      console.log("bleh",data);
+     // console.log("bleh",data);
     })
     .catch(err => {
       console.log(err)
@@ -106,28 +106,28 @@ export default function Questions() {
 }
 
 
-  const questions = [{
-    answerCount: 1,
-    isAnswered: false,
-    lastModified: 'modified Apr 7 at 11:14',
-    questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
-    questionURL: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
-    // reputationCount: 50,
-    tags: [
-      {
-        name: 'javascript',
-        // url: 'https://stackoverflow.com/questions/tagged/javascript'
-      }
-    ],
-    user: {
-      reputationCount: 123,
-      username: 'kfbustam',
-      userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
-      profileIconSrc: 'http://placekitten.com/200/300' 
-    },
-    voteCount: 4,
-    viewCount: 124
-  }]
+  // const questions = [{
+  //   answerCount: 1,
+  //   isAnswered: false,
+  //   lastModified: 'modified Apr 7 at 11:14',
+  //   questionTitle: 'Attempting to save only the metadata to a file from RTSP stream',
+  //   questionURL: 'https://stackoverflow.com/questions/71715649/attempting-to-save-only-the-metadata-to-a-file-from-rtsp-stream',
+  //   // reputationCount: 50,
+  //   tags: [
+  //     {
+  //       name: 'javascript',
+  //       // url: 'https://stackoverflow.com/questions/tagged/javascript'
+  //     }
+  //   ],
+  //   user: {
+  //     reputationCount: 123,
+  //     username: 'kfbustam',
+  //     userProfileURL: 'https://stackoverflow.com/questions/tagged/javascript',
+  //     profileIconSrc: 'http://placekitten.com/200/300' 
+  //   },
+  //   voteCount: 4,
+  //   viewCount: 124
+  // }]
 
   const handleInteresting = () => {}
   const handleBountied = () => {}
@@ -147,7 +147,7 @@ export default function Questions() {
         <h2>
           Questions
         </h2>
-        <Button key="askQuestion" onClick={() => navigate('/askQuestion')} variant="contained" style={{height: 40}}>Ask question</Button>
+        <Button key="askQuestion" onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')} variant="contained" style={{height: 40}}>Ask question</Button>
       </div>
       <ButtonGroup style={{ marginLeft: '52%' }}>
         <Button variant='outline-secondary' onClick={handleInteresting}>Interesting</Button>
@@ -161,7 +161,6 @@ export default function Questions() {
         
         { data.length > 0 &&
           data.map((question) => {
-            console.log("b",question)
             // const {
             //   answerCount,
             //   isAnswered,
@@ -238,14 +237,15 @@ export default function Questions() {
                       </div>
                     </div>
                     <div style={userCardStyle}>
-                      <IconButton key="profileIcon" onClick={() => navigate('/profile')} size="small">
-                        <Avatar src={question.url}/>
+                      <IconButton key="profileIcon" onClick={() => navigate('/users/'+question.user._id)} size="small">
+                        {console.log(question.user)}
+                        <Avatar src={question.user?`${API_URL}/image/`+question.user.profileURL:null}/>
                       </IconButton>
                       {/* 
                       <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
-                      <a onClick={() => navigate('/profile')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{question.user.username}</p>  : <p></p>}</a>
-
-                      <span style={{ margin: 'auto 0px auto 0px'}}>{ question.user ? <p>{numFormatter(question.user.reputation)}</p>  : <p></p>}</span>
+                      <a onClick={() => navigate('/users/'+question.user._id)} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{question.user.username}</p>  : <p></p>}</a>
+                      <br/>
+                      <span style={{ margin: 'auto 0px auto 0px'}}>{ question.user ? <p>Reputation: {numFormatter(question.user.reputation)}</p>  : <p></p>}</span>
                       {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
                       <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ question.user ? <p>{`asked ${getNumberOfDays(question.updatedAt)}`}</p>  : <p></p>}</a>
                       

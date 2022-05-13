@@ -110,8 +110,7 @@ function Tags() {
   useEffect(() => {
     if (tags.length > 0) return
     async function fetchTags() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getTagsTab/` + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getTagsTab/` + window.location.href.substring(window.location.href.lastIndexOf('/') + 1) )
       const tagData = response.data.user
       setTagCount(response.data.user.length)
       setTags(tagData)
@@ -147,9 +146,9 @@ function Tags() {
                 <ListItem style={tagListItemStyle}>
                   <div>
                     <a className='search-tag-block me-1' href={url}>{name}</a>
-                    {isGold && <IconButton key="gold" onClick={() => navigate('/gold')} size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
-                    {isSilver && <IconButton key="silver" onClick={() => navigate('/silver')} size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
-                    {isBronze && <IconButton key="bronze" onClick={() => navigate('/bronze')} size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}
+                    {isGold && <IconButton key="gold" size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
+                    {isSilver && <IconButton key="silver" size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
+                    {isBronze && <IconButton key="bronze" size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}
                   </div>
                   <div style={countStyle}>
                     <div style={{display: 'flex', margin: 'auto 0px auto 0px', gap: 5}}>{scoreCount} <div style={{color: '#6A747C'}}>score</div></div>

@@ -17,7 +17,6 @@ router.get("/getAllBadges/:id", async(req,res)=>
         const result = await User.getAllBadges(user);          
         //await client.set('user', JSON.stringify(result))
         if(result){
-            console.log(result)
             response.success = true;
             response.badges = result.badges;
             response.goldCount = result.goldCount;

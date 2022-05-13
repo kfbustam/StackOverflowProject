@@ -110,7 +110,7 @@ router.get('/getQuestionsByFilter/:filter', async (req, res) => {
 })
 
 
-router.get('/search/:query', async (req, res) => {
+router.get('/search/:query?', async (req, res) => {
     const query = req.params.query
 
     const response = {}

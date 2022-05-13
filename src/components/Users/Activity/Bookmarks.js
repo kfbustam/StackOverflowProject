@@ -90,10 +90,10 @@ function Bookmarks() {
   useEffect(() => {
     if (bookmarks.length > 0) return
     async function fetchBookmarks() {
-      let user = JSON.parse(localStorage.getItem('user'))
       axios.post(`${API_URL}/api/question/getAllBookmarkedQuestions/`, {
-        user: user._id
-        // user: "6270916b10d71bab3c5630fe"
+
+        user: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+
       })
       .then(res => {
         setBookmarks(res.data.data)

@@ -91,15 +91,15 @@ const silverCircleIconTextStyle = {
   color: 'silver',
 }
 
-const getRightOfTheSearchBarLinkComponents = (navigate, user, logout) => {
+const getRightOfTheSearchBarLinkComponents = (navigate, user, logout, userGoldCount, userSilverCount, userBronzeCount) => {
 
 
-  const profileIconSrc = 'http://placekitten.com/200/300';
-  const achievementCount = 42;
-  const messageCount = 5;
-  const userGoldCount = 2;
-  const userSilverCount = 2;
-  const userBronzeCount = 2;
+  // const profileIconSrc = 'http://placekitten.com/200/300';
+  // const achievementCount = 42;
+  // const messageCount = 5;
+  // const userGoldCount = 2;
+  // const userSilverCount = 2;
+  // const userBronzeCount = 2;
   // const isUserLoggedIn = true;
 
   if (!user) {
@@ -110,26 +110,26 @@ const getRightOfTheSearchBarLinkComponents = (navigate, user, logout) => {
   }
 
   const rightOfTheSearchBarLinkComponents = [
-    <IconButton key="profileIcon" onClick={() => navigate('/users')} size="small">
-      <Avatar src={profileIconSrc}/>
-      <span style={messageCountStyle}>{messageCount}</span>
+    <IconButton key="profileIcon" onClick={() => navigate('/users/'+JSON.parse(localStorage.getItem('user'))._id)} size="small">
+      <Avatar src={`${API_URL}/image/`+JSON.parse(localStorage.getItem("user")).profileURL}/>
+      {/* <span style={messageCountStyle}>{messageCount}</span> */}
     </IconButton>,
   ];
 
   if (userGoldCount > 0) {
-    rightOfTheSearchBarLinkComponents.push(<IconButton key="gold" onClick={() => navigate('/gold')} size="small"><CircleIcon style={goldCircleIconStyle}/><span style={goldCircleIconTextStyle}>{userGoldCount}</span></IconButton>)
+    rightOfTheSearchBarLinkComponents.push(<IconButton key="gold"  size="small"><CircleIcon style={goldCircleIconStyle}/><span style={goldCircleIconTextStyle}>{userGoldCount}</span></IconButton>)
   }
   if (userSilverCount > 0) {
-    rightOfTheSearchBarLinkComponents.push(<IconButton key="silver" onClick={() => navigate('/silver')} size="small"><CircleIcon style={silverCircleIconStyle} /><span style={silverCircleIconTextStyle}>{userSilverCount}</span></IconButton>)
+    rightOfTheSearchBarLinkComponents.push(<IconButton key="silver"  size="small"><CircleIcon style={silverCircleIconStyle} /><span style={silverCircleIconTextStyle}>{userSilverCount}</span></IconButton>)
   }
   if (userBronzeCount > 0) {
-    rightOfTheSearchBarLinkComponents.push(<IconButton key="bronze" onClick={() => navigate('/bronze')} size="small"><CircleIcon style={bronzeCircleIconStyle}/><span style={bronzeCircleIconTextStyle}>{userBronzeCount}</span></IconButton>)
+    rightOfTheSearchBarLinkComponents.push(<IconButton key="bronze"  size="small"><CircleIcon style={bronzeCircleIconStyle}/><span style={bronzeCircleIconTextStyle}>{userBronzeCount}</span></IconButton>)
   }
 
   rightOfTheSearchBarLinkComponents.push(
-    <IconButton key="inbox" onClick={() => navigate('/inbox')} size="small" ><Badge badgeContent={messageCount} color="primary"><InboxIcon color="#525960" /></Badge></IconButton>,
-    <IconButton key="achievements" onClick={() => navigate('/achievements')} size="small"><Badge badgeContent={achievementCount} color="success"><EmojiEventsIcon color="#525960" /></Badge></IconButton>,
-    <IconButton key="help" onClick={() => navigate('/help')} size="small"><HelpIcon color="#525960" /></IconButton>,
+    // <IconButton key="inbox" onClick={() => navigate('/inbox')} size="small" ><Badge badgeContent={messageCount} color="primary"><InboxIcon color="#525960" /></Badge></IconButton>,
+    // <IconButton key="achievements" onClick={() => navigate('/achievements')} size="small"><Badge badgeContent={achievementCount} color="success"><EmojiEventsIcon color="#525960" /></Badge></IconButton>,
+    // <IconButton key="help" onClick={() => navigate('/help')} size="small"><HelpIcon color="#525960" /></IconButton>,
     <IconButton key="community" onClick={() => navigate('/mymessages')} size="small"><CommentIcon color="#525960" /></IconButton>,
     <Button key="logout" onClick={logout} variant="outlined">Logout</Button>
   )
@@ -142,9 +142,27 @@ function App() {
   const location = useLocation();
   //const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   let user = JSON.parse(localStorage.getItem('user'))
+  const [gold, setGold] = useState(0)
+  const [silver, setSilver] = useState(0)
+  const [bronze, setBronze] = useState(0)
 
   useEffect(() => {
     //setUser(JSON.parse(localStorage.getItem('user')));
+    if(localStorage.getItem("user"))
+    { 
+      axios.get(`${API_URL}/api/user/getAllBadges/`+JSON.parse(localStorage.getItem("user"))._id)
+      .then(response=>{
+        setGold(response.data.goldCount)
+        setSilver(response.data.silverCount)
+        setBronze(response.data.bronzeCount)
+      })
+      .catch(error => {
+        console.log(error.response.data.error)
+     })
+
+    }
+
+    
   }, [location]);
 
   const logout = () => {
@@ -167,7 +185,7 @@ function App() {
     ]
   ;
 
-  const rightOfTheSearchBarLinkComponents = getRightOfTheSearchBarLinkComponents(navigate, user, logout);
+  const rightOfTheSearchBarLinkComponents = getRightOfTheSearchBarLinkComponents(navigate, user, logout, gold, silver, bronze);
 
   return (
     <>
@@ -184,13 +202,13 @@ function App() {
             </div>    
           </div>
         }/>
-        <Route path="/questions" element={   
+        <Route path="/questions" element={  localStorage.getItem('jwt') != null ?
           <div className='stack-layout'>
             <div className='stack-layout-container'>
               <LeftSideBar activeTab='questions'/>
               <Questions/>
             </div>    
-          </div>
+          </div> : <Navigate to='/login' />
         }/>
         <Route path="/tags" element={   
           <div className='stack-layout'>
@@ -200,7 +218,7 @@ function App() {
             </div>    
           </div>
         }/>
-        <Route path="/users" element={   
+        <Route path="/users/:paramid" element={   
           <div className='stack-layout'>
             <div className='stack-layout-container'>
               <LeftSideBar activeTab='users'/>
@@ -215,8 +233,9 @@ function App() {
             </div>    
           </div>
         }/>
-        <Route exact path="/questions/:id" element={<QuestionOverview />} />
-        <Route exact path="/questions/edit/:id" element={<EditQuestion />} />
+        <Route exact path="/users/:paramid" element={<Users />} />
+        <Route exact path="/questions/:id" element={localStorage.getItem('jwt') != null ? <QuestionOverview /> : <Navigate to='/login' />} />
+        <Route exact path="/questions/edit/:id" element={localStorage.getItem('jwt') != null ? <EditQuestion /> : <Navigate to='/login'/>} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/askQuestion" element={<PostQuestion />} />
@@ -246,6 +265,14 @@ function App() {
             </div>    
           </div>
         }/>
+        <Route path="/search/" element={   
+          <div className='stack-layout'>
+            <div >
+              <LeftSideBar activeTab='questions'/>
+              <Search/>
+            </div>    
+          </div>
+        }/>
         <Route path="/allUsers" element={   
           <div className='stack-layout'>
             <div >
@@ -254,13 +281,14 @@ function App() {
             </div>    
           </div>
         }/>
-        <Route exact path="/questions/tagged/:tagName" element={   
+        <Route exact path="/questions/tagged/:tagName" element={
+          localStorage.getItem('jwt') != null ?
           <div className='stack-layout'>
             <div >
               <LeftSideBar activeTab='questions'/>
               <TagsOverview/>
             </div>    
-          </div>
+          </div> : <Navigate to='/login' />
         }/>
         <Route exact path="/editProfile" element={   
           <div className='stack-layout'>

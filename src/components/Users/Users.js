@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Tabs from '@mui/material/Tabs';
@@ -14,6 +14,8 @@ import Profile from './Profile';
 import Activity from './Activity';
 import defaultimg from '../../default/default.png';
 import API_URL from '../../apiConfig'
+
+
 
 const rootStyle = {
   display: 'flex',
@@ -33,20 +35,9 @@ function Users() {
   const navigate = useNavigate()
   const [tab, setTab] = useState('activity')
   const [userData, setUserData] = useState(null)
-  // const user = {
-  //   aboutMeText: 'about',
-  //   answersCount: 12,
-  //   bronzeCount: 123,
-  //   goldCount: 54,
-  //   lastSeen: 'this week',
-  //   lengthOfTimeAsMember: '3 days',
-  //   profileIconSrc: 'http://placekitten.com/200/300',
-  //   reachedCount: 42,
-  //   reputationCount: 123,
-  //   questionsCount: 64,
-  //   silverCount: 12,
-  //   username: 'kfbustam',
-  // }
+  const [profileimage, setimgData] = useState(null)
+  let { paramid } = useParams();
+  console.log(paramid)
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -56,7 +47,13 @@ function Users() {
     if (userData != null) return
     async function fetchInfo() {
       let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getBasicDetails/` + user._id )
+      if(!paramid)
+      {
+        paramid = user._id
+      }
+      const response = await axios.get(`${API_URL}/api/user/getBasicDetails/` + paramid )
+      console.log(response)
+      setimgData(`${API_URL}/image/${response.data.user.profileURL}`)
       let {
         about,
         answerIds,
@@ -76,7 +73,8 @@ function Users() {
         upvotenum,
         username,
         lastSeen,
-        profileURL
+        profileURL,
+        _id
       } = response.data.user;
       
       setUserData({
@@ -86,7 +84,6 @@ function Users() {
         questionsCount: questionIds.length,
         reputationCount: reputation,
         lastSeen: new Date(updatedAt).toLocaleDateString("en-US", options),
-        profileIconSrc: defaultimg,
         username,
         visitedDateInterval: new Date(updatedAt).toLocaleDateString("en-US", options),
         location:location
@@ -98,8 +95,8 @@ function Users() {
   return (
     <div style={rootStyle}>
       <div style={titleHeaderStyle}>    
-        <IconButton key="profileIcon" onClick={() => navigate('/users')}>
-          <Avatar src={userData?.profileIconSrc} style={{width: 160, height: 160}} />
+        <IconButton key="profileIcon">
+          <Avatar src={profileimage} style={{width: 160, height: 160}} />
         </IconButton>
         <div style={{display: 'flex', flexDirection: 'column', margin: 'auto auto auto 0px'}}>
           <h2>
@@ -112,7 +109,7 @@ function Users() {
           </div>
         </div>
         <div style={{display: 'flex', flexDirection: 'row'}}>
-          <Button key="askQuestion" onClick={() => navigate('/editProfile')} variant="contained" style={{height: 40}}>Edit profile</Button>
+         {JSON.parse(localStorage.getItem("user"))._id==paramid ?<Button key="askQuestion" onClick={() => navigate('/editProfile')} variant="contained" style={{height: 40}}>Edit profile</Button> :null}
         </div>
       </div>
       <Tabs

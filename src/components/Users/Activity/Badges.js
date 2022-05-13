@@ -74,8 +74,7 @@ function Badges() {
   useEffect(() => {
     if (badges.length > 0) return
     async function fetchAnswers() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getAllBadges/` + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getAllBadges/` + window.location.href.substring(window.location.href.lastIndexOf('/') + 1) )
       const badgeData = response.data.badges
       setBadgeCount(response.data.badges.length)
       setBadges(badgeData)
@@ -105,9 +104,9 @@ function Badges() {
             } = tag
             return (
               <div key={badgeName}>
-                {type === 'Gold' && <IconButton key="gold" onClick={() => navigate('/gold')} size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
-                {type === 'Silver' && <IconButton key="silver" onClick={() => navigate('/silver')} size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
-                {type === 'Bronze' && <IconButton key="bronze" onClick={() => navigate('/bronze')} size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}
+                {type === 'Gold' && <IconButton key="gold" size="small"><CircleIcon style={goldCircleIconStyle} /></IconButton>}
+                {type === 'Silver' && <IconButton key="silver" size="small"><CircleIcon style={silverCircleIconStyle} /></IconButton>}
+                {type === 'Bronze' && <IconButton key="bronze" size="small"><CircleIcon style={bronzeCircleIconStyle} /></IconButton>}
                 <a className='search-tag-block me-1' href={url}>{badgeName}</a>
               </div>
             );

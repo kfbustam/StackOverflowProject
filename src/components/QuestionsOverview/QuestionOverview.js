@@ -1,3 +1,4 @@
+import "../Questions/Questions.css";
 import React, { useRef, useState, useEffect } from "react";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import { Editor } from "@tinymce/tinymce-react";
@@ -5,11 +6,14 @@ import axios from "axios";
 import parse from "html-react-parser";
 import { useNavigate, useParams } from "react-router-dom";
 import API_URL from "../../apiConfig";
-import { AddComment, CommentsDisabled } from "@mui/icons-material";
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
 
 const QuestionOverview = () => {
   const [ans, ansSet] = useState(null);
   const [data, dataSet] = useState(null);
+  const [comm, setComment] = useState("");
+  const[qComm, setQComment] = useState("");
   const editorRef = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -18,6 +22,14 @@ const QuestionOverview = () => {
       console.log(editorRef.current.getContent());
     }
   };
+
+  const userCardStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'end',
+    marginRight: 4
+  }
+
   useEffect(() => {
     async function fetchMyAPI() {
       let response = await axios.get(`${API_URL}/api/question/getById/${id}`);
@@ -44,18 +56,21 @@ const QuestionOverview = () => {
   }
 
   function addComment(type, qa_id, u_id) {
+    console.log(type)
     if (type === "question") {
       axios.post(`${API_URL}/api/question/addComment`, {
         question_id: qa_id,
-        comment: editorRef.current.getContent(),
-        userId: u_id,
+        comment: qComm,
+        user_id: u_id,
       });
-      window.location.reload();
+      
+      console.log(editorRef.current.getContent())
+     window.location.reload();
     } else {
       axios.post(`${API_URL}/api/answer/addComment`, {
         answer_id: qa_id,
-        comment: editorRef.current.getContent(),
-        userId: u_id,
+        comment: comm,
+        user_id: u_id,
       });
       window.location.reload();
     }
@@ -90,6 +105,7 @@ const QuestionOverview = () => {
       window.location.reload();
     }
   }
+  
   function getNumberOfDays(start) {
     const date1 = new Date(start);
     const date2 = new Date();
@@ -118,7 +134,7 @@ const QuestionOverview = () => {
           <div className="mt-1 text-right gap-4 col-span-3">
             <button
               className="bg-[#0A95FF] text-white font-light py-2 px-2 rounded"
-              onClick={() => navigate("/askQuestion")}
+              onClick={() => localStorage.getItem('jwt') != null ? navigate('/askQuestion') : navigate('/login')}
             >
               Ask Question
             </button>
@@ -223,22 +239,11 @@ const QuestionOverview = () => {
                   {c.comment}
                   </div>
                 ))}
-                <Editor
-                  onInit={(evt, editor) => (editorRef.current = editor)}
-                  init={{
-                    height: 200,
-                    width: 550,
-                    menubar: false,
-                    plugins: "lists link codesample image",
-                    toolbar:
-                      "bold italic | link codesample image | bullist numlist ",
-                    content_style:
-                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                  }}
-                />
-
+                <form>
+                  <input className="w-full" placeholder="Add Comment" type="text" onChange={e => setQComment(e.target.value)}></input>
+                </form>
                 <button
-                  onClick={(e) => addComment("answer", id, user._id)}
+                  onClick={(e) => addComment("question", id, user._id)}
                   className="bg-[#0A95FF] mt-2 text-white font-light py-2 px-2 rounded"
                 >
                   comment
@@ -379,6 +384,19 @@ const QuestionOverview = () => {
               </li>
             </ul>
           </div>
+          <div className="flex mt-5 w-full">
+                      <IconButton key="profileIcon" onClick={() => navigate(`/users/${data?.data.question.user._id}`)} size="small">
+                        <Avatar src={data?.data.question.body_image}/>
+                      </IconButton>
+                      {/* 
+                      <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
+                      <a onClick={() => navigate('/profile')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ data?.data.question.user.username ? <p>{data?.data.question.user.username}</p>  : <p></p>}</a>
+
+                      <span style={{ margin: 'auto 0px auto 0px'}}>{ data?.data.question.user.username ? <p>{data?.data.question.user.reputation}</p>  : <p></p>}</span>
+                      {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
+                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ data?.data.question.user.username ? <p>{`asked ${getNumberOfDays(data?.data.question.user.updatedAt)}`}</p>  : <p></p>}</a>
+                      
+                    </div>
         </div>
         <div className="">
           <div className="font-semibold text-2xl">Answers</div>
@@ -444,25 +462,16 @@ const QuestionOverview = () => {
                 {parse(String(a.answer))}
                 <br />
               <div className="">
-                <div className="text-1xl font-bold">Comments</div>
+                <div className=" text-1xl font-bold">Comments</div>
                 {a.comment_id.map((c) => (
-                  <div>
+                  <div className="text-sm border-b border-gray-300">
                     {c.comment}
+                    <span className="ml-[20%] font-thin w-full text-xs text-right">{ c.user?c.user.username:null} asked { getNumberOfDays(a.updatedAt)}</span>
                 </div>
                 ))}
-                <Editor
-                  onInit={(evt, editor) => (editorRef.current = editor)}
-                  init={{
-                    height: 200,
-                    width: 800,
-                    menubar: false,
-                    plugins: "lists link codesample image",
-                    toolbar:
-                      "bold italic | link codesample image | bullist numlist ",
-                    content_style:
-                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                  }}
-                />
+                <form>
+                  <input className="w-full"  placeholder="Add Comment" type="text" onChange={e => setComment(e.target.value)}></input>
+                </form>
 
                 <button
                   onClick={(e) => addComment("answer", a._id, user._id)}
@@ -470,6 +479,16 @@ const QuestionOverview = () => {
                 >
                   comment
                 </button>
+                <div className="flex mt-5 w-full">
+                      {/* 
+                      <a href={userProfileURL} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{username}</a> */}
+                      <a onClick={() => navigate('/profile')} style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ a.user_id.username ? <p>{a.user_id.username}</p>  : <p></p>}</a>
+
+                      <span style={{ margin: 'auto 0px auto 0px'}}>{ a.user_id.username ? <p>{a.user_id.reputation}</p>  : <p></p>}</span>
+                      {/* <a href={questionURL} style={{ margin: 'auto 5px auto 5px'}}>{lastModified}</a> */}
+                      <a  style={{color: '#0074cc', fontSize: 14, margin: 'auto 5px auto 5px'}}>{ a.user_id.username ? <p>{`asked ${getNumberOfDays(a.updatedAt)}`}</p>  : <p></p>}</a>
+                      
+                </div>
               </div>
               </div>
             </div>

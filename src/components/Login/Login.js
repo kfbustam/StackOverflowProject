@@ -49,11 +49,12 @@ function Login() {
                 localStorage.setItem('user', JSON.stringify({
                     username: foundUser.username,
                     email: foundUser.email,
-                    _id: foundUser._id
+                    _id: foundUser._id,
+                    profileURL: foundUser.profileURL
                 }))
     
                 if (email === 'admin@gmail.com') navigate('/addtag')
-                else navigate('/users')
+                else navigate('/users/'+foundUser._id)
             })
             .catch(err => {
                 console.log(err)
