@@ -110,8 +110,7 @@ function Tags() {
   useEffect(() => {
     if (tags.length > 0) return
     async function fetchTags() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getTagsTab/` + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getTagsTab/` + window.location.href.substring(window.location.href.lastIndexOf('/') + 1) )
       const tagData = response.data.user
       setTagCount(response.data.user.length)
       setTags(tagData)

@@ -34,12 +34,11 @@ function Reputation() {
     silverCount: 12,
     username: 'kfbustam',
   }
-  
+
   useEffect(() => {
     if (Object.values(reputations).length > 0) return
     async function fetchReputations() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getReputationHistory/` + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getReputationHistory/` + window.location.href.substring(window.location.href.lastIndexOf('/') + 1) )
       const reputationData = response.data.groupByDate;
       setReputations(reputationData)
     }

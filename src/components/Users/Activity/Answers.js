@@ -56,8 +56,7 @@ function Answers() {
   useEffect(() => {
     if (answers.length > 0) return
     async function fetchAnswers() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getAnswersTab/` + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getAnswersTab/` + window.location.href.substring(window.location.href.lastIndexOf('/') + 1) )
       const answersData = response.data.user
  
       let anstotal = response.data.user.length 

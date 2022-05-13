@@ -74,8 +74,7 @@ function Badges() {
   useEffect(() => {
     if (badges.length > 0) return
     async function fetchAnswers() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getAllBadges/` + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getAllBadges/` + window.location.href.substring(window.location.href.lastIndexOf('/') + 1) )
       const badgeData = response.data.badges
       setBadgeCount(response.data.badges.length)
       setBadges(badgeData)

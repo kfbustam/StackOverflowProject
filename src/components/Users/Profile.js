@@ -47,8 +47,9 @@ function Profile() {
   useEffect(() => {
     if (Object.values(profile).length > 0) return
     async function fetchProfile() {
-      let user = JSON.parse(localStorage.getItem('user'))
-      const response = await axios.get(`${API_URL}/api/user/getProfileTab/` + user._id )
+      const response = await axios.get(`${API_URL}/api/user/getProfileTab/` + window.location.href
+.substring(window.location.href
+.lastIndexOf('/') + 1) )
       const userData = response.data.user
       setRepCount(userData["stats"]["reputationCount"])
       setAnswer(userData["stats"]["answersCount"])
@@ -79,8 +80,9 @@ function Profile() {
       sort = value
       
     }
-    let user = JSON.parse(localStorage.getItem('user'))
-    axios.get(`${API_URL}/api/user/getSortPost/` + user._id+"/"+filter+"/"+sort)
+    axios.get(`${API_URL}/api/user/getSortPost/` + window.location.href
+.substring(window.location.href
+.lastIndexOf('/') + 1) +"/"+filter+"/"+sort)
     .then(response=>{
       //console.log(response)
       setQPost(response.data.user)
