@@ -81,7 +81,7 @@ export default function Questions() {
     .then(res => {
       const dataQuestions = res.data.question
       setData(dataQuestions)
-      console.log("bleh",data);
+     // console.log("bleh",data);
     })
     .catch(err => {
       console.log(err)
@@ -161,7 +161,6 @@ export default function Questions() {
         
         { data.length > 0 &&
           data.map((question) => {
-            console.log("b",question)
             // const {
             //   answerCount,
             //   isAnswered,
