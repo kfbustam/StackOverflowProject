@@ -533,6 +533,7 @@ class Question {
 
         static search = async(data) => {
                 const searchCriteria = data.match(/"[^"]*"|[^\s"]+/g)
+                console.log(data)
 
                 try {
                         let result = []
@@ -578,8 +579,10 @@ class Question {
                                         })
 
                                         answers = answers.filter(answer => {
-                                                for (const questionTag of answer.question_id.tags) {
-                                                        if (questionTag.name.toLowerCase() === tag.toLowerCase()) return true
+                                                if (answer.question_id) {
+                                                        for (const questionTag of answer.question_id.tags) {
+                                                                if (questionTag.name.toLowerCase() === tag.toLowerCase()) return true
+                                                        }
                                                 }
 
                                                 return false
