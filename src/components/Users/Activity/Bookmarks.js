@@ -91,7 +91,9 @@ function Bookmarks() {
     if (bookmarks.length > 0) return
     async function fetchBookmarks() {
       axios.post(`${API_URL}/api/question/getAllBookmarkedQuestions/`, {
+
         user: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+
       })
       .then(res => {
         setBookmarks(res.data.data)
@@ -107,15 +109,15 @@ function Bookmarks() {
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Bookmarks</h3>
+        <h3>{bookmarks.length} Bookmarks</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-          <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
+          {/* <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Score</Button>
             <Button>Activity</Button>
             <Button>Newest</Button>
             <Button>Views</Button>
             <Button>Added</Button>
-          </ButtonGroup>
+          </ButtonGroup> */}
         </div>
       </div>
       <List>
