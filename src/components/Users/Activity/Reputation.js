@@ -18,6 +18,8 @@ const filterButtonGroupStyle = {
 
 function Reputation() {
   const [reputations, setReputations] = useState([])
+  const [repCount, setReputationCount] = useState(0)
+
   const [errorMessages, setErrorMessages] = useState([])
   const user = {
     aboutMeText: 'about',
@@ -106,7 +108,9 @@ function Reputation() {
     async function fetchReputations() {
       let user = JSON.parse(localStorage.getItem('user'))
       const response = await axios.get(`${API_URL}/api/user/getReputationHistory/` + user._id )
-      const reputationData = response.data.groupByDate
+      const reputationData = response.data.groupByDate;
+      setReputationCount(response.data.groupByDate.length)
+      const count = reputationData
       setReputations(reputationData)
     }
     fetchReputations()
@@ -115,7 +119,7 @@ function Reputation() {
   return (
     <div style={rootStyle}>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <h3>{answersCount} Reputation</h3>
+        <h3>Reputation</h3>
         <div style={{display: 'flex', flexDirection: 'row', gap: 5}}>
           <ButtonGroup variant="outlined" aria-label="outlined button group" style={filterButtonGroupStyle}>
             <Button>Post</Button>

@@ -95,7 +95,7 @@ function Users() {
   return (
     <div style={rootStyle}>
       <div style={titleHeaderStyle}>    
-        <IconButton key="profileIcon" onClick={() => navigate('/users')}>
+        <IconButton key="profileIcon">
           <Avatar src={profileimage} style={{width: 160, height: 160}} />
         </IconButton>
         <div style={{display: 'flex', flexDirection: 'column', margin: 'auto auto auto 0px'}}>
